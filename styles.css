@@ -1,0 +1,139 @@
+/* PrimeVerse Realty Group - Luxury Consumer Property Portal Styles */
+
+:root {
+  --navy-deep: #0b132b;
+  --navy-mid: #1c2541;
+  --emerald-brand: #10b981;
+  --gold-accent: #d97706;
+  --slate-bg: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  background-color: var(--slate-bg);
+  color: #0f172a;
+}
+
+/* Sticky Glassmorphism Navbar */
+.glass-nav {
+  background: rgba(11, 19, 43, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Luxury Hero Scrim over Architectural Photo */
+.hero-backdrop {
+  position: relative;
+  background-color: #0b132b;
+}
+
+.hero-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(7, 13, 31, 0.84) 0%,
+    rgba(11, 19, 43, 0.78) 55%,
+    rgba(11, 19, 43, 0.96) 100%
+  );
+}
+
+/* Property Card Elevation & Image Zoom */
+.prop-card {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+
+.prop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 42px -12px rgba(11, 19, 43, 0.16);
+}
+
+.prop-card img.card-photo {
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prop-card:hover img.card-photo {
+  transform: scale(1.06);
+}
+
+/* Neighbourhood Guide Card */
+.guide-card img.guide-photo {
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.guide-card:hover img.guide-photo {
+  transform: scale(1.08);
+}
+
+/* Range Slider Styling */
+input[type="range"].custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  outline: none;
+}
+
+input[type="range"].custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0b132b;
+  border: 3px solid #10b981;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+input[type="range"].custom-range::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+/* Modal Slide Animation */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-animate {
+  animation: modalSlideUp 0.22s ease-out forwards;
+}
+
+/* Custom Thin Scrollbar */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.thin-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Active Lifestyle Pill */
+.lifestyle-pill-active {
+  background-color: #10b981 !important;
+  color: #06281e !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
