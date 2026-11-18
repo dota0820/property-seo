@@ -1,4 +1,4 @@
-/* PrimeVerse Realty Group - Luxury Consumer Property Portal Styles */
+/* PrimeVerse Ipoh Realty - Mobile-First Property Portal Styles */
 
 :root {
   --navy-deep: #0b132b;
@@ -10,6 +10,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -18,12 +19,31 @@ body {
   color: #0f172a;
 }
 
+/* Hide horizontal scrollbar for mobile swipe strips */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Sticky Glassmorphism Navbar */
 .glass-nav {
-  background: rgba(11, 19, 43, 0.94);
+  background: rgba(11, 19, 43, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sticky Mobile Bottom Bar */
+.mobile-bottom-nav {
+  background: rgba(11, 19, 43, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Luxury Hero Scrim over Architectural Photo */
@@ -36,7 +56,7 @@ body {
   background: linear-gradient(
     180deg,
     rgba(7, 13, 31, 0.84) 0%,
-    rgba(11, 19, 43, 0.78) 55%,
+    rgba(11, 19, 43, 0.8) 55%,
     rgba(11, 19, 43, 0.96) 100%
   );
 }
@@ -46,33 +66,31 @@ body {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
 }
 
-.prop-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 42px -12px rgba(11, 19, 43, 0.16);
+@media (hover: hover) {
+  .prop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 42px -12px rgba(11, 19, 43, 0.16);
+  }
+
+  .prop-card:hover img.card-photo {
+    transform: scale(1.06);
+  }
+
+  .guide-card:hover img.guide-photo {
+    transform: scale(1.08);
+  }
 }
 
-.prop-card img.card-photo {
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.prop-card:hover img.card-photo {
-  transform: scale(1.06);
-}
-
-/* Neighbourhood Guide Card */
+.prop-card img.card-photo,
 .guide-card img.guide-photo {
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.guide-card:hover img.guide-photo {
-  transform: scale(1.08);
-}
-
-/* Range Slider Styling */
+/* Range Slider Styling (touch-friendly 24px thumb) */
 input[type="range"].custom-range {
   -webkit-appearance: none;
   appearance: none;
-  height: 6px;
+  height: 8px;
   background: #e2e8f0;
   border-radius: 999px;
   outline: none;
@@ -81,29 +99,29 @@ input[type="range"].custom-range {
 input[type="range"].custom-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #0b132b;
   border: 3px solid #10b981;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
   transition: transform 0.15s ease;
 }
 
 input[type="range"].custom-range::-webkit-slider-thumb:hover {
-  transform: scale(1.12);
+  transform: scale(1.1);
 }
 
 /* Modal Slide Animation */
 @keyframes modalSlideUp {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.985);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -126,14 +144,39 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
   border-radius: 999px;
 }
 
-.thin-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
 /* Active Lifestyle Pill */
 .lifestyle-pill-active {
   background-color: #10b981 !important;
   color: #06281e !important;
   border-color: #10b981 !important;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+/* Blog Reader Prose */
+.blog-prose h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0b132b;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-prose p {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #334155;
+  margin-bottom: 0.85rem;
+}
+
+.blog-prose ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.blog-prose li {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #334155;
+  margin-bottom: 0.35rem;
 }

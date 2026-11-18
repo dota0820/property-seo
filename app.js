@@ -1,10 +1,10 @@
-// PrimeVerse Ipoh Realty - Consumer Subsale Property Portal Logic
+// PrimeVerse Ipoh Realty - Pro Portal Logic (English Default & Mobile-First)
 
 (function () {
   const DATA = window.APP_DATA;
 
   const state = {
-    lang: "zh",
+    lang: "en",
     search: "",
     searchTab: "all", // 'all' | 'Landed' | 'Condo' | 'investment'
     area: "all",
@@ -60,12 +60,14 @@
     const enBtn = document.getElementById("lang-en");
 
     if (lang === "zh") {
-      zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all bg-emerald-500 text-navy-950";
+      zhBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-emerald-500 text-navy-950";
       enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-300 hover:text-white";
     } else {
-      enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all bg-emerald-500 text-navy-950";
+      enBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-emerald-500 text-navy-950";
       zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-300 hover:text-white";
     }
+
+    document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
@@ -123,8 +125,8 @@
     document.querySelectorAll(".search-tab-btn").forEach((btn) => {
       const active = btn.getAttribute("data-tab") === tab;
       btn.className = active
-        ? "search-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-navy-950 transition-all"
-        : "search-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white/10 text-slate-200 hover:bg-white/15 transition-all";
+        ? "search-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-navy-950 transition-all"
+        : "search-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 text-slate-200 hover:bg-white/15 transition-all";
     });
     renderProjects();
   };
@@ -138,7 +140,7 @@
         const cls = active
           ? "lifestyle-pill-active font-bold"
           : "bg-white/10 text-slate-200 border-white/15 hover:border-emerald-400/60";
-        return `<button onclick="selectLifestyleFilter('${item.id}')" class="px-3 py-1.5 rounded-full text-xs border transition-all ${cls}">${escapeHtml(label)}</button>`;
+        return `<button onclick="selectLifestyleFilter('${item.id}')" class="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs border transition-all ${cls}">${escapeHtml(label)}</button>`;
       })
       .join("");
   }
@@ -195,7 +197,7 @@
 
     if (list.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-10 text-center">
+        <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-8 sm:p-10 text-center">
           <p class="text-slate-600 font-semibold mb-3">${
             state.lang === "zh" ? "当前筛选条件下暂无匹配怡保房源" : "No Ipoh properties match your current filters."
           }</p>
@@ -216,8 +218,7 @@
         return `
           <article class="prop-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between shadow-sm">
             <div>
-              <!-- Real Property Photo Header -->
-              <div onclick="openProjectModal('${p.id}')" class="relative h-56 bg-gradient-to-br ${p.gradient} overflow-hidden cursor-pointer group">
+              <div onclick="openProjectModal('${p.id}')" class="relative h-48 sm:h-56 bg-gradient-to-br ${p.gradient} overflow-hidden cursor-pointer group">
                 <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(p.name)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
                 <div class="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/20 to-transparent"></div>
 
@@ -232,10 +233,10 @@
 
                 <div class="absolute bottom-3 left-3.5 right-3.5 text-white">
                   <div class="flex items-center justify-between gap-2 mb-0.5">
-                    <span class="text-[11px] font-semibold text-amber-300 uppercase tracking-wider">${escapeHtml(badge)}</span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-black/45 text-slate-200 backdrop-blur-sm">${p.images.length} Photos</span>
+                    <span class="text-[11px] font-semibold text-amber-300 uppercase tracking-wider truncate">${escapeHtml(badge)}</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-black/45 text-slate-200 backdrop-blur-sm shrink-0">${p.images.length} Photos</span>
                   </div>
-                  <h3 class="text-lg font-extrabold leading-tight group-hover:text-emerald-300 transition-colors">${escapeHtml(p.name)}</h3>
+                  <h3 class="text-base sm:text-lg font-extrabold leading-tight group-hover:text-emerald-300 transition-colors">${escapeHtml(p.name)}</h3>
                   <div class="text-xs text-slate-200 flex items-center gap-2 mt-1">
                     <span>${escapeHtml(p.area)}</span>
                     <span>&middot;</span>
@@ -246,7 +247,6 @@
                 </div>
               </div>
 
-              <!-- Key Numbers Strip -->
               <div class="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100 bg-slate-50/70 text-center py-2.5">
                 <div>
                   <div class="text-[10px] text-slate-500 uppercase font-semibold">${state.lang === "zh" ? "参考价起" : "From"}</div>
@@ -262,28 +262,26 @@
                 </div>
               </div>
 
-              <!-- Description & Highlights -->
               <div class="p-4">
                 <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-3">${escapeHtml(summary)}</p>
                 <div class="flex flex-wrap gap-1.5">
                   <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">📐 ${escapeHtml(p.sqftSummary)}</span>
-                  ${p.gatedGuarded ? `<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold">🛡️ Gated & Guarded</span>` : ""}
-                  ${p.homestayHot ? `<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold">🏨 Homestay / Yield</span>` : ""}
+                  ${p.gatedGuarded ? `<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold">🛡️ Gated</span>` : ""}
+                  ${p.homestayHot ? `<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold">🏨 Homestay</span>` : ""}
                 </div>
               </div>
             </div>
 
-            <!-- Specialist Footer & Buttons -->
             <div class="px-4 pb-4 pt-2 border-t border-slate-100">
               <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-7 h-7 rounded-full bg-gradient-to-br ${agent.avatarBg} text-white text-[10px] font-bold flex items-center justify-center">${agent.initials}</div>
-                  <div class="text-[11px]">
-                    <div class="font-bold text-navy-900">${escapeHtml(agent.name)}</div>
+                <div class="flex items-center gap-2 min-w-0">
+                  <div class="w-7 h-7 rounded-full bg-gradient-to-br ${agent.avatarBg} text-white text-[10px] font-bold flex items-center justify-center shrink-0">${agent.initials}</div>
+                  <div class="text-[11px] truncate">
+                    <div class="font-bold text-navy-900 truncate">${escapeHtml(agent.name)}</div>
                     <div class="text-slate-400">${escapeHtml(agent.renCode)}</div>
                   </div>
                 </div>
-                <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">${escapeHtml(p.maintenanceLabel)}</span>
+                <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded shrink-0">${escapeHtml(p.maintenanceLabel)}</span>
               </div>
 
               <div class="grid grid-cols-12 gap-2">
@@ -314,15 +312,15 @@
     grid.innerHTML = DATA.areaGuides
       .map(
         (g) => `
-      <div onclick="filterByGuideArea('${escapeHtml(g.area)}')" class="guide-card relative h-52 rounded-2xl overflow-hidden cursor-pointer group shadow-sm border border-slate-200 bg-navy-900">
+      <div onclick="filterByGuideArea('${escapeHtml(g.area)}')" class="guide-card relative h-44 sm:h-52 rounded-2xl overflow-hidden cursor-pointer group shadow-sm border border-slate-200 bg-navy-900">
         <img src="${escapeHtml(g.image)}" alt="${escapeHtml(g.area)}" class="guide-photo w-full h-full object-cover opacity-80" onerror="this.style.display='none'" />
         <div class="absolute inset-0 bg-gradient-to-t from-navy-950/95 via-navy-950/40 to-transparent"></div>
         <div class="absolute top-3 right-3 flex gap-1.5">
           <span class="px-2.5 py-1 rounded-full bg-white/90 text-navy-900 text-[11px] font-bold">${escapeHtml(g.avgPsf)}/psf</span>
           <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-navy-950 text-[11px] font-extrabold">${escapeHtml(g.avgYield)} ROI</span>
         </div>
-        <div class="absolute bottom-4 left-4 right-4 text-white">
-          <h3 class="text-lg font-extrabold group-hover:text-emerald-300 transition-colors">${escapeHtml(pick(g, "titleEn", "titleZh"))}</h3>
+        <div class="absolute bottom-3.5 left-4 right-4 text-white">
+          <h3 class="text-base sm:text-lg font-extrabold group-hover:text-emerald-300 transition-colors">${escapeHtml(pick(g, "titleEn", "titleZh"))}</h3>
           <p class="text-xs text-slate-200 mt-1 line-clamp-2">${escapeHtml(pick(g, "descEn", "descZh"))}</p>
         </div>
       </div>`
@@ -330,7 +328,7 @@
       .join("");
   }
 
-  // --- Ipoh Comparison Tool ---
+  // --- Ipoh Comparison Tool (Mobile Compact Table) ---
   window.toggleCompare = function (projectId) {
     const idx = state.compareIds.indexOf(projectId);
     if (idx > -1) {
@@ -360,57 +358,54 @@
   function renderCompareTable() {
     const selected = state.compareIds.map(findProject).filter(Boolean);
     const wrapper = document.getElementById("compare-table-wrapper");
+    const minTableWidth = selected.length >= 3 ? "min-w-[600px]" : "min-w-full";
 
     const rows = [
       {
-        label: state.lang === "zh" ? "怡保区域 & 房产类型" : "Ipoh Area & Type",
-        render: (p) => `<span class="font-semibold text-navy-900">${escapeHtml(p.area)}</span> · <span class="text-xs text-slate-500">${escapeHtml(p.category)} (${escapeHtml(p.tenure)})</span>`
+        label: state.lang === "zh" ? "区域 & 类型" : "Area & Type",
+        render: (p) => `<span class="font-semibold text-navy-900">${escapeHtml(p.area)}</span><br class="sm:hidden" /><span class="hidden sm:inline"> · </span><span class="text-[11px] text-slate-500">${escapeHtml(p.category)} (${escapeHtml(p.tenure)})</span>`
       },
       {
-        label: state.lang === "zh" ? "二手参考价起" : "Subsale Entry Price",
+        label: state.lang === "zh" ? "参考价起" : "Entry Price",
         render: (p) => `<span class="font-extrabold text-navy-900">${formatRM(p.priceFrom)}</span>`
       },
       {
-        label: state.lang === "zh" ? "房型与面积" : "Layout & Size",
+        label: state.lang === "zh" ? "房型面积" : "Layout & Size",
         render: (p) => `${escapeHtml(p.bedsSummary)} · ${escapeHtml(p.sqftSummary)}`
       },
       {
-        label: state.lang === "zh" ? "平均参考尺价" : "Avg Subsale PSF",
+        label: state.lang === "zh" ? "参考尺价" : "Avg PSF",
         render: (p) => `RM ${p.psfAvg} / sqft`
       },
       {
-        label: state.lang === "zh" ? "预估毛租金回报" : "Est. Gross Yield",
-        render: (p) => `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs">${p.rentalYield}%</span>`
+        label: state.lang === "zh" ? "租金回报" : "Est. Yield",
+        render: (p) => `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[11px] sm:text-xs">${p.rentalYield}%</span>`
       },
       {
-        label: state.lang === "zh" ? "商圈 / 医院 / 学校车程" : "Key Amenities Drive",
+        label: state.lang === "zh" ? "周边车程" : "Amenities",
         render: (p) => escapeHtml(p.amenityDrive)
       },
       {
-        label: state.lang === "zh" ? "保安 / 管理费" : "Security / Maint. Fee",
+        label: state.lang === "zh" ? "管理/保安费" : "Maint. / Guard",
         render: (p) => escapeHtml(p.maintenanceLabel)
-      },
-      {
-        label: state.lang === "zh" ? "楼盘特色标签" : "Highlight",
-        render: (p) => `<span class="text-xs text-slate-700">${escapeHtml(pick(p, "badgeEn", "badgeZh"))}</span>`
       }
     ];
 
     wrapper.innerHTML = `
-      <table class="w-full text-left border-collapse min-w-[640px]">
+      <table class="w-full text-left border-collapse ${minTableWidth}">
         <thead>
           <tr class="bg-navy-900 text-white">
-            <th class="p-4 text-xs font-bold uppercase tracking-wider w-48">${state.lang === "zh" ? "怡保对比维度" : "Ipoh Metric"}</th>
+            <th class="p-2.5 sm:p-4 text-[10px] sm:text-xs font-bold uppercase tracking-wider w-24 sm:w-44">${state.lang === "zh" ? "对比项" : "Metric"}</th>
             ${selected
               .map(
                 (p) => `
-              <th class="p-4">
-                <div class="flex items-center justify-between gap-2">
+              <th class="p-2.5 sm:p-4 align-top">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                   <div>
-                    <div class="text-sm font-extrabold">${escapeHtml(p.name)}</div>
-                    <div class="text-[11px] text-emerald-400 font-normal">${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 实盘" : "Example Units"}</div>
+                    <div class="text-xs sm:text-sm font-extrabold leading-snug">${escapeHtml(p.name)}</div>
+                    <div class="text-[10px] sm:text-[11px] text-emerald-400 font-normal">${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example" : "Examples"}</div>
                   </div>
-                  <button onclick="openProjectModal('${p.id}')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-semibold">
+                  <button onclick="openProjectModal('${p.id}')" class="self-start sm:self-auto px-2 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-[10px] sm:text-[11px] font-semibold">
                     ${state.lang === "zh" ? "查看" : "View"}
                   </button>
                 </div>
@@ -419,13 +414,13 @@
               .join("")}
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-200 bg-white text-sm">
+        <tbody class="divide-y divide-slate-200 bg-white">
           ${rows
             .map(
               (r) => `
             <tr class="hover:bg-slate-50/80">
-              <td class="p-4 font-bold text-xs text-slate-600 bg-slate-50/60">${r.label}</td>
-              ${selected.map((p) => `<td class="p-4 text-xs sm:text-sm">${r.render(p)}</td>`).join("")}
+              <td class="p-2.5 sm:p-4 font-bold text-[11px] sm:text-xs text-slate-600 bg-slate-50/70">${r.label}</td>
+              ${selected.map((p) => `<td class="p-2.5 sm:p-4 text-[11px] sm:text-sm align-top">${r.render(p)}</td>`).join("")}
             </tr>`
             )
             .join("")}
@@ -510,12 +505,12 @@
       .map((a) => {
         const isSelected = state.activeAgentId === a.id;
         return `
-          <div class="bg-white rounded-2xl border ${isSelected ? "border-emerald-500 ring-2 ring-emerald-500/20" : "border-slate-200"} p-5 flex flex-col justify-between shadow-sm">
+          <div class="bg-white rounded-2xl border ${isSelected ? "border-emerald-500 ring-2 ring-emerald-500/20" : "border-slate-200"} p-4 sm:p-5 flex flex-col justify-between shadow-sm">
             <div>
               <div class="flex items-center gap-3.5 mb-3">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${a.avatarBg} text-white font-extrabold flex items-center justify-center shadow-md">${a.initials}</div>
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${a.avatarBg} text-white font-extrabold flex items-center justify-center shadow-md shrink-0">${a.initials}</div>
                 <div>
-                  <h3 class="font-extrabold text-navy-900 flex items-center gap-2">
+                  <h3 class="font-extrabold text-navy-900 flex flex-wrap items-center gap-1.5">
                     <span>${escapeHtml(a.name)}</span>
                     <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${escapeHtml(a.renCode)}</span>
                   </h3>
@@ -559,7 +554,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
         <div>
           <div class="text-xs text-emerald-700 font-bold">${escapeHtml(agent.areas.join(" · "))} · ${escapeHtml(agent.languages.join(" / "))}</div>
-          <h4 class="text-lg font-extrabold text-navy-900">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
+          <h4 class="text-base sm:text-lg font-extrabold text-navy-900">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
         </div>
         <button onclick="openLeadModal('Direct Inquiry to ${escapeHtml(agent.name)}')" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-bold text-xs">
           ${state.lang === "zh" ? "联系顾问看房" : "Contact Specialist"}
@@ -574,7 +569,7 @@
               <div class="text-sm font-extrabold text-navy-900">${escapeHtml(p.name)}</div>
               <div class="text-xs text-slate-500">${escapeHtml(p.area)} &middot; ${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 房源" : "Example Units"} &middot; ${formatRM(p.priceFrom)}+</div>
             </div>
-            <button onclick="openProjectModal('${p.id}')" class="px-3 py-1.5 rounded-lg bg-navy-900 text-white text-xs font-bold hover:bg-navy-800">
+            <button onclick="openProjectModal('${p.id}')" class="px-3 py-1.5 rounded-lg bg-navy-900 text-white text-xs font-bold hover:bg-navy-800 shrink-0">
               ${state.lang === "zh" ? "查看" : "View"}
             </button>
           </div>`
@@ -605,7 +600,7 @@
     `;
   }
 
-  // --- Property Detail Modal ---
+  // --- Property Detail Modal (Mobile Bottom-Sheet Friendly) ---
   window.openProjectModal = function (projectId) {
     state.activeProjectId = projectId;
     state.activeModalTab = "overview";
@@ -650,31 +645,31 @@
     const isLanded = p.category === "Landed";
 
     const tabs = [
-      { id: "overview", label: state.lang === "zh" ? "社区介绍与真实优缺点" : "Overview & Highlights" },
-      { id: "units", label: `${state.lang === "zh" ? "Example 在售单位" : "Example Subsale Units"} (${p.verifiedUnits.length})` },
-      { id: "floorplans", label: state.lang === "zh" ? "户型规格与估价" : "Layouts & Valuation" },
+      { id: "overview", label: state.lang === "zh" ? "社区介绍与优缺点" : "Overview & Highlights" },
+      { id: "units", label: `${state.lang === "zh" ? "Example 在售单位" : "Example Units"} (${p.verifiedUnits.length})` },
+      { id: "floorplans", label: state.lang === "zh" ? "户型与估价" : "Layouts & Value" },
       { id: "faq", label: `${state.lang === "zh" ? "买家常见问答" : "Buyer Q&A"} (${p.faqs.length})` }
     ];
 
     let bodyHtml = "";
     if (state.activeModalTab === "overview") {
       bodyHtml = `
-        <p class="text-sm text-slate-700 leading-relaxed mb-5">${escapeHtml(pick(p, "summaryEn", "summaryZh"))}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-4 sm:mb-5">${escapeHtml(pick(p, "summaryEn", "summaryZh"))}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 mb-4 sm:mb-5">
           <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
-            <h4 class="font-extrabold text-emerald-900 text-sm mb-2.5">✓ ${
+            <h4 class="font-extrabold text-emerald-900 text-xs sm:text-sm mb-2">✓ ${
               state.lang === "zh" ? "怡保买家喜欢的原因" : "Why Ipoh Buyers Love This Area"
             }</h4>
-            <ul class="space-y-2 text-xs text-emerald-950">${pros.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
+            <ul class="space-y-1.5 text-xs text-emerald-950">${pros.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
           <div class="rounded-2xl bg-amber-50 border border-amber-200 p-4">
-            <h4 class="font-extrabold text-amber-900 text-sm mb-2.5">⚠ ${
+            <h4 class="font-extrabold text-amber-900 text-xs sm:text-sm mb-2">⚠ ${
               state.lang === "zh" ? "买二手房前要注意" : "Good to Check Before Buying"
             }</h4>
-            <ul class="space-y-2 text-xs text-amber-950">${cons.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
+            <ul class="space-y-1.5 text-xs text-amber-950">${cons.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
         </div>
-        <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5 sm:p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
           <div><span class="text-slate-400 block">${state.lang === "zh" ? "周边车程" : "Key Amenities"}</span><strong class="text-navy-900">${escapeHtml(p.amenityDrive)}</strong></div>
           <div><span class="text-slate-400 block">${state.lang === "zh" ? "保安 / 管理费" : "Maint. / Guard"}</span><strong class="text-navy-900">${escapeHtml(p.maintenanceLabel)}</strong></div>
           <div><span class="text-slate-400 block">${state.lang === "zh" ? "产权状态" : "Tenure"}</span><strong class="text-navy-900">${escapeHtml(p.tenure)}</strong></div>
@@ -686,7 +681,7 @@
         <div class="mb-3 text-xs text-slate-600 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
           <strong>${state.lang === "zh" ? "Example 示范实盘：" : "Sample Subsale Units:"}</strong> ${
             state.lang === "zh"
-              ? `以下数据参照 PropertyGuru 怡保当前真实挂牌水平整理，实际项目上线后由顾问 ${escapeHtml(agent.name)} 实时更新屋主盘源。`
+              ? `以下数据参照 PropertyGuru 怡保当前真实挂牌水平整理，实际项目上线后由顾问 ${escapeHtml(agent.name)} 实时更新。`
               : `Benchmarked against live PropertyGuru Ipoh subsale prices and managed directly by ${escapeHtml(agent.name)}.`
           }
         </div>
@@ -703,10 +698,10 @@
                 <div class="font-extrabold text-navy-900 text-sm">${escapeHtml(u.layout)} &middot; ${escapeHtml(u.level)}</div>
                 <div class="text-xs text-slate-500">${escapeHtml(u.furnishing)} &middot; ~RM ${u.psf} psf</div>
               </div>
-              <div class="text-left sm:text-right">
-                <div class="text-lg font-extrabold text-emerald-700">${formatRM(u.price)}</div>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(u.code)} Viewing')" class="mt-1 px-3.5 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold">
-                  ${state.lang === "zh" ? "预约看房 / 查估价" : "Book Viewing"}
+              <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                <div class="text-base sm:text-lg font-extrabold text-emerald-700">${formatRM(u.price)}</div>
+                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(u.code)} Viewing')" class="px-3.5 py-2 rounded-lg bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold">
+                  ${state.lang === "zh" ? "预约看房" : "Book Viewing"}
                 </button>
               </div>
             </div>`
@@ -727,7 +722,7 @@
               <div class="flex items-center justify-between pt-2 border-t border-slate-200">
                 <span class="font-extrabold text-navy-900">${escapeHtml(fp.price)}</span>
                 <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(fp.type)} Floor Plan & Bank Value')" class="text-xs font-bold text-emerald-700 hover:underline">
-                  ${state.lang === "zh" ? "索取实景视频与估价 →" : "Get Video & Bank Value →"}
+                  ${state.lang === "zh" ? "索取视频与估价 →" : "Get Video & Bank Value →"}
                 </button>
               </div>
             </div>`
@@ -752,27 +747,25 @@
     }
 
     document.getElementById("project-modal-content").innerHTML = `
-      <!-- Photo Gallery Header -->
-      <div class="relative h-64 sm:h-72 bg-gradient-to-r ${p.gradient} text-white overflow-hidden">
+      <div class="relative h-52 sm:h-64 shrink-0 bg-gradient-to-r ${p.gradient} text-white overflow-hidden">
         <img id="main-gallery-photo" src="${escapeHtml(p.images[state.activePhotoIdx])}" alt="${escapeHtml(p.name)}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
         <div class="absolute inset-0 bg-gradient-to-t from-navy-950/95 via-navy-950/35 to-black/30"></div>
 
-        <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm">
+        <button onclick="closeProjectModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-sm">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
 
-        <div class="absolute bottom-4 left-5 right-5 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div class="absolute bottom-3.5 left-4 right-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2.5">
           <div>
-            <div class="text-xs font-bold text-emerald-300 mb-1">${escapeHtml(p.area)} &middot; Subsale ${escapeHtml(p.category)} &middot; ${escapeHtml(p.tenure)}</div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold">${escapeHtml(p.name)}</h3>
-            <div class="text-xs text-slate-200 mt-1">From ${formatRM(p.priceFrom)} &middot; Avg RM ${p.psfAvg} psf &middot; Est. ${p.rentalYield}% Yield</div>
+            <div class="text-[11px] font-bold text-emerald-300 mb-0.5">${escapeHtml(p.area)} &middot; Subsale ${escapeHtml(p.category)} &middot; ${escapeHtml(p.tenure)}</div>
+            <h3 class="text-lg sm:text-2xl font-extrabold leading-tight">${escapeHtml(p.name)}</h3>
+            <div class="text-xs text-slate-200 mt-0.5">From ${formatRM(p.priceFrom)} &middot; Avg RM ${p.psfAvg} psf &middot; Est. ${p.rentalYield}% Yield</div>
           </div>
-          <!-- Gallery Thumbnails -->
           <div class="flex gap-1.5">
             ${p.images
               .map(
                 (img, idx) => `
-              <button onclick="selectModalPhoto(${idx})" class="gallery-thumb w-12 h-9 rounded-lg overflow-hidden border border-white/40 transition-all ${
+              <button onclick="selectModalPhoto(${idx})" class="gallery-thumb w-11 h-8 rounded-lg overflow-hidden border border-white/40 transition-all ${
                   idx === state.activePhotoIdx ? "ring-2 ring-emerald-400" : "opacity-65 hover:opacity-100"
                 }">
                 <img src="${escapeHtml(img)}" alt="" class="w-full h-full object-cover" />
@@ -783,7 +776,7 @@
         </div>
       </div>
 
-      <div class="border-b border-slate-200 px-5 sm:px-6 flex gap-5 overflow-x-auto bg-slate-50">
+      <div class="border-b border-slate-200 px-4 sm:px-6 flex gap-4 overflow-x-auto no-scrollbar bg-slate-50 shrink-0">
         ${tabs
           .map(
             (tb) => `
@@ -796,17 +789,17 @@
           .join("")}
       </div>
 
-      <div class="p-5 sm:p-6 max-h-[55vh] overflow-y-auto thin-scroll">${bodyHtml}</div>
+      <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1">${bodyHtml}</div>
 
-      <div class="p-4 sm:px-6 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2.5 text-xs">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br ${agent.avatarBg} text-white font-bold flex items-center justify-center">${agent.initials}</div>
-          <div>
-            <div class="font-bold text-navy-900">${escapeHtml(agent.name)} (${escapeHtml(agent.renCode)})</div>
-            <div class="text-slate-500">${state.lang === "zh" ? "怡保区主理顾问 · 平均回复" : "Ipoh Specialist · Avg reply"} ${agent.avgReplyMin} min</div>
+      <div class="p-3.5 sm:px-6 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-2 min-w-0 text-xs">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br ${agent.avatarBg} text-white font-bold flex items-center justify-center shrink-0">${agent.initials}</div>
+          <div class="truncate">
+            <div class="font-bold text-navy-900 truncate">${escapeHtml(agent.name)}</div>
+            <div class="text-slate-500 text-[11px]">${escapeHtml(agent.renCode)} · ${agent.avgReplyMin}m reply</div>
           </div>
         </div>
-        <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs shadow-md">
+        <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs shadow-md shrink-0">
           ${t("modalDownloadCta")}
         </button>
       </div>
@@ -849,7 +842,7 @@
           <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内与您 WhatsApp 联系</div>
         </div>
       </div>
-      <button onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-emerald-600 text-white font-bold">好的 / 完成</button>`
+      <button onclick="closeLeadModal()" class="w-full py-2.5 rounded-lg bg-emerald-600 text-white font-bold">好的 / 完成</button>`
         : `
       <div class="font-extrabold text-sm text-emerald-800">✓ Request Confirmed!</div>
       <p>Thank you, <strong>${escapeHtml(name)}</strong>! Unit photos &amp; bank valuation details for <em>"${escapeHtml(ctx)}"</em> are being sent to WhatsApp (${escapeHtml(phone)}).</p>
@@ -860,7 +853,7 @@
           <div class="text-slate-500">Typically replies within ${assignedAgent.avgReplyMin} mins</div>
         </div>
       </div>
-      <button onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-emerald-600 text-white font-bold">Done</button>`;
+      <button onclick="closeLeadModal()" class="w-full py-2.5 rounded-lg bg-emerald-600 text-white font-bold">Done</button>`;
   };
 
   // --- Bind Events & Init ---
@@ -896,7 +889,7 @@
     bindEvents();
     updateCalculators();
     updateCompareCounters();
-    setLanguage("zh");
+    setLanguage("en");
   }
 
   document.addEventListener("DOMContentLoaded", init);
