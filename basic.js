@@ -17,7 +17,7 @@
       furnishingZh: "厨房已扩建 · 配自动门",
       descEn: "Well-maintained freehold double-storey terrace inside a 24-hour guarded enclave in Bandar Seri Botani. 3 mins to Botani Eco Park, Lotus's & SJK(C) Botani.",
       descZh: "位于翠林城 24 小时保安围篱街区，屋况保养极佳、厨房已扩建。3 分钟直达生态公园、Lotus's 与华小。",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/botani-exterior.jpg",
       agentId: "jason-leong"
     },
     {
@@ -33,7 +33,7 @@
       furnishingZh: "全套精装家私",
       descEn: "High-floor Block B unit overlooking the Olympic-size pool at Ipoh's prestigious Tiger Lane. Walking/5-min drive to Royal Perak Golf Club & KPJ Ipoh.",
       descZh: "坐落怡保名门地段 Tiger Lane，Block B 高楼层俯瞰奥林匹克泳池，5 分钟直达皇家高尔夫球场与 KPJ 专科医院。",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/tigerlane-condo.jpg",
       agentId: "michelle-chong"
     },
     {
@@ -49,7 +49,7 @@
       furnishingZh: "度假风全精装 · 看天然湖景",
       descEn: "Scenic lake and limestone hill views in Acacia Tower. Ideal for serene retirement living or weekend homestay investment next to Lost World of Tambun.",
       descZh: "Acacia 楼栋直望天然湖泊与石灰岩山景，毗邻双威温泉乐园与双威医疗中心，退休自住或短租回报俱佳。",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/haven-aerial.jpg",
       agentId: "kenny-yeoh"
     },
     {
@@ -65,7 +65,7 @@
       furnishingZh: "全屋翻新地砖电线 · 现代厨房",
       descEn: "Move-in ready refurbished terrace house in the heart of Ipoh. 3 mins to AEON Kinta City, Pantai Hospital, and Ipoh's famous Canning dim sum & cafes.",
       descZh: "全屋全新翻新免大改，3 分钟内覆盖 AEON Kinta City、班台医院与桂和园美食圈，永久地契零管理费。",
-      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/canning-terrace.jpg",
       agentId: "michelle-chong"
     },
     {
@@ -81,7 +81,7 @@
       furnishingZh: "配厨柜与居民会所泳池",
       descEn: "Spacious guarded superlink home 3 minutes from Tenby International School, Mydin Mall, and the North-South Highway toll.",
       descZh: "24x75 宽敞超排户型，24 小时保安与会所配套，3 分钟直达 Tenby 国际学校与南北大道入口。",
-      image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/meru-superlink.jpg",
       agentId: "kenny-yeoh"
     },
     {
@@ -97,7 +97,7 @@
       furnishingZh: "全套家私 · 带水上乐园泳池",
       descEn: "Affordable freehold 3-bedroom unit at Level 9 overlooking the waterpark pool. 4 mins to AEON Station 18 & Lotus's — easy loan approval for first-time buyers.",
       descZh: "RM33.8万即可入手永久地契三房公寓！靠近 AEON Station 18，月供约 RM1,346，非常适合怡保年轻首购族。",
-      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/manhattan-exterior.jpg",
       agentId: "jason-leong"
     },
     {
@@ -113,7 +113,7 @@
       furnishingZh: "超大侧花园屋地 · 50万以下",
       descEn: "Rare single-storey corner terrace with generous side garden under RM500k in central Ipoh Garden — ideal for elderly parents or buyers wanting zero stairs.",
       descZh: "50 万以内罕见单层角头排屋，带 3,600 方尺大屋地，无楼梯设计极适合长辈同住。",
-      image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/ipoh-corner-lot.jpg",
       agentId: "michelle-chong"
     },
     {
@@ -129,7 +129,7 @@
       furnishingZh: "阳台直望高尔夫球场绿景",
       descEn: "Quiet, airy golf-resort apartment surrounded by lush fairways and hills in Meru Valley — popular with retirees and out-of-state weekend homeowners.",
       descZh: "环境清幽空气极佳，阳台直望高尔夫球场绿地，深受跨州退休族与居家办公人士喜爱。",
-      image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80",
+      image: "./images/meru-ecovillage.jpg",
       agentId: "kenny-yeoh"
     }
   ];
@@ -141,7 +141,7 @@
       categoryZh: "买房区域指南",
       readTime: "4 min read",
       date: "Nov 2026",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80",
+      image: "./images/botani-ecopark.jpg",
       titleEn: "2026 Ipoh Subsale Guide: Top 5 Most Popular Neighbourhoods for Families",
       titleZh: "2026 怡保买二手房看哪里？最受本地家庭欢迎的 5 大社区盘点",
       excerptEn: "Compare Bandar Seri Botani, Canning Garden, Tiger Lane, Meru Desa Park, and Station 18 by price range, school access, and resale demand.",
@@ -179,7 +179,7 @@
       categoryZh: "社区横评",
       readTime: "3 min read",
       date: "Nov 2026",
-      image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=900&q=80",
+      image: "./images/meru-superlink.jpg",
       titleEn: "Bandar Seri Botani vs Meru Desa Park: Which Guarded Township Fits You?",
       titleZh: "Botani 翠林城 vs Meru Desa Park：怡保两大围篱排屋区怎么选？",
       excerptEn: "Both offer modern 24-hour guarded terraces around RM 530k–RM 630k, but serve completely different daily commutes and school needs.",
@@ -207,7 +207,7 @@
       categoryZh: "买房干货",
       readTime: "5 min read",
       date: "Oct 2026",
-      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80",
+      image: "./images/canning-terrace.jpg",
       titleEn: "Complete Guide to Buying a Subsale House in Ipoh: Valuation, DSR & Legal Fees",
       titleZh: "怡保买二手房（Subsale）完整攻略：银行估价、DSR 薪水门槛与印花税怎么算？",
       excerptEn: "Avoid cash top-up surprises! Learn how to check bank valuation before paying earnest deposit and estimate your MOT & lawyer fees.",
@@ -237,7 +237,7 @@
       categoryZh: "投资分析",
       readTime: "4 min read",
       date: "Oct 2026",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80",
+      image: "./images/tambun-lake.jpg",
       titleEn: "Can Ipoh Resort Condos Like The Haven Generate Good Homestay & Medical Rental Yields?",
       titleZh: "买怡保度假公寓（如 The Haven / Sunway 一带）做民宿或医院旁长租划算吗？",
       excerptEn: "Why Tambun & Sunway City Ipoh continue to draw weekend KL/SG tourists and medical staff tenants in 2026.",

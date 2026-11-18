@@ -14,7 +14,7 @@ window.APP_DATA = {
     taglineZh: "怡保严选二手房与社区指南 · 团队实勘真房源 (Example)"
   },
 
-  heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
+  heroImage: "./images/haven-night.jpg",
 
   i18n: {
     en: {
@@ -116,7 +116,7 @@ window.APP_DATA = {
       avgYield: "5.2%",
       descEn: "Ipoh South's #1 master-planned eco township with parks, guarded enclaves & Chinese/international schools.",
       descZh: "怡保南区最抢手生态大城，自带大公园、华小与国际学校，24小时围篱双层排屋家庭自住首选。",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80"
+      image: "./images/botani-ecopark.jpg"
     },
     {
       area: "Tiger Lane",
@@ -126,7 +126,7 @@ window.APP_DATA = {
       avgYield: "5.6%",
       descEn: "Ipoh's Millionaires' Row — prestigious freehold condos & bungalows near Royal Perak Golf Club & KPJ.",
       descZh: "怡保传统老牌富人区，紧邻皇家高尔夫球场、KPJ 专科医院与名校，低密度豪华公寓保值力极强。",
-      image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=80"
+      image: "./images/tigerlane-condo.jpg"
     },
     {
       area: "Tambun / Sunway",
@@ -136,7 +136,7 @@ window.APP_DATA = {
       avgYield: "6.8%",
       descEn: "Limestone lake resorts near Lost World of Tambun & Sunway Medical — top Airbnb & retiree demand.",
       descZh: "背靠喀斯特石灰岩山湖，毗邻 Lost World 温泉乐园与双威医院，全怡保短租民宿与退休度假热门区。",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80"
+      image: "./images/tambun-lake.jpg"
     },
     {
       area: "Canning / Ipoh Garden",
@@ -146,7 +146,7 @@ window.APP_DATA = {
       avgYield: "5.4%",
       descEn: "Ipoh's most sought-after central mature belt beside AEON Kinta City, Pantai Hospital & famous eateries.",
       descZh: "怡保最黄金成熟生活圈，3 分钟到 AEON Kinta City、班台医院与老字号美食街，老屋翻新极为抢手。",
-      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80"
+      image: "./images/canning-terrace.jpg"
     },
     {
       area: "Meru Valley",
@@ -156,7 +156,7 @@ window.APP_DATA = {
       avgYield: "5.1%",
       descEn: "Tranquil golf-resort community next to Tenby International School, government hub & highway exit.",
       descZh: "高尔夫球场与山景围篱社区，紧靠 Tenby 国际学校与南北大道入口，深受跨州退休族与外派家庭喜爱。",
-      image: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=900&q=80"
+      image: "./images/meru-villas.jpg"
     },
     {
       area: "Station 18",
@@ -166,7 +166,7 @@ window.APP_DATA = {
       avgYield: "6.3%",
       descEn: "High-convenience southern hub near AEON Station 18 & Lotus's — best RM300k–RM430k value.",
       descZh: "南区商业生活中心，AEON 与 Lotus's 就在旁，RM32万–43万即可买到带水上乐园泳池的三房公寓。",
-      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80"
+      image: "./images/manhattan-exterior.jpg"
     }
   ],
 
@@ -246,10 +246,10 @@ window.APP_DATA = {
       topics: ["gated-guarded", "freehold"],
       gradient: "from-emerald-950 via-teal-900 to-slate-900",
       images: [
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1200&q=80"
+        "./images/botani-exterior.jpg",
+        "./images/botani-living.jpg",
+        "./images/botani-dining.jpg",
+        "./images/botani-master.jpg"
       ],
       badgeEn: "Example · Ipoh #1 Family Township",
       badgeZh: "Example · 怡保南区最热围篱排屋",
@@ -311,10 +311,10 @@ window.APP_DATA = {
       topics: ["gated-guarded", "freehold"],
       gradient: "from-amber-950 via-stone-900 to-slate-950",
       images: [
-        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
+        "./images/tigerlane-condo.jpg",
+        "./images/tigerlane-pool.jpg",
+        "./images/tigerlane-suite.jpg",
+        "./images/tigerlane-semid.jpg"
       ],
       badgeEn: "Example · Tiger Lane Luxury Address",
       badgeZh: "Example · 老虎巷富人区永久地契公寓",
@@ -376,10 +376,10 @@ window.APP_DATA = {
       topics: ["gated-guarded", "under-500k", "homestay-yield"],
       gradient: "from-teal-950 via-cyan-900 to-slate-900",
       images: [
-        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80"
+        "./images/haven-aerial.jpg",
+        "./images/haven-night.jpg",
+        "./images/haven-living.jpg",
+        "./images/haven-bedroom.jpg"
       ],
       badgeEn: "Example · Iconic Lake & Limestone Resort",
       badgeZh: "Example · 怡保知名山湖景观度假公寓",
@@ -441,10 +441,10 @@ window.APP_DATA = {
       topics: ["freehold", "under-500k", "homestay-yield"],
       gradient: "from-slate-900 via-zinc-800 to-amber-950",
       images: [
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80"
+        "./images/canning-terrace.jpg",
+        "./images/canning-living.jpg",
+        "./images/canning-kitchen.jpg",
+        "./images/canning-master.jpg"
       ],
       badgeEn: "Example · Heart of Ipoh Food & Lifestyle",
       badgeZh: "Example · 桂和园核心区翻新排屋",
@@ -506,10 +506,10 @@ window.APP_DATA = {
       topics: ["gated-guarded", "freehold"],
       gradient: "from-sky-950 via-slate-900 to-emerald-950",
       images: [
-        "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+        "./images/meru-superlink.jpg",
+        "./images/meru-villas.jpg",
+        "./images/meru-ecovillage.jpg",
+        "./images/meru-clubhouse.jpg"
       ],
       badgeEn: "Example · Golf, Tenby School & Highway",
       badgeZh: "Example · 美露国际学校与高尔夫社区",
@@ -571,10 +571,10 @@ window.APP_DATA = {
       topics: ["gated-guarded", "freehold", "under-500k", "homestay-yield"],
       gradient: "from-violet-950 via-purple-900 to-slate-900",
       images: [
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
+        "./images/manhattan-exterior.jpg",
+        "./images/station18-condo.webp",
+        "./images/manhattan-dining.jpg",
+        "./images/manhattan-room.jpg"
       ],
       badgeEn: "Example · Best Value Under RM400k",
       badgeZh: "Example · RM33万上车三房带水上乐园",
