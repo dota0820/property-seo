@@ -1,4 +1,4 @@
-// PrimeVerse Ipoh - Basic Package Demo Logic (Listings + Blog Only, English Default)
+// PrimeVerse Ipoh - Basic Package Demo Logic (3-Theme Switcher + Rule 1/2/3 UI)
 
 (function () {
   const DATA = window.APP_DATA;
@@ -12,6 +12,7 @@
       type: "Landed",
       tenure: "Freehold",
       price: 538000,
+      isNew: true,
       specs: "4 Bed · 3 Bath · 20'x70'",
       furnishingEn: "Extended Kitchen & Auto Gate",
       furnishingZh: "厨房已扩建 · 配自动门",
@@ -28,6 +29,7 @@
       type: "Condo",
       tenure: "Freehold",
       price: 528000,
+      isNew: false,
       specs: "3 Bed · 2 Bath · 1,162 sqft",
       furnishingEn: "Fully Furnished w/ Built-ins",
       furnishingZh: "全套精装家私",
@@ -44,6 +46,7 @@
       type: "Condo",
       tenure: "Leasehold",
       price: 485000,
+      isNew: false,
       specs: "2+1 Bed · 2 Bath · 1,140 sqft",
       furnishingEn: "Resort Furnished (Lake View)",
       furnishingZh: "度假风全精装 · 看天然湖景",
@@ -60,6 +63,7 @@
       type: "Landed",
       tenure: "Freehold",
       price: 560000,
+      isNew: false,
       specs: "4 Bed · 3 Bath · 22'x70'",
       furnishingEn: "Newly Tiled, Rewired & Modern Kitchen",
       furnishingZh: "全屋翻新地砖电线 · 现代厨房",
@@ -76,6 +80,7 @@
       type: "Landed",
       tenure: "Freehold",
       price: 598000,
+      isNew: false,
       specs: "4+1 Bed · 4 Bath · 24'x75'",
       furnishingEn: "Kitchen Cabinets + Clubhouse Access",
       furnishingZh: "配厨柜与居民会所泳池",
@@ -92,6 +97,7 @@
       type: "Condo",
       tenure: "Freehold",
       price: 338000,
+      isNew: true,
       specs: "3 Bed · 2 Bath · 1,033 sqft",
       furnishingEn: "Fully Furnished (Waterpark Pool)",
       furnishingZh: "全套家私 · 带水上乐园泳池",
@@ -108,6 +114,7 @@
       type: "Landed",
       tenure: "Freehold",
       price: 495000,
+      isNew: false,
       specs: "3 Bed · 2 Bath · 3,600 sqft Land",
       furnishingEn: "Large Side Garden · Below RM500k",
       furnishingZh: "超大侧花园屋地 · 50万以下",
@@ -124,6 +131,7 @@
       type: "Condo",
       tenure: "Freehold",
       price: 365000,
+      isNew: false,
       specs: "3 Bed · 2 Bath · 1,200 sqft",
       furnishingEn: "Golf Course Balcony View",
       furnishingZh: "阳台直望高尔夫球场绿景",
@@ -256,10 +264,12 @@
 
   const state = {
     lang: "en",
+    theme: localStorage.getItem("pv_theme") || "a",
     search: "",
     area: "all",
     type: "all",
-    maxBudget: 99999999
+    maxBudget: 99999999,
+    viewedIds: new Set()
   };
 
   function formatRM(num) {
@@ -288,17 +298,33 @@
     }
   }
 
+  // --- Live 3-Theme Switcher ---
+  window.setBasicTheme = function (themeId) {
+    state.theme = themeId;
+    document.body.setAttribute("data-theme", themeId);
+    localStorage.setItem("pv_theme", themeId);
+
+    ["a", "b", "c"].forEach((id) => {
+      const btn = document.getElementById("theme-btn-" + id);
+      if (!btn) return;
+      const active = id === themeId;
+      btn.className = active
+        ? "px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 bg-white text-slate-900 whitespace-nowrap shadow-sm"
+        : "px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 bg-white/10 text-slate-200 hover:bg-white/20 whitespace-nowrap";
+    });
+  };
+
   window.setBasicLang = function (lang) {
     state.lang = lang;
     const enBtn = document.getElementById("basic-lang-en");
     const zhBtn = document.getElementById("basic-lang-zh");
 
     if (lang === "en") {
-      enBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-emerald-500 text-navy-950";
-      zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-300 hover:text-white";
+      enBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all btn-brand-primary";
+      zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 hover:text-slate-900";
     } else {
-      zhBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-emerald-500 text-navy-950";
-      enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-300 hover:text-white";
+      zhBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all btn-brand-primary";
+      enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 hover:text-slate-900";
     }
 
     const isZh = lang === "zh";
@@ -323,7 +349,7 @@
       : "Ipoh Subsale Listings (Examples)";
     document.getElementById("basic-listings-sub").textContent = isZh
       ? "每一张卡片对应一套独立实盘，点击即可查看照片、户型参数并直接 WhatsApp 联系。"
-      : "Individual subsale units across Ipoh — tap any listing to view full photos, specs, and direct agent contact.";
+      : "Individual subsale units across Ipoh — tap any listing to view full photos, specs, and direct WhatsApp inquiry.";
     document.getElementById("basic-blog-heading").textContent = isZh
       ? "怡保买房指南与市场部落格 (Blog)"
       : "Ipoh Real Estate Blog & Buying Guides";
@@ -377,7 +403,7 @@
           <p class="text-sm font-semibold text-slate-600 mb-3">${
             state.lang === "zh" ? "未找到符合条件的怡保房源" : "No matching Ipoh listings found."
           }</p>
-          <button onclick="resetBasicFilters()" class="px-4 py-2 rounded-xl bg-emerald-500 text-navy-950 text-xs font-bold">${
+          <button onclick="resetBasicFilters()" class="px-4 py-2 rounded-xl btn-brand-primary text-xs font-bold">${
             state.lang === "zh" ? "重置筛选" : "Reset Filters"
           }</button>
         </div>`;
@@ -387,15 +413,19 @@
     grid.innerHTML = list
       .map((item) => {
         const agent = findAgent(item.agentId);
+        const isViewed = state.viewedIds.has(item.id);
         return `
-          <article onclick="openListingModal('${item.id}')" class="prop-card bg-white rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col justify-between shadow-sm">
+          <article onclick="openListingModal('${item.id}')" class="prop-card rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col justify-between shadow-sm">
             <div>
-              <div class="relative h-44 bg-navy-900 overflow-hidden">
+              <div class="relative h-44 bg-slate-200 overflow-hidden">
                 <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.titleEn)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
-                <div class="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
                 <div class="absolute top-2.5 left-2.5 right-2.5 flex justify-between gap-1.5">
-                  <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-navy-950 text-[10px] font-extrabold">Subsale · ${escapeHtml(item.type)}</span>
-                  <span class="px-2 py-0.5 rounded-full bg-black/55 text-white text-[10px] font-semibold backdrop-blur-sm">${escapeHtml(item.tenure)}</span>
+                  <div class="flex items-center gap-1">
+                    <span class="px-2 py-0.5 rounded-full ${isViewed ? "bg-slate-400 text-white" : "btn-brand-primary"} text-[10px] font-extrabold">${isViewed ? "Viewed" : "For Sale"}</span>
+                    ${item.isNew ? `<span class="px-2 py-0.5 rounded-full badge-price-drop text-[10px] font-bold">New</span>` : ""}
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-white/95 text-slate-800 text-[10px] font-bold">${escapeHtml(item.tenure)}</span>
                 </div>
                 <div class="absolute bottom-2.5 left-3 right-3 text-white font-extrabold text-base">
                   ${formatRM(item.price)}
@@ -403,16 +433,16 @@
               </div>
 
               <div class="p-3.5">
-                <div class="text-[11px] font-bold text-emerald-700 mb-0.5">${escapeHtml(item.area)}</div>
-                <h3 class="text-sm font-extrabold text-navy-900 leading-snug mb-1.5 line-clamp-2">${escapeHtml(pick(item, "titleEn", "titleZh"))}</h3>
+                <div class="text-[11px] font-bold text-brand-primary mb-0.5">${escapeHtml(item.area)}</div>
+                <h3 class="text-sm font-extrabold text-slate-900 leading-snug mb-1.5 line-clamp-2">${escapeHtml(pick(item, "titleEn", "titleZh"))}</h3>
                 <div class="text-xs text-slate-500 mb-2">${escapeHtml(item.specs)}</div>
-                <div class="text-[11px] text-slate-600 bg-slate-50 rounded-lg px-2.5 py-1.5">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</div>
+                <div class="text-[11px] text-slate-600 bg-[#F8FAFC] border border-slate-100 rounded-lg px-2.5 py-1.5">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</div>
               </div>
             </div>
 
             <div class="px-3.5 pb-3.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
               <span class="text-slate-500 truncate">${escapeHtml(agent.name.replace(" (Example)", ""))}</span>
-              <span class="font-bold text-emerald-700 shrink-0">${state.lang === "zh" ? "看详情 →" : "View →"}</span>
+              <span class="font-bold text-brand-primary shrink-0">${state.lang === "zh" ? "看详情 →" : "View →"}</span>
             </div>
           </article>`;
       })
@@ -423,20 +453,20 @@
     const grid = document.getElementById("basic-blog-grid");
     grid.innerHTML = BLOG_POSTS.map(
       (post) => `
-      <article onclick="openBlogModal('${post.id}')" class="prop-card bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col sm:flex-row">
-        <div class="sm:w-44 h-44 sm:h-auto shrink-0 bg-navy-900 overflow-hidden">
+      <article onclick="openBlogModal('${post.id}')" class="prop-card bg-[#F8FAFC] rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col sm:flex-row">
+        <div class="sm:w-44 h-44 sm:h-auto shrink-0 bg-slate-200 overflow-hidden">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.titleEn)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
         </div>
-        <div class="p-4 sm:p-5 flex flex-col justify-between">
+        <div class="p-4 sm:p-5 flex flex-col justify-between bg-white flex-1">
           <div>
             <div class="flex items-center gap-2 text-[11px] mb-1.5">
-              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">${escapeHtml(pick(post, "categoryEn", "categoryZh"))}</span>
+              <span class="px-2 py-0.5 rounded badge-accent-soft border font-bold">${escapeHtml(pick(post, "categoryEn", "categoryZh"))}</span>
               <span class="text-slate-400">${escapeHtml(post.date)} &middot; ${escapeHtml(post.readTime)}</span>
             </div>
-            <h3 class="text-base font-extrabold text-navy-900 leading-snug mb-2">${escapeHtml(pick(post, "titleEn", "titleZh"))}</h3>
+            <h3 class="text-base font-extrabold text-slate-900 leading-snug mb-2">${escapeHtml(pick(post, "titleEn", "titleZh"))}</h3>
             <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">${escapeHtml(pick(post, "excerptEn", "excerptZh"))}</p>
           </div>
-          <div class="mt-3 text-xs font-bold text-emerald-700">${state.lang === "zh" ? "阅读全文 →" : "Read Full Article →"}</div>
+          <div class="mt-3 text-xs font-bold text-brand-primary">${state.lang === "zh" ? "阅读全文 →" : "Read Full Article →"}</div>
         </div>
       </article>`
     ).join("");
@@ -449,51 +479,53 @@
         (a) => `
       <div class="bg-white rounded-2xl border border-slate-200 p-4 flex items-center justify-between gap-3 shadow-sm">
         <div class="flex items-center gap-3 min-w-0">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${a.avatarBg} text-white font-bold flex items-center justify-center shrink-0">${a.initials}</div>
+          <div class="w-11 h-11 rounded-xl btn-brand-primary font-bold flex items-center justify-center shrink-0">${a.initials}</div>
           <div class="min-w-0">
-            <div class="font-extrabold text-sm text-navy-900 truncate">${escapeHtml(a.name)}</div>
+            <div class="font-extrabold text-sm text-slate-900 truncate">${escapeHtml(a.name)}</div>
             <div class="text-xs text-slate-500 truncate">${escapeHtml(pick(a, "roleEn", "roleZh"))}</div>
-            <div class="text-[11px] text-emerald-700 font-semibold">${escapeHtml(a.renCode)}</div>
+            <div class="text-[11px] text-brand-primary font-semibold">${escapeHtml(a.renCode)}</div>
           </div>
         </div>
-        <button onclick="openBasicInquiry('Consultation with ${escapeHtml(a.name)}')" class="px-3 py-2 rounded-xl bg-navy-900 text-white text-xs font-bold shrink-0">Chat</button>
+        <button onclick="openBasicInquiry('Consultation with ${escapeHtml(a.name)}')" class="px-3 py-2 rounded-xl btn-whatsapp text-xs shrink-0">WhatsApp</button>
       </div>`
       )
       .join("");
   }
 
   window.openListingModal = function (id) {
+    state.viewedIds.add(id);
+    renderListings();
     const item = BASIC_LISTINGS.find((l) => l.id === id);
     if (!item) return;
     const agent = findAgent(item.agentId);
     const title = pick(item, "titleEn", "titleZh");
 
     document.getElementById("basic-modal-content").innerHTML = `
-      <div class="relative h-56 sm:h-64 shrink-0 bg-navy-900 overflow-hidden">
+      <div class="relative h-56 sm:h-64 shrink-0 bg-slate-900 overflow-hidden">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-transparent to-black/30"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-black/25"></div>
         <button onclick="closeBasicModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 text-white flex items-center justify-center">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
         <div class="absolute bottom-4 left-4 right-4 text-white">
-          <div class="text-xs font-bold text-emerald-300">${escapeHtml(item.area)} &middot; ${escapeHtml(item.tenure)}</div>
+          <div class="text-xs font-bold text-slate-200">${escapeHtml(item.area)} &middot; ${escapeHtml(item.tenure)}</div>
           <h3 class="text-lg sm:text-2xl font-extrabold">${escapeHtml(title)}</h3>
           <div class="text-lg font-extrabold text-amber-300 mt-0.5">${formatRM(item.price)}</div>
         </div>
       </div>
-      <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 space-y-4">
-        <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50 rounded-xl p-3.5 border border-slate-200">
-          <div><span class="text-slate-400 block">Specs</span><strong class="text-navy-900">${escapeHtml(item.specs)}</strong></div>
-          <div><span class="text-slate-400 block">Condition</span><strong class="text-navy-900">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</strong></div>
+      <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 space-y-4 bg-white">
+        <div class="grid grid-cols-2 gap-3 text-xs bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-200">
+          <div><span class="text-slate-400 block">Specs</span><strong class="text-slate-900">${escapeHtml(item.specs)}</strong></div>
+          <div><span class="text-slate-400 block">Condition</span><strong class="text-slate-900">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</strong></div>
         </div>
         <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(pick(item, "descEn", "descZh"))}</p>
       </div>
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+      <div class="p-4 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
         <div class="text-xs">
-          <div class="font-bold text-navy-900">${escapeHtml(agent.name)}</div>
+          <div class="font-bold text-slate-900">${escapeHtml(agent.name)}</div>
           <div class="text-slate-500">${escapeHtml(agent.renCode)}</div>
         </div>
-        <button onclick="openBasicInquiry('${escapeHtml(title)}')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs">
+        <button onclick="openBasicInquiry('${escapeHtml(title)}')" class="px-5 py-2.5 rounded-xl btn-whatsapp text-xs">
           ${state.lang === "zh" ? "WhatsApp 预约看房" : "Inquire on WhatsApp"}
         </button>
       </div>`;
@@ -508,24 +540,24 @@
     const title = pick(post, "titleEn", "titleZh");
 
     document.getElementById("basic-modal-content").innerHTML = `
-      <div class="relative h-48 sm:h-56 shrink-0 bg-navy-900 overflow-hidden">
-        <img src="${escapeHtml(post.image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover opacity-80" />
-        <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-black/30"></div>
+      <div class="relative h-48 sm:h-56 shrink-0 bg-slate-900 overflow-hidden">
+        <img src="${escapeHtml(post.image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover opacity-85" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-black/25"></div>
         <button onclick="closeBasicModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 text-white flex items-center justify-center">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
         <div class="absolute bottom-4 left-4 right-4 text-white">
-          <div class="text-xs font-bold text-emerald-300 mb-1">${escapeHtml(pick(post, "categoryEn", "categoryZh"))} &middot; ${escapeHtml(post.readTime)}</div>
+          <div class="text-xs font-bold text-slate-200 mb-1">${escapeHtml(pick(post, "categoryEn", "categoryZh"))} &middot; ${escapeHtml(post.readTime)}</div>
           <h3 class="text-lg sm:text-2xl font-extrabold leading-snug">${escapeHtml(title)}</h3>
         </div>
       </div>
-      <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 blog-prose">
+      <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 blog-prose bg-white">
         ${pick(post, "bodyEn", "bodyZh")}
       </div>
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+      <div class="p-4 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
         <span class="text-xs text-slate-600">${state.lang === "zh" ? "想找文中提到的社区房源？" : "Looking for homes mentioned in this guide?"}</span>
-        <button onclick="openBasicInquiry('Blog Inquiry: ${escapeHtml(title)}')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs shrink-0">
-          ${state.lang === "zh" ? "咨询怡保顾问" : "Ask Our Ipoh Agent"}
+        <button onclick="openBasicInquiry('Blog Inquiry: ${escapeHtml(title)}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shrink-0">
+          ${state.lang === "zh" ? "WhatsApp 咨询顾问" : "WhatsApp Ipoh Agent"}
         </button>
       </div>`;
     document.getElementById("basic-modal").classList.remove("hidden");
@@ -560,8 +592,8 @@
     box.classList.remove("hidden");
     box.innerHTML =
       state.lang === "zh"
-        ? `<div class="font-bold text-emerald-800">✓ 已收到您的咨询！</div><p>感谢 ${escapeHtml(name)}，顾问将通过 WhatsApp (${escapeHtml(phone)}) 回复关于「${escapeHtml(ctx)}」的详情。</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-emerald-600 text-white font-bold">关闭</button>`
-        : `<div class="font-bold text-emerald-800">✓ Inquiry Received!</div><p>Thank you ${escapeHtml(name)}, our Ipoh agent will message you on WhatsApp (${escapeHtml(phone)}) regarding "${escapeHtml(ctx)}".</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-emerald-600 text-white font-bold">Done</button>`;
+        ? `<div class="font-bold text-emerald-800">✓ 已收到您的咨询！</div><p>感谢 ${escapeHtml(name)}，顾问将通过 WhatsApp (${escapeHtml(phone)}) 回复关于「${escapeHtml(ctx)}」的详情。</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg btn-brand-primary font-bold">关闭</button>`
+        : `<div class="font-bold text-emerald-800">✓ Inquiry Received!</div><p>Thank you ${escapeHtml(name)}, our Ipoh agent will message you on WhatsApp (${escapeHtml(phone)}) regarding "${escapeHtml(ctx)}".</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg btn-brand-primary font-bold">Done</button>`;
   };
 
   function bindEvents() {
@@ -591,6 +623,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     bindEvents();
+    setBasicTheme(state.theme);
     setBasicLang("en");
   });
 })();

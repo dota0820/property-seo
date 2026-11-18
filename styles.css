@@ -1,11 +1,56 @@
-/* PrimeVerse Ipoh Realty - Mobile-First Property Portal Styles */
+/* PrimeVerse Ipoh Realty - 3-Theme Switchable Design System + 3 Golden UI Rules */
 
 :root {
-  --navy-deep: #0b132b;
-  --navy-mid: #1c2541;
-  --emerald-brand: #10b981;
-  --gold-accent: #d97706;
-  --slate-bg: #f8fafc;
+  --canvas-white: #ffffff;
+  --canvas-slate: #f8fafc;
+  --whatsapp-green: #25d366;
+  --whatsapp-green-hover: #1ebe5d;
+  --pin-rent: #7c3aed;
+  --pin-viewed: #94a3b8;
+  --badge-new-green: #16a34a;
+
+  /* Default Theme A: Tech Blue + Vibrant Orange */
+  --brand-primary: #006aff;
+  --brand-primary-hover: #1e40af;
+  --brand-primary-soft: #eff6ff;
+  --brand-primary-border: #bfdbfe;
+  --brand-accent: #f97316;
+  --brand-accent-soft: #fff7ed;
+  --brand-accent-border: #fed7aa;
+  --brand-dark: #0f172a;
+}
+
+body[data-theme="a"] {
+  --brand-primary: #006aff;
+  --brand-primary-hover: #1e40af;
+  --brand-primary-soft: #eff6ff;
+  --brand-primary-border: #bfdbfe;
+  --brand-accent: #f97316;
+  --brand-accent-soft: #fff7ed;
+  --brand-accent-border: #fed7aa;
+  --brand-dark: #0f172a;
+}
+
+body[data-theme="b"] {
+  --brand-primary: #0d9488;
+  --brand-primary-hover: #15803d;
+  --brand-primary-soft: #f0fdfa;
+  --brand-primary-border: #99f6e4;
+  --brand-accent: #d97706;
+  --brand-accent-soft: #fffbeb;
+  --brand-accent-border: #fde68a;
+  --brand-dark: #064e3b;
+}
+
+body[data-theme="c"] {
+  --brand-primary: #e11d48;
+  --brand-primary-hover: #be123c;
+  --brand-primary-soft: #fff1f2;
+  --brand-primary-border: #fecdd3;
+  --brand-accent: #1e293b;
+  --brand-accent-soft: #f1f5f9;
+  --brand-accent-border: #cbd5e1;
+  --brand-dark: #1e293b;
 }
 
 html {
@@ -15,7 +60,7 @@ html {
 
 body {
   font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-  background-color: var(--slate-bg);
+  background-color: var(--canvas-slate);
   color: #0f172a;
 }
 
@@ -29,47 +74,133 @@ body {
   display: none;
 }
 
-/* Sticky Glassmorphism Navbar */
-.glass-nav {
-  background: rgba(11, 19, 43, 0.95);
+/* Rule 1: Clean White Glass Header (85%+ White/Light Grey Canvas) */
+.clean-white-nav {
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Sticky Mobile Bottom Bar */
+/* Clean White Mobile Bottom Navigation */
 .mobile-bottom-nav {
-  background: rgba(11, 19, 43, 0.97);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Luxury Hero Scrim over Architectural Photo */
-.hero-backdrop {
-  position: relative;
-  background-color: #0b132b;
+/* Dynamic Theme Utility Classes */
+.btn-brand-primary {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+  transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.hero-scrim {
-  background: linear-gradient(
-    180deg,
-    rgba(7, 13, 31, 0.84) 0%,
-    rgba(11, 19, 43, 0.8) 55%,
-    rgba(11, 19, 43, 0.96) 100%
-  );
+.btn-brand-primary:hover {
+  background-color: var(--brand-primary-hover);
+}
+
+.text-brand-primary {
+  color: var(--brand-primary);
+}
+
+.bg-brand-primary {
+  background-color: var(--brand-primary);
+}
+
+.bg-brand-soft {
+  background-color: var(--brand-primary-soft);
+  color: var(--brand-primary);
+  border-color: var(--brand-primary-border);
+}
+
+.badge-brand-accent {
+  background-color: var(--brand-accent);
+  color: #ffffff;
+}
+
+.badge-accent-soft {
+  background-color: var(--brand-accent-soft);
+  color: var(--brand-accent);
+  border-color: var(--brand-accent-border);
+}
+
+.border-brand-primary {
+  border-color: var(--brand-primary) !important;
+}
+
+/* Rule 3: Dedicated Official WhatsApp #25D366 Button */
+.btn-whatsapp {
+  background-color: var(--whatsapp-green);
+  color: #052e16;
+  font-weight: 800;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-whatsapp:hover {
+  background-color: var(--whatsapp-green-hover);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+}
+
+/* Rule 2: Map Price Pin States */
+.map-canvas-bg {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(#cbd5e1 1px, transparent 1px),
+    linear-gradient(to right, rgba(226, 232, 240, 0.55) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.55) 1px, transparent 1px);
+  background-size: 24px 24px, 48px 48px, 48px 48px;
+}
+
+.map-pin-sale {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+}
+
+.map-pin-rent {
+  background-color: var(--pin-rent);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.24);
+}
+
+.map-pin-viewed {
+  background-color: var(--pin-viewed) !important;
+  color: #ffffff !important;
+  box-shadow: none;
+}
+
+.badge-price-drop {
+  background-color: var(--badge-new-green);
+  color: #ffffff;
+}
+
+/* Active Search Tab & Lifestyle Pill */
+.search-tab-active {
+  background-color: var(--brand-primary) !important;
+  color: #ffffff !important;
+}
+
+.lifestyle-pill-active {
+  background-color: var(--brand-primary) !important;
+  color: #ffffff !important;
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
 }
 
 /* Property Card Elevation & Image Zoom */
 .prop-card {
+  background-color: #ffffff;
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
 }
 
 @media (hover: hover) {
   .prop-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 22px 42px -12px rgba(11, 19, 43, 0.16);
+    box-shadow: 0 20px 38px -12px rgba(15, 23, 42, 0.12);
   }
 
   .prop-card:hover img.card-photo {
@@ -86,7 +217,7 @@ body {
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Range Slider Styling (touch-friendly 24px thumb) */
+/* Range Slider Styling */
 input[type="range"].custom-range {
   -webkit-appearance: none;
   appearance: none;
@@ -102,10 +233,10 @@ input[type="range"].custom-range::-webkit-slider-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #0b132b;
-  border: 3px solid #10b981;
+  background: #ffffff;
+  border: 4px solid var(--brand-primary);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.22);
   transition: transform 0.15s ease;
 }
 
@@ -144,19 +275,11 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
   border-radius: 999px;
 }
 
-/* Active Lifestyle Pill */
-.lifestyle-pill-active {
-  background-color: #10b981 !important;
-  color: #06281e !important;
-  border-color: #10b981 !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-}
-
 /* Blog Reader Prose */
 .blog-prose h4 {
   font-size: 1rem;
   font-weight: 800;
-  color: #0b132b;
+  color: #0f172a;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
