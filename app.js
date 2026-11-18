@@ -1,4 +1,4 @@
-// PrimeVerse Realty Group - Consumer Property Portal Logic
+// PrimeVerse Ipoh Realty - Consumer Subsale Property Portal Logic
 
 (function () {
   const DATA = window.APP_DATA;
@@ -6,11 +6,11 @@
   const state = {
     lang: "zh",
     search: "",
-    searchTab: "all", // 'all' | 'New Launch' | 'Subsale' | 'investment'
+    searchTab: "all", // 'all' | 'Landed' | 'Condo' | 'investment'
     area: "all",
     maxBudget: 99999999,
     topic: "all",
-    compareIds: ["trx-core-residence", "klcc-sky-atelier"],
+    compareIds: ["upper-east-tiger-lane", "the-haven-tambun"],
     activeAgentId: null,
     activeProjectId: null,
     activeModalTab: "overview",
@@ -81,8 +81,8 @@
       state.lang === "zh" ? DATA.brand.addressZh : DATA.brand.addressEn;
     document.getElementById("calc-cta-text").textContent =
       state.lang === "zh"
-        ? "将完整贷款评估与印花税明细发到我 WhatsApp"
-        : "WhatsApp Me the Full Loan & Stamp Duty Breakdown";
+        ? "将怡保贷款评估与银行估价发到我 WhatsApp"
+        : "WhatsApp Me This Ipoh Loan & Valuation Breakdown";
 
     updateCalculatorLabels();
     renderLifestylePills();
@@ -173,14 +173,14 @@
   function getFilteredProjects() {
     const q = state.search.trim().toLowerCase();
     return DATA.projects.filter((p) => {
-      if (state.searchTab === "New Launch" && p.category !== "New Launch") return false;
-      if (state.searchTab === "Subsale" && p.category !== "Subsale") return false;
+      if (state.searchTab === "Landed" && p.category !== "Landed") return false;
+      if (state.searchTab === "Condo" && p.category !== "Condo") return false;
       if (state.searchTab === "investment" && p.rentalYield < 6.0) return false;
       if (state.area !== "all" && p.area !== state.area) return false;
       if (p.priceFrom > state.maxBudget) return false;
       if (state.topic !== "all" && !p.topics.includes(state.topic)) return false;
       if (q) {
-        const hay = `${p.name} ${p.area} ${p.mrtStation} ${p.summaryEn} ${p.summaryZh}`.toLowerCase();
+        const hay = `${p.name} ${p.area} ${p.amenityDrive} ${p.summaryEn} ${p.summaryZh}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -197,10 +197,10 @@
       grid.innerHTML = `
         <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-10 text-center">
           <p class="text-slate-600 font-semibold mb-3">${
-            state.lang === "zh" ? "当前筛选条件下暂无匹配楼盘" : "No residences match your current filters."
+            state.lang === "zh" ? "当前筛选条件下暂无匹配怡保房源" : "No Ipoh properties match your current filters."
           }</p>
           <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-emerald-500 text-navy-950 font-bold text-xs">${
-            state.lang === "zh" ? "查看全部精选楼盘" : "Show All Properties"
+            state.lang === "zh" ? "查看全部怡保严选楼盘" : "Show All Ipoh Properties"
           }</button>
         </div>`;
       return;
@@ -212,7 +212,6 @@
         const inCompare = state.compareIds.includes(p.id);
         const badge = pick(p, "badgeEn", "badgeZh");
         const summary = pick(p, "summaryEn", "summaryZh");
-        const mrtText = p.mrtDistanceM <= 300 ? `${p.mrtDistanceM}m Walk` : `${(p.mrtDistanceM / 1000).toFixed(1)}km`;
 
         return `
           <article class="prop-card bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between shadow-sm">
@@ -224,10 +223,10 @@
 
                 <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
                   <span class="px-2.5 py-1 rounded-full bg-emerald-500 text-navy-950 text-[11px] font-extrabold shadow-sm">
-                    ✓ ${p.verifiedUnits.length} ${state.lang === "zh" ? "套认证实盘" : "Verified Units"}
+                    ✓ ${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 实盘" : "Example Units"}
                   </span>
                   <span class="px-2.5 py-1 rounded-full bg-navy-950/75 backdrop-blur-sm text-white text-[11px] font-semibold border border-white/15">
-                    ${escapeHtml(p.category)}
+                    Subsale · ${escapeHtml(p.category)}
                   </span>
                 </div>
 
@@ -250,7 +249,7 @@
               <!-- Key Numbers Strip -->
               <div class="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100 bg-slate-50/70 text-center py-2.5">
                 <div>
-                  <div class="text-[10px] text-slate-500 uppercase font-semibold">${state.lang === "zh" ? "总价起" : "From"}</div>
+                  <div class="text-[10px] text-slate-500 uppercase font-semibold">${state.lang === "zh" ? "参考价起" : "From"}</div>
                   <div class="text-xs sm:text-sm font-extrabold text-navy-900">${formatRM(p.priceFrom)}</div>
                 </div>
                 <div>
@@ -258,7 +257,7 @@
                   <div class="text-xs sm:text-sm font-extrabold text-navy-900">RM ${p.psfAvg}</div>
                 </div>
                 <div>
-                  <div class="text-[10px] text-slate-500 uppercase font-semibold">${state.lang === "zh" ? "租金回报" : "Est. Yield"}</div>
+                  <div class="text-[10px] text-slate-500 uppercase font-semibold">${state.lang === "zh" ? "预估回酬" : "Est. Yield"}</div>
                   <div class="text-xs sm:text-sm font-extrabold text-emerald-600">${p.rentalYield}%</div>
                 </div>
               </div>
@@ -267,9 +266,9 @@
               <div class="p-4">
                 <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-3">${escapeHtml(summary)}</p>
                 <div class="flex flex-wrap gap-1.5">
-                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">🚇 MRT ${escapeHtml(mrtText)}</span>
                   <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">📐 ${escapeHtml(p.sqftSummary)}</span>
-                  ${p.petFriendly ? `<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold">🐾 Pet-Friendly</span>` : ""}
+                  ${p.gatedGuarded ? `<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold">🛡️ Gated & Guarded</span>` : ""}
+                  ${p.homestayHot ? `<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-semibold">🏨 Homestay / Yield</span>` : ""}
                 </div>
               </div>
             </div>
@@ -284,7 +283,7 @@
                     <div class="text-slate-400">${escapeHtml(agent.renCode)}</div>
                   </div>
                 </div>
-                <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">${escapeHtml(p.completion)}</span>
+                <span class="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">${escapeHtml(p.maintenanceLabel)}</span>
               </div>
 
               <div class="grid grid-cols-12 gap-2">
@@ -309,7 +308,7 @@
     refreshIcons();
   }
 
-  // --- Neighbourhood Area Guides ---
+  // --- Ipoh Neighbourhood Area Guides ---
   function renderAreaGuides() {
     const grid = document.getElementById("area-guides-grid");
     grid.innerHTML = DATA.areaGuides
@@ -331,7 +330,7 @@
       .join("");
   }
 
-  // --- Condo Comparison Tool ---
+  // --- Ipoh Comparison Tool ---
   window.toggleCompare = function (projectId) {
     const idx = state.compareIds.indexOf(projectId);
     if (idx > -1) {
@@ -364,15 +363,19 @@
 
     const rows = [
       {
-        label: state.lang === "zh" ? "区域 & 类别" : "Area & Category",
-        render: (p) => `<span class="font-semibold text-navy-900">${escapeHtml(p.area)}</span> · <span class="text-xs text-slate-500">${escapeHtml(p.category)}</span>`
+        label: state.lang === "zh" ? "怡保区域 & 房产类型" : "Ipoh Area & Type",
+        render: (p) => `<span class="font-semibold text-navy-900">${escapeHtml(p.area)}</span> · <span class="text-xs text-slate-500">${escapeHtml(p.category)} (${escapeHtml(p.tenure)})</span>`
       },
       {
-        label: state.lang === "zh" ? "起步总价" : "Entry Price",
+        label: state.lang === "zh" ? "二手参考价起" : "Subsale Entry Price",
         render: (p) => `<span class="font-extrabold text-navy-900">${formatRM(p.priceFrom)}</span>`
       },
       {
-        label: state.lang === "zh" ? "平均实测尺价" : "Avg Transacted PSF",
+        label: state.lang === "zh" ? "房型与面积" : "Layout & Size",
+        render: (p) => `${escapeHtml(p.bedsSummary)} · ${escapeHtml(p.sqftSummary)}`
+      },
+      {
+        label: state.lang === "zh" ? "平均参考尺价" : "Avg Subsale PSF",
         render: (p) => `RM ${p.psfAvg} / sqft`
       },
       {
@@ -380,20 +383,15 @@
         render: (p) => `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs">${p.rentalYield}%</span>`
       },
       {
-        label: state.lang === "zh" ? "地铁 / RTS 实测距离" : "MRT / RTS Distance",
-        render: (p) => `${p.mrtDistanceM}m (${escapeHtml(p.mrtStation)})`
+        label: state.lang === "zh" ? "商圈 / 医院 / 学校车程" : "Key Amenities Drive",
+        render: (p) => escapeHtml(p.amenityDrive)
       },
       {
-        label: state.lang === "zh" ? "物业管理费" : "Maintenance Fee",
-        render: (p) => `RM ${p.maintenancePsf.toFixed(2)} psf`
+        label: state.lang === "zh" ? "保安 / 管理费" : "Security / Maint. Fee",
+        render: (p) => escapeHtml(p.maintenanceLabel)
       },
       {
-        label: state.lang === "zh" ? "宠物友好 / 外籍资格" : "Pets / Foreigner",
-        render: (p) =>
-          `${p.petFriendly ? "🐾 Allowed" : "No Pets"} · ${p.foreignerEligible ? "🌏 Foreigner OK" : "Local / >RM1M"}`
-      },
-      {
-        label: state.lang === "zh" ? "楼盘定位标签" : "Key Highlight",
+        label: state.lang === "zh" ? "楼盘特色标签" : "Highlight",
         render: (p) => `<span class="text-xs text-slate-700">${escapeHtml(pick(p, "badgeEn", "badgeZh"))}</span>`
       }
     ];
@@ -402,7 +400,7 @@
       <table class="w-full text-left border-collapse min-w-[640px]">
         <thead>
           <tr class="bg-navy-900 text-white">
-            <th class="p-4 text-xs font-bold uppercase tracking-wider w-48">${state.lang === "zh" ? "对比项目" : "Metric"}</th>
+            <th class="p-4 text-xs font-bold uppercase tracking-wider w-48">${state.lang === "zh" ? "怡保对比维度" : "Ipoh Metric"}</th>
             ${selected
               .map(
                 (p) => `
@@ -410,7 +408,7 @@
                 <div class="flex items-center justify-between gap-2">
                   <div>
                     <div class="text-sm font-extrabold">${escapeHtml(p.name)}</div>
-                    <div class="text-[11px] text-emerald-400 font-normal">${p.verifiedUnits.length} ${state.lang === "zh" ? "套认证单位" : "Verified Units"}</div>
+                    <div class="text-[11px] text-emerald-400 font-normal">${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 实盘" : "Example Units"}</div>
                   </div>
                   <button onclick="openProjectModal('${p.id}')" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-semibold">
                     ${state.lang === "zh" ? "查看" : "View"}
@@ -436,7 +434,16 @@
     `;
   }
 
-  // --- Mortgage, DSR & Malaysian MOT Stamp Duty Calculator ---
+  // --- Ipoh DSR, Mortgage & MOT Stamp Duty Calculator ---
+  window.applyDsrExample = function (price, rent) {
+    document.getElementById("slider-price").value = price;
+    document.getElementById("slider-rent").value = rent;
+    document.getElementById("slider-margin").value = 90;
+    document.getElementById("slider-rate").value = 4.0;
+    document.getElementById("slider-tenure").value = 35;
+    updateCalculators();
+  };
+
   function calculateMalaysiaMOT(price, isForeigner) {
     if (isForeigner) return price * 0.08;
     let duty = 0;
@@ -496,7 +503,7 @@
     cfEl.className = cashflow >= 0 ? "text-emerald-300" : "text-amber-300";
   }
 
-  // --- Specialists Roster ---
+  // --- Ipoh Specialists Roster ---
   function renderAgents() {
     const grid = document.getElementById("agents-grid");
     grid.innerHTML = DATA.agents
@@ -526,7 +533,7 @@
               <button onclick="selectAgentPortfolio('${a.id}')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-navy-900 text-xs font-bold transition-colors">
                 ${state.lang === "zh" ? "查看负责楼盘" : "View Listings"}
               </button>
-              <button onclick="openLeadModal('Direct Consultation with ${escapeHtml(a.name)} (${escapeHtml(a.renCode)})')" class="py-2.5 px-3 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold transition-colors">
+              <button onclick="openLeadModal('Ipoh Consultation with ${escapeHtml(a.name)} (${escapeHtml(a.renCode)})')" class="py-2.5 px-3 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold transition-colors">
                 WhatsApp
               </button>
             </div>
@@ -552,7 +559,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
         <div>
           <div class="text-xs text-emerald-700 font-bold">${escapeHtml(agent.areas.join(" · "))} · ${escapeHtml(agent.languages.join(" / "))}</div>
-          <h4 class="text-lg font-extrabold text-navy-900">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "主理认证房源列表" : "Active Curated Developments"}</h4>
+          <h4 class="text-lg font-extrabold text-navy-900">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
         </div>
         <button onclick="openLeadModal('Direct Inquiry to ${escapeHtml(agent.name)}')" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-bold text-xs">
           ${state.lang === "zh" ? "联系顾问看房" : "Contact Specialist"}
@@ -565,7 +572,7 @@
           <div class="bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center justify-between gap-3">
             <div>
               <div class="text-sm font-extrabold text-navy-900">${escapeHtml(p.name)}</div>
-              <div class="text-xs text-slate-500">${escapeHtml(p.area)} &middot; ${p.verifiedUnits.length} ${state.lang === "zh" ? "套认证单位" : "Verified Units"} &middot; ${formatRM(p.priceFrom)}+</div>
+              <div class="text-xs text-slate-500">${escapeHtml(p.area)} &middot; ${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 房源" : "Example Units"} &middot; ${formatRM(p.priceFrom)}+</div>
             </div>
             <button onclick="openProjectModal('${p.id}')" class="px-3 py-1.5 rounded-lg bg-navy-900 text-white text-xs font-bold hover:bg-navy-800">
               ${state.lang === "zh" ? "查看" : "View"}
@@ -578,22 +585,22 @@
   }
 
   // --- Architectural SVG Floor Plan Schematic ---
-  function renderFloorPlanSvg(fp) {
+  function renderFloorPlanSvg(fp, isLanded) {
     return `
       <svg viewBox="0 0 320 170" class="w-full h-36 bg-white rounded-xl border border-slate-200 mb-3" xmlns="http://www.w3.org/2000/svg">
         <rect x="10" y="10" width="300" height="150" fill="#f8fafc" stroke="#0f172a" stroke-width="2" />
         <rect x="10" y="10" width="120" height="85" fill="#ecfdf5" stroke="#334155" stroke-width="1.2" />
-        <text x="70" y="55" font-size="10" font-weight="bold" text-anchor="middle" fill="#065f46">Living &amp; Dining</text>
+        <text x="70" y="55" font-size="10" font-weight="bold" text-anchor="middle" fill="#065f46">${isLanded ? "Car Porch / Living" : "Living & Dining"}</text>
         <rect x="130" y="10" width="90" height="85" fill="#ffffff" stroke="#334155" stroke-width="1.2" />
-        <text x="175" y="55" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Master Suite</text>
+        <text x="175" y="55" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Master Bedroom</text>
         <rect x="220" y="10" width="90" height="55" fill="#ffffff" stroke="#334155" stroke-width="1.2" />
-        <text x="265" y="40" font-size="9" text-anchor="middle" fill="#334155">${fp.beds > 1 ? "Bedroom 2" : "Study / Flex"}</text>
+        <text x="265" y="40" font-size="9" text-anchor="middle" fill="#334155">${fp.beds} Beds Layout</text>
         <rect x="220" y="65" width="90" height="30" fill="#f1f5f9" stroke="#334155" stroke-width="1.2" />
         <text x="265" y="83" font-size="9" text-anchor="middle" fill="#475569">${fp.baths} Bath(s)</text>
         <rect x="10" y="95" width="180" height="65" fill="#fffbeb" stroke="#334155" stroke-width="1.2" />
-        <text x="100" y="130" font-size="10" font-weight="bold" text-anchor="middle" fill="#92400e">Kitchen &amp; Yard</text>
+        <text x="100" y="130" font-size="10" font-weight="bold" text-anchor="middle" fill="#92400e">${isLanded ? "Extended Wet Kitchen" : "Kitchen & Yard"}</text>
         <rect x="190" y="95" width="120" height="65" fill="#eff6ff" stroke="#334155" stroke-width="1.2" />
-        <text x="250" y="130" font-size="10" text-anchor="middle" fill="#1e40af">Sky Balcony (${fp.sqft} sqft)</text>
+        <text x="250" y="130" font-size="10" text-anchor="middle" fill="#1e40af">${isLanded ? "Garden / Backyard" : "Balcony"} (${fp.sqft} sqft)</text>
       </svg>
     `;
   }
@@ -640,11 +647,12 @@
     const agent = findAgent(p.specialistId);
     const pros = pick(p, "prosEn", "prosZh");
     const cons = pick(p, "consEn", "consZh");
+    const isLanded = p.category === "Landed";
 
     const tabs = [
-      { id: "overview", label: state.lang === "zh" ? "楼盘详情与真实测评" : "Overview & Highlights" },
-      { id: "units", label: `${state.lang === "zh" ? "在售认证单位" : "Verified Units"} (${p.verifiedUnits.length})` },
-      { id: "floorplans", label: state.lang === "zh" ? "户型图与尺价" : "Floor Plans" },
+      { id: "overview", label: state.lang === "zh" ? "社区介绍与真实优缺点" : "Overview & Highlights" },
+      { id: "units", label: `${state.lang === "zh" ? "Example 在售单位" : "Example Subsale Units"} (${p.verifiedUnits.length})` },
+      { id: "floorplans", label: state.lang === "zh" ? "户型规格与估价" : "Layouts & Valuation" },
       { id: "faq", label: `${state.lang === "zh" ? "买家常见问答" : "Buyer Q&A"} (${p.faqs.length})` }
     ];
 
@@ -655,31 +663,31 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
           <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
             <h4 class="font-extrabold text-emerald-900 text-sm mb-2.5">✓ ${
-              state.lang === "zh" ? "核心亮点与买点" : "Why Buyers Love This Project"
+              state.lang === "zh" ? "怡保买家喜欢的原因" : "Why Ipoh Buyers Love This Area"
             }</h4>
             <ul class="space-y-2 text-xs text-emerald-950">${pros.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
           <div class="rounded-2xl bg-amber-50 border border-amber-200 p-4">
             <h4 class="font-extrabold text-amber-900 text-sm mb-2.5">⚠ ${
-              state.lang === "zh" ? "看房前需注意" : "Good to Know Before Buying"
+              state.lang === "zh" ? "买二手房前要注意" : "Good to Check Before Buying"
             }</h4>
             <ul class="space-y-2 text-xs text-amber-950">${cons.map((item) => `<li>• ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
         </div>
         <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div><span class="text-slate-400 block">MRT / RTS</span><strong class="text-navy-900">${p.mrtDistanceM}m</strong></div>
-          <div><span class="text-slate-400 block">${state.lang === "zh" ? "物业管理费" : "Maintenance"}</span><strong class="text-navy-900">RM ${p.maintenancePsf.toFixed(2)} psf</strong></div>
-          <div><span class="text-slate-400 block">${state.lang === "zh" ? "交房时间" : "Completion"}</span><strong class="text-navy-900">${escapeHtml(p.completion)}</strong></div>
-          <div><span class="text-slate-400 block">${state.lang === "zh" ? "预估租金回报" : "Est. Yield"}</span><strong class="text-emerald-600">${p.rentalYield}%</strong></div>
+          <div><span class="text-slate-400 block">${state.lang === "zh" ? "周边车程" : "Key Amenities"}</span><strong class="text-navy-900">${escapeHtml(p.amenityDrive)}</strong></div>
+          <div><span class="text-slate-400 block">${state.lang === "zh" ? "保安 / 管理费" : "Maint. / Guard"}</span><strong class="text-navy-900">${escapeHtml(p.maintenanceLabel)}</strong></div>
+          <div><span class="text-slate-400 block">${state.lang === "zh" ? "产权状态" : "Tenure"}</span><strong class="text-navy-900">${escapeHtml(p.tenure)}</strong></div>
+          <div><span class="text-slate-400 block">${state.lang === "zh" ? "参考租金回报" : "Est. Yield"}</span><strong class="text-emerald-600">${p.rentalYield}%</strong></div>
         </div>
       `;
     } else if (state.activeModalTab === "units") {
       bodyHtml = `
         <div class="mb-3 text-xs text-slate-600 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-          <strong>${state.lang === "zh" ? "团队真房源保证：" : "Verified Exclusives:"}</strong> ${
+          <strong>${state.lang === "zh" ? "Example 示范实盘：" : "Sample Subsale Units:"}</strong> ${
             state.lang === "zh"
-              ? `以下在售单位均由主理顾问 ${escapeHtml(agent.name)} 实勘核实价格与钥匙状态，实时更新。`
-              : `Every unit below is directly verified by ${escapeHtml(agent.name)} with live availability.`
+              ? `以下数据参照 PropertyGuru 怡保当前真实挂牌水平整理，实际项目上线后由顾问 ${escapeHtml(agent.name)} 实时更新屋主盘源。`
+              : `Benchmarked against live PropertyGuru Ipoh subsale prices and managed directly by ${escapeHtml(agent.name)}.`
           }
         </div>
         <div class="space-y-3">
@@ -693,12 +701,12 @@
                   <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">${escapeHtml(pick(u, "tagEn", "tagZh"))}</span>
                 </div>
                 <div class="font-extrabold text-navy-900 text-sm">${escapeHtml(u.layout)} &middot; ${escapeHtml(u.level)}</div>
-                <div class="text-xs text-slate-500">${escapeHtml(u.furnishing)} &middot; RM ${u.psf} psf</div>
+                <div class="text-xs text-slate-500">${escapeHtml(u.furnishing)} &middot; ~RM ${u.psf} psf</div>
               </div>
               <div class="text-left sm:text-right">
                 <div class="text-lg font-extrabold text-emerald-700">${formatRM(u.price)}</div>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — Unit ${escapeHtml(u.code)} Private Viewing')" class="mt-1 px-3.5 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold">
-                  ${state.lang === "zh" ? "预约看房 / 查实盘" : "Book Viewing"}
+                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(u.code)} Viewing')" class="mt-1 px-3.5 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold">
+                  ${state.lang === "zh" ? "预约看房 / 查估价" : "Book Viewing"}
                 </button>
               </div>
             </div>`
@@ -713,13 +721,13 @@
             .map(
               (fp) => `
             <div class="rounded-2xl border border-slate-200 p-4 bg-slate-50">
-              ${renderFloorPlanSvg(fp)}
+              ${renderFloorPlanSvg(fp, isLanded)}
               <div class="font-extrabold text-navy-900 text-sm mb-1">${escapeHtml(fp.type)}</div>
               <div class="text-xs text-slate-500 mb-3">${fp.sqft} sqft &middot; ${fp.beds} Bed &middot; ${fp.baths} Bath &middot; Est. Rent: <strong class="text-emerald-700">${escapeHtml(fp.estRent)}</strong></div>
               <div class="flex items-center justify-between pt-2 border-t border-slate-200">
                 <span class="font-extrabold text-navy-900">${escapeHtml(fp.price)}</span>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(fp.type)} High-Res Floor Plan PDF')" class="text-xs font-bold text-emerald-700 hover:underline">
-                  ${state.lang === "zh" ? "索取高清 PDF 户型图 →" : "Get Floor Plan PDF →"}
+                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(fp.type)} Floor Plan & Bank Value')" class="text-xs font-bold text-emerald-700 hover:underline">
+                  ${state.lang === "zh" ? "索取实景视频与估价 →" : "Get Video & Bank Value →"}
                 </button>
               </div>
             </div>`
@@ -755,7 +763,7 @@
 
         <div class="absolute bottom-4 left-5 right-5 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <div class="text-xs font-bold text-emerald-300 mb-1">${escapeHtml(p.area)} &middot; ${escapeHtml(p.category)} &middot; ${escapeHtml(p.tenure)}</div>
+            <div class="text-xs font-bold text-emerald-300 mb-1">${escapeHtml(p.area)} &middot; Subsale ${escapeHtml(p.category)} &middot; ${escapeHtml(p.tenure)}</div>
             <h3 class="text-2xl sm:text-3xl font-extrabold">${escapeHtml(p.name)}</h3>
             <div class="text-xs text-slate-200 mt-1">From ${formatRM(p.priceFrom)} &middot; Avg RM ${p.psfAvg} psf &middot; Est. ${p.rentalYield}% Yield</div>
           </div>
@@ -795,10 +803,10 @@
           <div class="w-8 h-8 rounded-full bg-gradient-to-br ${agent.avatarBg} text-white font-bold flex items-center justify-center">${agent.initials}</div>
           <div>
             <div class="font-bold text-navy-900">${escapeHtml(agent.name)} (${escapeHtml(agent.renCode)})</div>
-            <div class="text-slate-500">${state.lang === "zh" ? "专属楼盘顾问 · 平均回复" : "Dedicated Specialist · Avg reply"} ${agent.avgReplyMin} min</div>
+            <div class="text-slate-500">${state.lang === "zh" ? "怡保区主理顾问 · 平均回复" : "Ipoh Specialist · Avg reply"} ${agent.avgReplyMin} min</div>
           </div>
         </div>
-        <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Floor Plan PDF')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs shadow-md">
+        <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-navy-950 font-extrabold text-xs shadow-md">
           ${t("modalDownloadCta")}
         </button>
       </div>
@@ -832,23 +840,23 @@
     box.innerHTML =
       state.lang === "zh"
         ? `
-      <div class="font-extrabold text-sm text-emerald-800">✓ 预约与资料请求已收到！</div>
-      <p>感谢 <strong>${escapeHtml(name)}</strong>！关于 <em>"${escapeHtml(ctx)}"</em> 的高清户型图与最新单位价单正在发送至您的 WhatsApp（${escapeHtml(phone)}）。</p>
+      <div class="font-extrabold text-sm text-emerald-800">✓ 怡保看房与估价请求已提交！</div>
+      <p>感谢 <strong>${escapeHtml(name)}</strong>！关于 <em>"${escapeHtml(ctx)}"</em> 的实拍资料与银行估价参考正发送至您的 WhatsApp（${escapeHtml(phone)}）。</p>
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full bg-gradient-to-br ${assignedAgent.avatarBg} text-white font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
-          <div class="font-bold text-navy-900">专属对接顾问：${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
-          <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内与您联系安排看房</div>
+          <div class="font-bold text-navy-900">怡保对接顾问：${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
+          <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内与您 WhatsApp 联系</div>
         </div>
       </div>
       <button onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-emerald-600 text-white font-bold">好的 / 完成</button>`
         : `
       <div class="font-extrabold text-sm text-emerald-800">✓ Request Confirmed!</div>
-      <p>Thank you, <strong>${escapeHtml(name)}</strong>! The brochure &amp; unit availability for <em>"${escapeHtml(ctx)}"</em> are on their way to your WhatsApp (${escapeHtml(phone)}).</p>
+      <p>Thank you, <strong>${escapeHtml(name)}</strong>! Unit photos &amp; bank valuation details for <em>"${escapeHtml(ctx)}"</em> are being sent to WhatsApp (${escapeHtml(phone)}).</p>
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full bg-gradient-to-br ${assignedAgent.avatarBg} text-white font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
-          <div class="font-bold text-navy-900">Assigned Specialist: ${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
+          <div class="font-bold text-navy-900">Ipoh Specialist: ${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
           <div class="text-slate-500">Typically replies within ${assignedAgent.avgReplyMin} mins</div>
         </div>
       </div>
