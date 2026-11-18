@@ -1,4 +1,4 @@
-/* PrimeVerse Ipoh Realty - 3-Theme Switchable Design System + 3 Golden UI Rules */
+/* PrimeVerse Ipoh Realty - Unified Stitch UI + 3-Theme Switchable Design System */
 
 :root {
   --canvas-white: #ffffff;
@@ -9,26 +9,30 @@
   --pin-viewed: #94a3b8;
   --badge-new-green: #16a34a;
 
-  /* Default Theme A: Tech Blue + Vibrant Orange */
+  /* Default Theme A: Tech Blue + Vibrant Orange + Stitch Surface Tint */
   --brand-primary: #006aff;
-  --brand-primary-hover: #1e40af;
+  --brand-primary-hover: #0053cc;
   --brand-primary-soft: #eff6ff;
   --brand-primary-border: #bfdbfe;
-  --brand-accent: #f97316;
+  --surface-low: #f2f3ff;
+  --surface-high: #e2e7ff;
+  --brand-accent: #fd761a;
   --brand-accent-soft: #fff7ed;
   --brand-accent-border: #fed7aa;
-  --brand-dark: #0f172a;
+  --brand-dark: #131b2e;
 }
 
 body[data-theme="a"] {
   --brand-primary: #006aff;
-  --brand-primary-hover: #1e40af;
+  --brand-primary-hover: #0053cc;
   --brand-primary-soft: #eff6ff;
   --brand-primary-border: #bfdbfe;
-  --brand-accent: #f97316;
+  --surface-low: #f2f3ff;
+  --surface-high: #e2e7ff;
+  --brand-accent: #fd761a;
   --brand-accent-soft: #fff7ed;
   --brand-accent-border: #fed7aa;
-  --brand-dark: #0f172a;
+  --brand-dark: #131b2e;
 }
 
 body[data-theme="b"] {
@@ -36,6 +40,8 @@ body[data-theme="b"] {
   --brand-primary-hover: #15803d;
   --brand-primary-soft: #f0fdfa;
   --brand-primary-border: #99f6e4;
+  --surface-low: #f0fdfa;
+  --surface-high: #ccfbf1;
   --brand-accent: #d97706;
   --brand-accent-soft: #fffbeb;
   --brand-accent-border: #fde68a;
@@ -47,6 +53,8 @@ body[data-theme="c"] {
   --brand-primary-hover: #be123c;
   --brand-primary-soft: #fff1f2;
   --brand-primary-border: #fecdd3;
+  --surface-low: #fff1f2;
+  --surface-high: #ffe4e6;
   --brand-accent: #1e293b;
   --brand-accent-soft: #f1f5f9;
   --brand-accent-border: #cbd5e1;
@@ -59,9 +67,13 @@ html {
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-  background-color: var(--canvas-slate);
-  color: #0f172a;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  background-color: #faf8ff;
+  color: #131b2e;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, sans-serif;
 }
 
 /* Hide horizontal scrollbar for mobile swipe strips */
@@ -74,12 +86,13 @@ body {
   display: none;
 }
 
-/* Rule 1: Clean White Glass Header (85%+ White/Light Grey Canvas) */
+/* Clean White Header */
 .clean-white-nav {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid rgba(194, 198, 216, 0.35);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
 }
 
 /* Clean White Mobile Bottom Navigation */
@@ -87,9 +100,22 @@ body {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid #e2e8f0;
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+  border-top: 1px solid rgba(194, 198, 216, 0.4);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Stitch Surface Tokens */
+.bg-surface-low {
+  background-color: var(--surface-low);
+}
+
+.bg-surface-high {
+  background-color: var(--surface-high);
+}
+
+.bg-ambient-glow {
+  background: radial-gradient(circle, var(--surface-high) 0%, transparent 70%);
 }
 
 /* Dynamic Theme Utility Classes */
@@ -132,45 +158,54 @@ body {
   border-color: var(--brand-primary) !important;
 }
 
-/* Rule 3: Dedicated Official WhatsApp #25D366 Button */
+/* Dedicated Official WhatsApp #25D366 Button */
 .btn-whatsapp {
   background-color: var(--whatsapp-green);
-  color: #052e16;
-  font-weight: 800;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  color: #ffffff;
+  font-weight: 700;
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-whatsapp:hover {
-  background-color: var(--whatsapp-green-hover);
+  filter: brightness(0.95);
   box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
 }
 
-/* Rule 2: Map Price Pin States */
-.map-canvas-bg {
-  background-color: #f8fafc;
-  background-image:
-    radial-gradient(#cbd5e1 1px, transparent 1px),
-    linear-gradient(to right, rgba(226, 232, 240, 0.55) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 232, 240, 0.55) 1px, transparent 1px);
-  background-size: 24px 24px, 48px 48px, 48px 48px;
-}
-
+/* Map Price Pin States */
 .map-pin-sale {
   background-color: var(--brand-primary);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+}
+
+.map-pin-sale-tip {
+  background-color: var(--brand-primary);
 }
 
 .map-pin-rent {
   background-color: var(--pin-rent);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.24);
+}
+
+.map-pin-rent-tip {
+  background-color: var(--pin-rent);
+}
+
+.map-pin-new {
+  background-color: var(--badge-new-green);
+  color: #ffffff;
+}
+
+.map-pin-new-tip {
+  background-color: var(--badge-new-green);
 }
 
 .map-pin-viewed {
   background-color: var(--pin-viewed) !important;
   color: #ffffff !important;
-  box-shadow: none;
+}
+
+.map-pin-viewed-tip {
+  background-color: var(--pin-viewed) !important;
 }
 
 .badge-price-drop {
@@ -200,11 +235,11 @@ body {
 @media (hover: hover) {
   .prop-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 38px -12px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 20px 38px -12px rgba(19, 27, 46, 0.14);
   }
 
   .prop-card:hover img.card-photo {
-    transform: scale(1.06);
+    transform: scale(1.05);
   }
 
   .guide-card:hover img.guide-photo {
@@ -214,7 +249,7 @@ body {
 
 .prop-card img.card-photo,
 .guide-card img.guide-photo {
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Range Slider Styling */
@@ -222,7 +257,7 @@ input[type="range"].custom-range {
   -webkit-appearance: none;
   appearance: none;
   height: 8px;
-  background: #e2e8f0;
+  background: var(--surface-high);
   border-radius: 999px;
   outline: none;
 }
@@ -279,7 +314,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
 .blog-prose h4 {
   font-size: 1rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #131b2e;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
