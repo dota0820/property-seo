@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#727787", "on-secondary-fixed-variant": "#783200", "tertiary": "#006b2e", "on-primary": "#ffffff", "surface-container-highest": "#dae2fd", "surface-variant": "#dae2fd", "on-tertiary": "#ffffff", "on-error-container": "#93000a", "on-tertiary-fixed": "#002109", "primary-container": "#006aff", "surface-container-lowest": "#ffffff", "primary-fixed": "#dae2ff", "tertiary-fixed": "#66ff8e", "on-tertiary-fixed-variant": "#005322", "inverse-surface": "#283044", "surface-bright": "#faf8ff", "surface-container-low": "#f2f3ff", "on-surface": "#131b2e", "on-background": "#131b2e", "error": "#ba1a1a", "on-primary-fixed": "#001847", "secondary-fixed-dim": "#ffb690", "secondary-container": "#fd761a", "on-primary-fixed-variant": "#0040a1", "primary-fixed-dim": "#b2c5ff", "error-container": "#ffdad6", "outline-variant": "#c2c6d8", "on-secondary-fixed": "#341100", "on-secondary-container": "#5c2400", "inverse-primary": "#b2c5ff", "surface": "#faf8ff", "background": "#faf8ff", "secondary": "#9d4300", "on-secondary": "#ffffff", "on-surface-variant": "#424655", "tertiary-container": "#00873c", "surface-container-high": "#e2e7ff", "surface-container": "#eaedff", "on-tertiary-container": "#f8fff4", "inverse-on-surface": "#eef0ff", "primary": "#0053cc", "on-error": "#ffffff", "tertiary-fixed-dim": "#3de273", "secondary-fixed": "#ffdbca", "on-primary-container": "#fefbff", "surface-dim": "#d2d9f4", "surface-tint": "#0056d1" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "margin": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "gutter-desktop": "1.5rem", "space-md": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "margin-desktop": "2.5rem", "margin-tablet": "1.5rem" }, "fontFamily": { "body-md": ["Inter"], "price-badge-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "price-badge-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "price-badge-sm": ["16px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "800" }], "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "price-badge-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "display-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-sm": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface antialiased">
+<div class="bg-slate-900 text-slate-200 border-b border-slate-800 text-[11px] sm:text-xs">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-1.5 overflow-x-auto">
+      <a href="./basic.html" class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 font-semibold whitespace-nowrap transition-colors">
+        Package 1: Basic
+      </a>
+      <a href="./index.html" class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 font-semibold whitespace-nowrap transition-colors">
+        Package 2: Pro Portal
+      </a>
+      <span class="px-2.5 py-1 rounded-full bg-[#006AFF] text-white font-extrabold whitespace-nowrap">
+        Tab 3: Stitch UI Preview ✓
+      </span>
+    </div>
+    <span class="text-[11px] text-slate-400 hidden sm:inline">Google Stitch Design Preview</span>
+  </div>
+</div><header class="sticky top-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm" data-path="subsale-homes" href="#"><img alt="PrimeVerse Ipoh Realty Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCtUQhTFPX_QjdojnVofSn1mwkr6RVtMq4AqfuKYqWedKIF0w7959__jxoNvVW0NZbN08ZMVLbV1s1w1wFBugZMw5Ds_m7lMrHwhQI-GN0sy0c999cFS7guHJTPZgMNxb7uQeZdYMg9Wi12Cf007mXSxdYM7wGpeccVJk12z-l0Qmqp68lfSH4iczmpnXpNKebNaUOX4LHBYu3ckoMfhf6HahwA4xyiSfg6X65coPQu"/><span class="font-headline-md text-headline-md text-on-surface tracking-tight hidden sm:inline-block">PrimeVerse <span class="text-primary font-headline-md text-headline-md">Ipoh</span></span></a></div><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-headline-sm"><a aria-current="page" class="transition-colors text-primary font-headline-sm" data-path="subsale-homes" href="#">Subsale Homes</a><a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" data-path="new-projects" href="#">New Projects</a><a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" data-path="rent-homestay" href="#">Rent / Homestay</a><a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" data-path="ipoh-areas" href="#">Ipoh Areas</a><a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" data-path="mortgage-tools" href="#">Mortgage Tools</a></nav><div class="flex items-center gap-space-sm md:gap-space-md shrink-0"><div class="hidden md:flex items-center p-0.5 rounded-full bg-surface-container-high"><button class="px-2.5 py-1 rounded-full bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-sm" type="button">EN</button><button class="px-2.5 py-1 rounded-full text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">中文</button></div><a class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#25D366] text-white font-label-md text-label-md shadow-sm hover:brightness-95 active:scale-98 transition-all shrink-0" href="https://wa.me/60123456789" rel="noopener noreferrer" target="_blank"><span class="material-symbols-outlined text-[18px]">call</span><span class="hidden sm:inline">WhatsApp Agent</span></a><div class="flex items-center pl-1 shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoFiXv8mqRm5uZTzltnkOV3R8hWb8ZimvnLrou_t3XvCVrG-axwLC1OUAoyWLf5EvJG6xQ-olMqAo_FsyXyrka_WdtnB5lPNYLCDMxd2HBdaIR_labO-9n9CrQ9aEqMjfIPlRSiKW9Ybp4luNVVg7oz3UMqJ4vxii-gtAvPo1qpxXG1OBHJMuRqx4wZXJ9DrpKj11FksbDQt4LMsHn9WTonQiE1r3mupd4lkZNx8E"/></div></div></div></header><main class="w-full pt-4 bg-surface pb-20 md:pb-0"><div class="flex flex-col w-full">
+<!-- Top Ambient Glow -->
+<div class="relative w-full overflow-hidden bg-surface-container-lowest">
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- 1. COMPACT HERO & BESPOKE SEARCH SYSTEM -->
+<section class="relative max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop pt-8 pb-10">
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-8">
+<div class="max-w-2xl">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider mb-3">
+<span class="inline-block w-2 h-2 rounded-full bg-[#16A34A] animate-pulse"></span>
+            Ipoh &amp; Kinta Valley MLS Feed Active
+          </div>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface tracking-tight">
+            Find Your Dream Subsale Home in <span class="text-primary-container">Ipoh, Perak</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">
+            怡保精选二手与新盘房产 • Verified freehold properties, hill-view semi-Ds, and prime heritage investments.
+          </p>
+</div>
+<!-- Quick Stats Pill Strip -->
+<div class="flex items-center gap-space-sm sm:gap-space-md bg-surface-container-low px-4 py-3 rounded-xl">
+<div class="text-left">
+<div class="font-headline-md text-headline-md text-on-surface">1,420+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Live Listings</div>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<div class="text-left">
+<div class="font-headline-md text-headline-md text-tertiary">RM 245</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Avg. Subsale PSF</div>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<div class="text-left">
+<div class="font-headline-md text-headline-md text-secondary-container">98.4%</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Title Clear</div>
+</div>
+</div>
+</div>
+<!-- Multifunction Search Container -->
+<div class="w-full bg-surface-container-lowest rounded-2xl shadow-xl p-4 md:p-6">
+<!-- Search Type Tabs -->
+<div class="flex items-center gap-2 mb-4">
+<button class="px-4 py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md shadow-sm" type="button">
+            Subsale Properties
+          </button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+            New Project Launches
+          </button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+            Rent &amp; Homestay
+          </button>
+</div>
+<!-- Inputs Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-space-sm items-center">
+<!-- Area Selector -->
+<div class="lg:col-span-4 bg-surface-container-low rounded-xl px-4 py-3 flex flex-col justify-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1" for="filter-location">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span> Key Township / Area
+            </label>
+<select class="bg-transparent font-headline-sm text-headline-sm text-on-surface focus:outline-none cursor-pointer w-full mt-0.5" id="filter-location">
+<option value="all">All Ipoh Prime Enclaves</option>
+<option selected="" value="botani">Bandar Seri Botani</option>
+<option value="tiger-lane">Tiger Lane (Jln Sultan Azlan Shah)</option>
+<option value="canning">Canning Garden / Ipoh Garden</option>
+<option value="tambun">Tambun &amp; Sunway City</option>
+<option value="meru">Meru Valley &amp; Jelapang</option>
+<option value="station18">Station 18 &amp; Pengkalan</option>
+<option value="pasir-puteh">Pasir Puteh</option>
+<option value="bercham">Bercham Heritage</option>
+</select>
+</div>
+<!-- Budget Range -->
+<div class="lg:col-span-3 bg-surface-container-low rounded-xl px-4 py-3 flex flex-col justify-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1" for="filter-budget">
+<span class="material-symbols-outlined text-[16px] text-secondary">payments</span> Max Budget (MYR)
+            </label>
+<select class="bg-transparent font-headline-sm text-headline-sm text-on-surface focus:outline-none cursor-pointer w-full mt-0.5" id="filter-budget">
+<option value="any">Any Price</option>
+<option value="300k">Under RM 300,000</option>
+<option selected="" value="500k">RM 300,000 - RM 500,000</option>
+<option value="800k">RM 500,000 - RM 800,000</option>
+<option value="1.5m">RM 800,000 - RM 1.5M</option>
+<option value="luxury">RM 1.5M+ (Luxury Estate)</option>
+</select>
+</div>
+<!-- Property Type -->
+<div class="lg:col-span-3 bg-surface-container-low rounded-xl px-4 py-3 flex flex-col justify-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1" for="filter-type">
+<span class="material-symbols-outlined text-[16px] text-primary">apartment</span> Property Typology
+            </label>
+<select class="bg-transparent font-headline-sm text-headline-sm text-on-surface focus:outline-none cursor-pointer w-full mt-0.5" id="filter-type">
+<option value="all">All Residential Types</option>
+<option selected="" value="2s-terrace">Double Storey Terrace</option>
+<option value="semi-d">Semi-Detached (Semi-D)</option>
+<option value="bungalow">Bungalow &amp; Villa</option>
+<option value="single-storey">Single Storey Modern</option>
+<option value="corner-lot">Corner Lot with Garden</option>
+</select>
+</div>
+<!-- Search CTA Button -->
+<div class="lg:col-span-2">
+<button class="w-full h-[62px] rounded-xl bg-primary-container hover:brightness-95 active:scale-[0.98] text-on-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-md transition-all" type="button">
+<span class="material-symbols-outlined text-[22px]">search</span>
+<span>1,420+ Listings</span>
+</button>
+</div>
+</div>
+<!-- Horizontal Swipeable Filter Pills -->
+<div class="mt-4 pt-4 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant shrink-0 mr-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">tune</span> Quick Filters:
+          </span>
+<button class="px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-md text-label-md shrink-0 shadow-sm" type="button">
+            All Ipoh (1,420)
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors" type="button">
+            Freehold Only (982)
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors flex items-center gap-1" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span> Below Market Value (-15%)
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors" type="button">
+            Gated &amp; Guarded
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors" type="button">
+            Near Lotus / AEON
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors" type="button">
+            Renovated &amp; Move-in Ready
+          </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-md text-label-md shrink-0 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px] text-tertiary">terrain</span> Limestone Hill View
+          </button>
+</div>
+</div>
+</section>
+</div>
+<!-- 2. INTERACTIVE IPOH MAP PRICE-PIN STRIP & EXPLORER -->
+<section class="w-full bg-surface-container-low py-10">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-6">
+<div>
+<div class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary uppercase tracking-wide">
+<span class="material-symbols-outlined text-[16px]">travel_explore</span> Geospatial Property Radar
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-0.5">
+            Ipoh Valley Price Distribution Map
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Live interactive pricing per submarket across limestone karst belts and major arterial highways.
+          </p>
+</div>
+<!-- Map Legend Filters -->
+<div class="flex flex-wrap items-center gap-2 bg-surface-container-lowest p-2 rounded-xl shadow-sm">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-fixed text-on-primary-fixed font-label-md text-label-md" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span>For Sale (842)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-[#7C3AED]"></span>
+<span>Rent / Homestay (215)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-[#16A34A]"></span>
+<span>New Listings (48)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md" type="button">
+<span class="w-2.5 h-2.5 rounded-full bg-outline"></span>
+<span>Viewed (12)</span>
+</button>
+</div>
+</div>
+<!-- Map Canvas Mockup with Interactive Realistic Pins -->
+<div class="relative w-full h-[460px] md:h-[520px] rounded-2xl overflow-hidden shadow-lg bg-surface-container-highest">
+<!-- Static Map Underlay -->
+<div class="w-full h-full bg-cover bg-center" data-location="Ipoh, Perak, Malaysia" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGjmLTrwpXccSMOJoqQgLs1-YfyvI136KXejO2efcboCZjzRre3PXLLzNg0BOq9CX4B4o_yj85l-RDO-_2aB9afmV97Dvm4WyGF9_tXAEX52dNQ7ncHurQf8loEYqVRiYcW99-U9v5c2BMsIGPNDV-68Pq_dw94wev9QG6VOeTu5TcxMLsw20woVf1OKGLE6BuLf_Y7yBpz2WirnM88NfSBHgB0NzEVqKRTMisEwY')"></div>
+<!-- Translucent Backdrop & Water / Topography Accents -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 via-transparent to-surface-container-lowest/40 pointer-events-none"></div>
+<!-- Geographic Orientation Overlay -->
+<div class="absolute top-4 left-4 z-10 flex flex-col gap-2 pointer-events-none">
+<div class="bg-surface-container-lowest/95 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">explore</span>
+<div class="text-left">
+<div class="font-label-md text-label-md text-on-surface">Kinta Valley Regional Corridor</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">North-South Expressway (E1) • Jln Raja Dr Nazrin Shah</div>
+</div>
+</div>
+</div>
+<div class="absolute top-4 right-4 z-10 hidden sm:flex items-center gap-2">
+<div class="bg-surface-container-lowest/95 backdrop-blur-md p-2 rounded-xl shadow-md flex flex-col gap-1">
+<button aria-label="Zoom in" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-container-highest flex items-center justify-center text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<button aria-label="Zoom out" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-container-highest flex items-center justify-center text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<button aria-label="Full screen" class="w-8 h-8 rounded-lg bg-surface-container-high hover:bg-surface-container-highest flex items-center justify-center text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">fullscreen</span>
+</button>
+</div>
+</div>
+<!-- PRICE PIN 1: Bandar Seri Botani (For Sale - #006AFF) -->
+<div class="absolute bottom-24 left-[28%] md:left-[35%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-primary-container text-on-primary font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1.5 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[14px]">sell</span>
+              RM 538k • Botani
+            </div>
+<div class="w-2.5 h-2.5 bg-primary-container rotate-45 -mt-1 shadow-sm"></div>
+<!-- Tooltip Preview Card -->
+<div class="hidden group-hover:flex absolute bottom-full mb-3 w-64 bg-surface-container-lowest rounded-xl p-3 shadow-2xl flex-col gap-1 text-left">
+<div class="font-headline-sm text-headline-sm text-on-surface">Seri Botani Palma 2-Storey</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">2,200 sq.ft • 4 Beds, 4 Baths • Freehold</div>
+<div class="font-price-badge-sm text-price-badge-sm text-primary mt-1">RM 538,000 (RM 245 PSF)</div>
+</div>
+</div>
+</div>
+<!-- PRICE PIN 2: Tiger Lane (For Sale - #006AFF) -->
+<div class="absolute top-28 right-[32%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1.5 ring-2 ring-surface-container-lowest group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[14px]">villa</span>
+              RM 1.88M • Tiger Lane
+            </div>
+<div class="w-2.5 h-2.5 bg-primary-container rotate-45 -mt-1 shadow-sm"></div>
+<div class="hidden group-hover:flex absolute bottom-full mb-3 w-64 bg-surface-container-lowest rounded-xl p-3 shadow-2xl flex-col gap-1 text-left">
+<div class="font-headline-sm text-headline-sm text-on-surface">Tiger Lane Luxury Bungalow</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">5,000 sq.ft • Private Lap Pool</div>
+<div class="font-price-badge-sm text-price-badge-sm text-secondary-container mt-1">Exclusive • RM 1,880,000</div>
+</div>
+</div>
+</div>
+<!-- PRICE PIN 3: Canning Garden (For Sale - #006AFF) -->
+<div class="absolute top-44 left-[48%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-primary-container text-on-primary font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1 group-hover:scale-110 transition-transform">
+              RM 468k • Canning Gdn
+            </div>
+<div class="w-2.5 h-2.5 bg-primary-container rotate-45 -mt-1 shadow-sm"></div>
+</div>
+</div>
+<!-- PRICE PIN 4: Meru (Rent / Homestay - #7C3AED) -->
+<div class="absolute top-16 left-[18%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-[#7C3AED] text-white font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[14px]">key</span>
+              RM 2,200/mo • Meru
+            </div>
+<div class="w-2.5 h-2.5 bg-[#7C3AED] rotate-45 -mt-1 shadow-sm"></div>
+</div>
+</div>
+<!-- PRICE PIN 5: Sunway Tambun (Rent / Homestay - #7C3AED) -->
+<div class="absolute top-36 right-[14%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-[#7C3AED] text-white font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1 group-hover:scale-110 transition-transform">
+              RM 350/nt • Tambun Homestay
+            </div>
+<div class="w-2.5 h-2.5 bg-[#7C3AED] rotate-45 -mt-1 shadow-sm"></div>
+</div>
+</div>
+<!-- PRICE PIN 6: Station 18 (New Listing - #16A34A) -->
+<div class="absolute bottom-16 right-[38%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-[#16A34A] text-white font-price-badge-sm text-price-badge-sm shadow-xl flex items-center gap-1.5 group-hover:scale-110 transition-transform">
+<span class="font-label-sm text-[10px] bg-white text-[#16A34A] font-bold px-1 rounded">NEW</span>
+              RM 420k • Station 18
+            </div>
+<div class="w-2.5 h-2.5 bg-[#16A34A] rotate-45 -mt-1 shadow-sm"></div>
+</div>
+</div>
+<!-- PRICE PIN 7: Tambun Heritage (Viewed - #94A3B8) -->
+<div class="absolute bottom-32 right-[20%] -translate-x-1/2 cursor-pointer group z-20">
+<div class="relative flex flex-col items-center">
+<div class="px-3 py-1.5 rounded-full bg-outline text-white font-price-badge-sm text-price-badge-sm shadow-md flex items-center gap-1 opacity-90 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[13px]">visibility</span>
+              RM 610k • Tambun
+            </div>
+<div class="w-2.5 h-2.5 bg-outline rotate-45 -mt-1"></div>
+</div>
+</div>
+<!-- Floating Map Footer Status -->
+<div class="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-lg shadow-sm font-body-sm text-body-sm text-on-surface-variant pointer-events-auto">
+            Showing <strong class="text-on-surface font-semibold">1,105 verified geocoded units</strong> in Ipoh City Council (MBI) boundaries
+          </div>
+<button class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-lowest text-primary font-label-md text-label-md shadow-md hover:bg-surface-container-low transition-colors pointer-events-auto" type="button">
+<span class="material-symbols-outlined text-[18px]">layers</span> Switch Satellite / Karst Layer
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. FEATURED SUBSALE PROPERTY LISTING CARDS -->
+<section class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 md:py-16">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm mb-8">
+<div>
+<div class="flex items-center gap-2 text-secondary-container font-label-md text-label-md uppercase tracking-wider mb-1">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+          Curated Editorial Selection
+        </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Featured Ipoh Subsale Listings
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          Hand-vetted residential titles with authentic valuations, direct owner mandates, and high liquidity.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sort by:</span>
+<button class="px-3.5 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1" type="button">
+          Recommended <span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</button>
+</div>
+</div>
+<!-- Grid of 3 Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- CARD 1: Seri Botani Palma -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow flex flex-col group">
+<!-- Media Area (16:10 ratio) -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container-highest">
+<img alt="Modern two-storey semi-detached residence in Bandar Seri Botani Ipoh surrounded by majestic limestone hills" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7T1Hw8NKhMU-VjMYZI7c3Dbia0qNfBA2546wknG1p6RYL28oqqG_NRdnFEpkUHHXcwarKZmODhHf0GV9Td-5_FJpEjvav39wZsKCqfoPVGtFTvF7AV8MAHN-wLMmCcZEWWNe4ti8chPWu1PUP1-uikCNpp6Gq9Gg-Knfcq7PzFnPAIIxbJr91W9hosUDMr7qEGwXUjdxXKUR0a-p6gLFfMjuwSPO0MYSsYS1jvpw"/>
+<!-- Badges Overlay -->
+<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-primary font-label-sm text-label-sm uppercase tracking-wide shadow-sm">
+              Featured
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-inverse-surface/85 backdrop-blur-sm text-inverse-on-surface font-label-sm text-label-sm">
+              Freehold
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-sm text-label-sm">
+              Gated &amp; Guarded
+            </span>
+</div>
+<button aria-label="Save to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-error transition-colors shadow-sm z-10" type="button">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm font-label-sm text-label-sm text-on-surface">
+            Subsale • Bandar Seri Botani
+          </div>
+</div>
+<!-- Content Stack -->
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<!-- Price Block -->
+<div class="flex items-baseline justify-between gap-2 mb-2">
+<div class="font-price-badge-lg text-price-badge-lg text-primary-container">
+                RM 538,000
+              </div>
+<div class="font-label-md text-label-md text-on-surface-variant">
+                RM 245 PSF
+              </div>
+</div>
+<!-- Title & Location -->
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 group-hover:text-primary transition-colors">
+              Bandar Seri Botani Palma Double Storey
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0">pin_drop</span>
+<span class="truncate">Seri Botani, 31350 Ipoh (Near Shen Jai &amp; Fairview)</span>
+</p>
+<!-- Specs Grid -->
+<div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-outline-variant/20">
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bed</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">4 Beds</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bathtub</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">4 Baths</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">square_foot</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">2,200 sq.ft</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 line-clamp-2">
+              Well-maintained corner perimeter with high-ceiling design, dual-car porch, solar water heating, and 24-hour perimeter security.
+            </p>
+</div>
+<!-- Dual Action Buttons -->
+<div class="grid grid-cols-2 gap-2 mt-5 pt-3 border-t border-outline-variant/20">
+<button class="w-full py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" type="button">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<a class="w-full py-2.5 rounded-lg bg-[#25D366] hover:brightness-95 active:scale-98 text-white font-label-md text-label-md transition-all flex items-center justify-center gap-1.5 shadow-sm" href="https://wa.me/60123456789?text=Hi%20PrimeVerse,%20interested%20in%20Bandar%20Seri%20Botani%20Palma%20RM538k" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>WhatsApp</span>
+</a>
+</div>
+</div>
+</article>
+<!-- CARD 2: Tiger Lane Exclusive Luxury Bungalow -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow flex flex-col group">
+<!-- Media Area (16:10 ratio) -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container-highest">
+<img alt="Prestigious contemporary luxury bungalow on Tiger Lane Ipoh with long private lap pool, glass facade and lush tropical landscape" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2LDSqx1rXlsEi0EDFYIGUkDO_INzooEc7OO98KgQu3HeWiu6qqMjrYTHHWLZ6rZR15PhmuXXl8mUdkeUOlV4pZV5Q4_vFnuJB6SslGHCpuW4B3it0z165Jl_1gumqTbtT6mF7waPfMpM4UtdKDHR0qL1X42vXNCC_zw5GllpYNAzHbTm3cgzukKo1EpmKFul5RW991FlIJWhOUN0LZSIYJKC3mgry45LTOev-aVU"/>
+<!-- Badges Overlay -->
+<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
+<span class="px-2.5 py-1 rounded-full bg-secondary text-white font-label-sm text-label-sm uppercase tracking-wide shadow-sm">
+              Exclusive Deal
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+              Private Pool
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-sm text-label-sm">
+              Low Density
+            </span>
+</div>
+<button aria-label="Save to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-error transition-colors shadow-sm z-10" type="button">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm font-label-sm text-label-sm text-on-surface">
+            Diplomatic Row • Tiger Lane
+          </div>
+</div>
+<!-- Content Stack -->
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<!-- Price Block -->
+<div class="flex items-baseline justify-between gap-2 mb-2">
+<div class="font-price-badge-lg text-price-badge-lg text-primary-container">
+                RM 1,880,000
+              </div>
+<div class="font-label-md text-label-md text-on-surface-variant">
+                RM 376 PSF
+              </div>
+</div>
+<!-- Title & Location -->
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 group-hover:text-primary transition-colors">
+              Tiger Lane Exclusive Luxury Bungalow
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0">pin_drop</span>
+<span class="truncate">Jalan Sultan Azlan Shah (Tiger Lane), 31400 Ipoh</span>
+</p>
+<!-- Specs Grid -->
+<div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-outline-variant/20">
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bed</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">5+1 Beds</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bathtub</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">6 Baths</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">pool</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">5,000 sq.ft</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 line-clamp-2">
+              Architect-designed sanctuary featuring double volume foyer, full lap swimming pool, manicured lawn, and parking for 4 vehicles.
+            </p>
+</div>
+<!-- Dual Action Buttons -->
+<div class="grid grid-cols-2 gap-2 mt-5 pt-3 border-t border-outline-variant/20">
+<button class="w-full py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" type="button">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<a class="w-full py-2.5 rounded-lg bg-[#25D366] hover:brightness-95 active:scale-98 text-white font-label-md text-label-md transition-all flex items-center justify-center gap-1.5 shadow-sm" href="https://wa.me/60123456789?text=Hi%20PrimeVerse,%20interested%20in%20Tiger%20Lane%20Luxury%20Bungalow%20RM1.88M" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>WhatsApp</span>
+</a>
+</div>
+</div>
+</article>
+<!-- CARD 3: Canning Garden Classic Modern Corner Terrace -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow flex flex-col group">
+<!-- Media Area (16:10 ratio) -->
+<div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container-highest">
+<img alt="Beautifully refurbished modern corner single-storey terrace home in Canning Garden Ipoh with timber accents and tropical garden" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCoNJXLD6nwVjqS2WuarUVLUuegwUdCf5m8XHgH-IdUVQgJxSoYth1WRU1rdjxEyWpMG_ZsSvzeySWrjD55-4mLa-CCpnAcXSU30S6xe-6mtclWKYOSzJho9daItQOMaInFgDU3MeeQpQGCtB54sTTeE5Qg8DDi-2qYeSzDa88HHH4eVHbz7A7GCeqEcsQ_bJMB6uW9FxDdQgzDvWLKTS195GUwpAmrpF1OHJ9ObY"/>
+<!-- Badges Overlay -->
+<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
+<span class="px-2.5 py-1 rounded-full bg-tertiary text-on-primary font-label-sm text-label-sm uppercase tracking-wide shadow-sm">
+              Refurbished 2024
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm">
+              Corner Lot
+            </span>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-secondary font-label-sm text-label-sm">
+              Hot Demand
+            </span>
+</div>
+<button aria-label="Save to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-error transition-colors shadow-sm z-10" type="button">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm font-label-sm text-label-sm text-on-surface">
+            Prime Central • Canning Garden
+          </div>
+</div>
+<!-- Content Stack -->
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<!-- Price Block -->
+<div class="flex items-baseline justify-between gap-2 mb-2">
+<div class="font-price-badge-lg text-price-badge-lg text-primary-container">
+                RM 468,000
+              </div>
+<div class="font-label-md text-label-md text-on-surface-variant">
+                RM 280 PSF
+              </div>
+</div>
+<!-- Title & Location -->
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 group-hover:text-primary transition-colors">
+              Canning Garden Modern Corner Single Storey
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0">pin_drop</span>
+<span class="truncate">Lengkok Canning, Canning Garden, 31400 Ipoh</span>
+</p>
+<!-- Specs Grid -->
+<div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-outline-variant/20">
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bed</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">3 Beds</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">bathtub</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">2 Baths</span>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-low text-center">
+<span class="material-symbols-outlined text-[18px] text-primary">yard</span>
+<span class="font-headline-sm text-label-md text-on-surface mt-0.5">1,670 sq.ft</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 line-clamp-2">
+              Tastefully restyled mid-century facade with warm Japandi timber screens, wrap-around tropical foliage, and high rental yield potential.
+            </p>
+</div>
+<!-- Dual Action Buttons -->
+<div class="grid grid-cols-2 gap-2 mt-5 pt-3 border-t border-outline-variant/20">
+<button class="w-full py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" type="button">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<a class="w-full py-2.5 rounded-lg bg-[#25D366] hover:brightness-95 active:scale-98 text-white font-label-md text-label-md transition-all flex items-center justify-center gap-1.5 shadow-sm" href="https://wa.me/60123456789?text=Hi%20PrimeVerse,%20interested%20in%20Canning%20Garden%20Corner%20RM468k" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>WhatsApp</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+<!-- Secondary Callout Strip -->
+<div class="mt-12 bg-surface-container-low rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]">notification_important</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Can't find your exact location or layout?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Our Ipoh licensed agent network can source unlisted pre-market subsales across Gunong Rapat, Tambun, and Bercham.</p>
+</div>
+</div>
+<a class="px-5 py-3 rounded-xl bg-surface-container-lowest text-primary hover:bg-surface-container-high font-label-md text-label-md transition-colors shrink-0 shadow-sm flex items-center gap-2" href="https://wa.me/60123456789?text=Hi%20PrimeVerse,%20I%20have%20specific%20home%20requirements%20in%20Ipoh" rel="noopener noreferrer" target="_blank">
+<span>Request Private Matchmaking</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</a>
+</div>
+</section>
+<!-- 4. IPOH DSR MORTGAGE CALCULATOR & PERAK HOUSING SCHEME -->
+<section class="w-full bg-surface-container-low py-12 md:py-16">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+<div class="bg-surface-container-lowest rounded-3xl p-6 md:p-10 shadow-xl">
+<div class="max-w-3xl mb-8">
+<div class="inline-flex items-center gap-1.5 font-label-sm text-label-sm text-tertiary uppercase tracking-wide mb-1">
+<span class="material-symbols-outlined text-[16px]">account_balance</span>
+            Bank Eligibility &amp; Financial Planning
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Ipoh Property Mortgage &amp; DSR Estimator
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Calculate your monthly repayment according to BNM standards and Perak First Home Buyer (Skim Rumah Pertamaku / LPPSA) parameters.
+          </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Interactive Sliders / Inputs (Cols 7) -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Slider 1: Property Price -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<label class="font-headline-sm text-headline-sm text-on-surface" for="calc-price-slider">Target Home Price</label>
+<span class="font-price-badge-lg text-price-badge-lg text-primary-container" id="display-price">RM 480,000</span>
+</div>
+<input class="w-full accent-primary h-2 bg-surface-container-high rounded-lg cursor-pointer" id="calc-price-slider" max="2000000" min="150000" step="10000" type="range" value="480000"/>
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mt-1">
+<span>RM 150k</span>
+<span>RM 1.0M</span>
+<span>RM 2.0M+</span>
+</div>
+</div>
+<!-- 2-Column Sub-inputs -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Downpayment -->
+<div class="bg-surface-container-low p-4 rounded-xl">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Downpayment (10%)</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-1" id="display-downpayment">RM 48,000</div>
+<div class="font-body-sm text-body-sm text-tertiary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> 0% Down for 1st-Time Perak Buyers
+                </div>
+</div>
+<!-- Loan Tenure & Interest -->
+<div class="bg-surface-container-low p-4 rounded-xl">
+<div class="font-label-sm text-label-sm text-on-surface-variant">Tenure &amp; Indicative Rate</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-1">30 Years @ 4.15%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">Standard Bank Islamic / Conventional</div>
+</div>
+</div>
+<!-- LPPSA / Stamp Duty Exemption Banner -->
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-highest/60 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">verified_user</span>
+<div class="font-body-sm text-body-sm">
+<strong class="font-semibold text-primary">100% MOT Stamp Duty Exemption</strong> applies to completed subsale homes in Ipoh priced under RM 500,000 for qualified Malaysian first-time purchasers.
+              </div>
+</div>
+</div>
+<!-- Result Callout & Eligibility Box (Cols 5) -->
+<div class="lg:col-span-5 bg-gradient-to-br from-surface-container-low to-surface-container-high/60 p-6 md:p-8 rounded-2xl flex flex-col justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estimated Monthly Repayment</span>
+<div class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary-container mt-1" id="display-installment">
+                RM 1,913 <span class="font-headline-sm text-headline-sm text-on-surface-variant">/ month</span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                Loan Amount: <strong class="text-on-surface" id="display-loan-amount">RM 432,000</strong> (90% Margin)
+              </div>
+<!-- DSR Assessment Block -->
+<div class="mt-6 pt-6 border-t border-outline-variant/30 space-y-3">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Min. Recommended Net Income:</span>
+<strong class="text-on-surface font-headline-sm text-label-md" id="display-income">RM 3,850 / mo</strong>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Acceptable Debt Service Ratio (DSR):</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">Safe ≤ 50%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Govt LPPSA Loan Compatible:</span>
+<strong class="text-tertiary font-medium">Yes (Grade 41 &amp; Above)</strong>
+</div>
+</div>
+</div>
+<!-- Instant Eligibility CTA -->
+<div class="mt-6 pt-4">
+<a class="w-full py-3.5 rounded-xl bg-[#25D366] hover:brightness-95 active:scale-98 text-white font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-md transition-all" href="https://wa.me/60123456789?text=Hi%20PrimeVerse,%20can%20you%20check%20my%20bank%20eligibility%20for%20a%20subsale%20home%20priced%20RM480k?" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span>Check Bank Eligibility via WhatsApp</span>
+</a>
+<p class="font-body-sm text-[11px] text-center text-on-surface-variant mt-2">
+                Free pre-assessment with Maybank, Public Bank, CIMB &amp; Hong Leong panel bankers.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. LOCAL IPOH NEIGHBORHOOD GUIDE (BENTO SPOTLIGHT) -->
+<section class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 md:py-16">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm mb-8">
+<div>
+<div class="font-label-md text-label-md text-primary uppercase tracking-wider mb-1">
+          Kinta Valley Submarket Analysis
+        </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Explore Popular Ipoh Neighborhoods
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Discover lifestyle amenities, school catchments, and rental yields across Perak's capital.
+        </p>
+</div>
+<button class="inline-flex items-center gap-1 font-label-md text-label-md text-primary hover:underline" type="button">
+<span>View all 18 Ipoh postal districts</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Area 1: Botani -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-1 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">High Growth</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mukim Sungai Raia</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-3">Bandar Seri Botani</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5">
+            Master-planned eco township famous for its 300-acre Botani Nature Park, leading international schools, and modern gated residential clusters.
+          </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+            Median Subsale: <strong class="text-on-surface">RM 490k</strong>
+</div>
+<span class="text-primary font-label-sm text-label-sm flex items-center">
+            240 listings →
+          </span>
+</div>
+</div>
+<!-- Area 2: Tiger Lane -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-1 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Ultra Luxury</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Jalan Sultan Azlan Shah</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-3">Tiger Lane &amp; Thompson</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5">
+            Ipoh's prestigious millionaire row. Tree-canopied boulevards, Royal Perak Golf Club proximity, and spacious legacy estate homes.
+          </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+            Median Subsale: <strong class="text-on-surface">RM 1.45M</strong>
+</div>
+<span class="text-primary font-label-sm text-label-sm flex items-center">
+            78 listings →
+          </span>
+</div>
+</div>
+<!-- Area 3: Canning Garden & Ipoh Garden -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-1 rounded-md bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">Heritage &amp; Food</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">31400 Ipoh City</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-3">Canning Garden</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5">
+            Beloved mature neighborhood renowned for hipster coffeehouses, dim sum eateries, multi-generational single-storey revamps, and prime central connectivity.
+          </p>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+            Median Subsale: <strong class="text-on-surface">RM 450k</strong>
+</div>
+<span class="text-primary font-label-sm text-label-sm flex items-center">
+            165 listings →
+          </span>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. AGENT CONCIERGE & TESTIMONIAL TRUST BAR -->
+<section class="w-full bg-surface-container-lowest border-t border-outline-variant/20 py-12">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+<div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="flex items-center gap-5">
+<div class="relative">
+<img alt="PrimeVerse Senior Lead Negotiator headshot" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoFiXv8mqRm5uZTzltnkOV3R8hWb8ZimvnLrou_t3XvCVrG-axwLC1OUAoyWLf5EvJG6xQ-olMqAo_FsyXyrka_WdtnB5lPNYLCDMxd2HBdaIR_labO-9n9CrQ9aEqMjfIPlRSiKW9Ybp4luNVVg7oz3UMqJ4vxii-gtAvPo1qpxXG1OBHJMuRqx4wZXJ9DrpKj11FksbDQt4LMsHn9WTonQiE1r3mupd4lkZNx8E"/>
+<span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#25D366] border-2 border-surface-container-lowest" title="Agent Online Now"></span>
+</div>
+<div>
+<div class="inline-flex items-center gap-1 font-label-sm text-label-sm text-tertiary">
+<span class="material-symbols-outlined text-[16px]">verified</span> LPPEH Registered Real Estate Firm (E-1892)
+            </div>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-0.5">
+              Talk directly with an Ipoh Subsale Specialist
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Clarify title types (Freehold vs Leasehold 99), State Consent applications, valuation reports, and lawyer fees.
+            </p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+<a class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:brightness-95 active:scale-98 text-white font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-sm transition-all" href="https://wa.me/60123456789?text=Hi%20PrimeVerse%20Agent,%20I%20would%20like%20a%20free%20consultation%20on%20Ipoh%20properties" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+<span>Direct WhatsApp (Grace Liew, PEA 2814)</span>
+</a>
+<button class="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" type="button">
+<span>Book In-Person Viewing</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. MOBILE BOTTOM QUICK FLOATING DOCK (Appears above shell bottom navigation) -->
+<aside aria-label="Quick Actions" class="md:hidden fixed bottom-14 left-4 right-4 z-40 bg-surface-container-lowest/95 backdrop-blur-md rounded-2xl p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="relative">
+<img alt="Grace Liew Agent Avatar" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoFiXv8mqRm5uZTzltnkOV3R8hWb8ZimvnLrou_t3XvCVrG-axwLC1OUAoyWLf5EvJG6xQ-olMqAo_FsyXyrka_WdtnB5lPNYLCDMxd2HBdaIR_labO-9n9CrQ9aEqMjfIPlRSiKW9Ybp4luNVVg7oz3UMqJ4vxii-gtAvPo1qpxXG1OBHJMuRqx4wZXJ9DrpKj11FksbDQt4LMsHn9WTonQiE1r3mupd4lkZNx8E"/>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] ring-2 ring-white"></span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface leading-tight">Grace Liew (Ipoh Agent)</div>
+<div class="font-body-sm text-[11px] text-tertiary">Online now • Typical reply: 2 mins</div>
+</div>
+</div>
+<a class="px-3.5 py-2 rounded-xl bg-[#25D366] text-white font-label-md text-label-md flex items-center gap-1 shadow-sm active:scale-95 transition-transform" href="https://wa.me/60123456789" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>WhatsApp</span>
+</a>
+</aside>
+<!-- Interactive JavaScript for Live Mortgage Calculator -->
+<script>
+    (function initMortgageCalculator() {
+      const priceSlider = document.getElementById('calc-price-slider');
+      const displayPrice = document.getElementById('display-price');
+      const displayDownpayment = document.getElementById('display-downpayment');
+      const displayInstallment = document.getElementById('display-installment');
+      const displayLoanAmount = document.getElementById('display-loan-amount');
+      const displayIncome = document.getElementById('display-income');
+
+      if (!priceSlider) return;
+
+      function updateCalculator() {
+        const price = parseFloat(priceSlider.value);
+        const downpayment = price * 0.10;
+        const loanPrincipal = price * 0.90;
+        const annualRate = 0.0415;
+        const monthlyRate = annualRate / 12;
+        const totalMonths = 30 * 12;
+
+        // Amortization formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+        const monthlyPayment = loanPrincipal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        const requiredNetIncome = monthlyPayment / 0.50; // 50% DSR ceiling
+
+        displayPrice.textContent = 'RM ' + price.toLocaleString('en-MY');
+        displayDownpayment.textContent = 'RM ' + Math.round(downpayment).toLocaleString('en-MY');
+        displayLoanAmount.textContent = 'RM ' + Math.round(loanPrincipal).toLocaleString('en-MY');
+        displayInstallment.innerHTML = 'RM ' + Math.round(monthlyPayment).toLocaleString('en-MY') + ' <span class="font-headline-sm text-headline-sm text-on-surface-variant">/ month</span>';
+        displayIncome.textContent = 'RM ' + Math.round(requiredNetIncome).toLocaleString('en-MY') + ' / mo';
+      }
+
+      priceSlider.addEventListener('input', updateCalculator);
+    })();
+  </script>
+</div></main><div class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-outline-variant/30 py-space-xs px-margin md:hidden shadow-[0_-2px_10px_rgba(0,0,0,0.06)]"><nav class="flex items-center justify-around" data-active-classes="text-primary"><a aria-current="page" class="flex flex-col items-center gap-0.5 py-1 text-primary" data-path="subsale-homes" href="#"><span class="material-symbols-outlined text-[20px]">home</span><span class="font-label-sm text-[10px]">Homes</span></a><a class="flex flex-col items-center gap-0.5 text-on-surface-variant hover:text-on-surface py-1" data-path="new-projects" href="#"><span class="material-symbols-outlined text-[20px]">domain</span><span class="font-label-sm text-[10px]">New</span></a><a class="flex flex-col items-center gap-0.5 text-on-surface-variant hover:text-on-surface py-1" data-path="rent-homestay" href="#"><span class="material-symbols-outlined text-[20px]">key</span><span class="font-label-sm text-[10px]">Rent</span></a><a class="flex flex-col items-center gap-0.5 text-on-surface-variant hover:text-on-surface py-1" data-path="ipoh-areas" href="#"><span class="material-symbols-outlined text-[20px]">map</span><span class="font-label-sm text-[10px]">Explore</span></a><a class="flex flex-col items-center gap-0.5 text-on-surface-variant hover:text-on-surface py-1" data-path="mortgage-tools" href="#"><span class="material-symbols-outlined text-[20px]">calculate</span><span class="font-label-sm text-[10px]">Loan</span></a></nav></div><footer class="w-full bg-surface-container-low border-t border-outline-variant/30 py-space-xl"><div class="max-w-7xl mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop"><div class="flex flex-col md:flex-row justify-between items-center gap-space-md pb-space-lg border-b border-outline-variant/20"><div class="flex items-center gap-space-sm"><img alt="PrimeVerse Ipoh Realty Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCtUQhTFPX_QjdojnVofSn1mwkr6RVtMq4AqfuKYqWedKIF0w7959__jxoNvVW0NZbN08ZMVLbV1s1w1wFBugZMw5Ds_m7lMrHwhQI-GN0sy0c999cFS7guHJTPZgMNxb7uQeZdYMg9Wi12Cf007mXSxdYM7wGpeccVJk12z-l0Qmqp68lfSH4iczmpnXpNKebNaUOX4LHBYu3ckoMfhf6HahwA4xyiSfg6X65coPQu"/><span class="font-headline-sm text-headline-sm text-on-surface">PrimeVerse Ipoh Realty</span></div><p class="font-body-sm text-body-sm text-on-surface-variant text-center md:text-right">Premier Perak &amp; Kinta Valley Real Estate Discovery Portal</p></div><div class="pt-space-md flex flex-col sm:flex-row justify-between items-center gap-space-sm text-center sm:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 PrimeVerse Realty Sdn Bhd. Licensed Real Estate Agency (Ipoh, Perak).</p><div class="flex items-center gap-space-md font-body-sm text-body-sm text-on-surface-variant"><a class="hover:text-primary transition-colors" href="#">Privacy Notice</a><a class="hover:text-primary transition-colors" href="#">Terms of Service</a><a class="hover:text-primary transition-colors" href="#">LPPSA &amp; State Guidelines</a></div></div></div></footer></body></html>
