@@ -360,21 +360,47 @@
       ? "怡保主理顾问团队 (Example)"
       : "Your Ipoh Property Team (Example)";
 
+    const stickySearch = document.getElementById("basic-sticky-search");
+    if (stickySearch) {
+      stickySearch.placeholder = isZh
+        ? "搜 Botani, Upper East, Haven..."
+        : "Search Botani, Upper East, Haven...";
+    }
+    const stickyLbl = document.getElementById("basic-sticky-lbl");
+    if (stickyLbl) stickyLbl.textContent = isZh ? "套" : "Units";
+
     renderListings();
     renderBlogs();
     renderTeam();
     refreshIcons();
   };
 
+  function syncBasicStickyInputs() {
+    const ss = document.getElementById("basic-sticky-search");
+    const sa = document.getElementById("basic-sticky-area");
+    const st = document.getElementById("basic-sticky-type");
+    const sb = document.getElementById("basic-sticky-budget");
+    const hs = document.getElementById("basic-search");
+    const ha = document.getElementById("basic-area");
+    const ht = document.getElementById("basic-type");
+    const hb = document.getElementById("basic-budget");
+
+    if (hs && document.activeElement !== hs) hs.value = state.search;
+    if (ss && document.activeElement !== ss) ss.value = state.search;
+    if (ha) ha.value = state.area;
+    if (sa) sa.value = state.area;
+    if (ht) ht.value = state.type;
+    if (st) st.value = state.type;
+    if (hb) hb.value = String(state.maxBudget);
+    if (sb) sb.value = String(state.maxBudget);
+  }
+
   window.resetBasicFilters = function () {
     state.search = "";
     state.area = "all";
     state.type = "all";
     state.maxBudget = 99999999;
-    document.getElementById("basic-search").value = "";
-    document.getElementById("basic-area").value = "all";
-    document.getElementById("basic-type").value = "all";
-    document.getElementById("basic-budget").value = "99999999";
+    syncBasicStickyInputs();
     renderListings();
   };
 
@@ -395,6 +421,8 @@
   function renderListings() {
     const list = getFilteredListings();
     document.getElementById("basic-count").textContent = list.length;
+    const stickyCount = document.getElementById("basic-sticky-count");
+    if (stickyCount) stickyCount.textContent = list.length;
     const grid = document.getElementById("basic-listings-grid");
 
     if (list.length === 0) {
@@ -708,23 +736,86 @@
            <button type="button" onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">Done</button>`;
   };
 
+  function initBasicStickyObserver() {
+    const heroCard = document.getElementById("basic-hero-search");
+    const stickyBar = document.getElementById("basic-sticky-search-bar");
+    if (!heroCard || !stickyBar) return;
+
+    function updateVisibility() {
+      const rect = heroCard.getBoundingClientRect();
+      stickyBar.classList.toggle("is-visible", rect.bottom < 0);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          const shouldShow = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
+          stickyBar.classList.toggle("is-visible", shouldShow);
+        },
+        { threshold: 0 }
+      );
+      observer.observe(heroCard);
+    }
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+  }
+
   function bindEvents() {
     document.getElementById("basic-search").addEventListener("input", (e) => {
       state.search = e.target.value;
+      syncBasicStickyInputs();
       renderListings();
     });
     document.getElementById("basic-area").addEventListener("change", (e) => {
       state.area = e.target.value;
+      syncBasicStickyInputs();
       renderListings();
     });
     document.getElementById("basic-type").addEventListener("change", (e) => {
       state.type = e.target.value;
+      syncBasicStickyInputs();
       renderListings();
     });
     document.getElementById("basic-budget").addEventListener("change", (e) => {
       state.maxBudget = Number(e.target.value);
+      syncBasicStickyInputs();
       renderListings();
     });
+
+    const ss = document.getElementById("basic-sticky-search");
+    const sa = document.getElementById("basic-sticky-area");
+    const st = document.getElementById("basic-sticky-type");
+    const sb = document.getElementById("basic-sticky-budget");
+    if (ss) {
+      ss.addEventListener("input", (e) => {
+        state.search = e.target.value;
+        syncBasicStickyInputs();
+        renderListings();
+      });
+    }
+    if (sa) {
+      sa.addEventListener("change", (e) => {
+        state.area = e.target.value;
+        syncBasicStickyInputs();
+        renderListings();
+      });
+    }
+    if (st) {
+      st.addEventListener("change", (e) => {
+        state.type = e.target.value;
+        syncBasicStickyInputs();
+        renderListings();
+      });
+    }
+    if (sb) {
+      sb.addEventListener("change", (e) => {
+        state.maxBudget = Number(e.target.value);
+        syncBasicStickyInputs();
+        renderListings();
+      });
+    }
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeBasicModal();
@@ -735,6 +826,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     bindEvents();
+    initBasicStickyObserver();
     setBasicTheme(state.theme);
     setBasicLang("en");
   });

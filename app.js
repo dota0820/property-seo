@@ -1,12 +1,32 @@
-// PrimeVerse Ipoh Realty - Unified Stitch UI + Real Leaflet Map + Pre-filled WhatsApp Pro Logic
+// PrimeVerse Ipoh Realty - MapLibre GL Vector Map + PropertyGuru Sticky Search + Pre-filled WhatsApp Pro Logic
 
 (function () {
   const DATA = window.APP_DATA;
 
-  let leafletMap = null;
-  let mapMarkersLayer = null;
-  let mapTileLayer = null;
-  let mapStyle = "street";
+  let mapInstance = null;
+  let activeMapMarkers = [];
+  let mapStyle = "bright";
+
+  const MAP_STYLES = {
+    bright: "https://tiles.openfreemap.org/styles/bright",
+    positron: "https://tiles.openfreemap.org/styles/positron",
+    satellite: {
+      version: 8,
+      sources: {
+        esri: {
+          type: "raster",
+          tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+          tileSize: 256,
+          attribution: "Imagery &copy; Esri"
+        }
+      },
+      layers: [{ id: "esri-satellite", type: "raster", source: "esri", minzoom: 0, maxzoom: 18 }]
+    }
+  };
+
+  function toLngLat(coords) {
+    return [coords[1], coords[0]];
+  }
 
   const AREA_BADGES = {
     "Bandar Seri Botani": { en: "High Growth", zh: "热门成长区", cls: "bg-brand-soft border" },
@@ -120,6 +140,16 @@
 
     const isZh = lang === "zh";
     document.getElementById("search-input").placeholder = t("searchPlaceholder");
+    const stickySearch = document.getElementById("sticky-search-input");
+    if (stickySearch) {
+      stickySearch.placeholder = isZh
+        ? "搜 Botani, Upper East, Haven..."
+        : "Search Botani, Upper East, Haven...";
+    }
+    const stickyHomesLbl = document.getElementById("sticky-homes-lbl");
+    if (stickyHomesLbl) {
+      stickyHomesLbl.textContent = isZh ? "个楼盘" : "Homes";
+    }
     document.getElementById("footer-address").textContent = isZh ? DATA.brand.addressZh : DATA.brand.addressEn;
     document.getElementById("calc-cta-text").textContent = isZh
       ? "WhatsApp 免费银行贷款评估与估价"
@@ -127,8 +157,8 @@
     document.getElementById("map-eyebrow").textContent = isZh ? "怡保地理房价雷达" : "Geospatial Property Radar";
     document.getElementById("map-section-title").textContent = isZh ? "怡保各区房价分布地图" : "Ipoh Valley Price Distribution Map";
     document.getElementById("map-strip-title").textContent = isZh
-      ? "可双指缩放或点击右侧 +/- 查看怡保真实街道与学校医院周边（点击气泡预览并直连 WhatsApp，看过变浅灰 Viewed）"
-      : "Pinch or click +/− to zoom real Ipoh streets & landmarks — tap any price pin to preview or WhatsApp directly.";
+      ? "可切换 Street / Minimal / 卫星视图并双指缩放（点击气泡预览详情并直连 WhatsApp，看过变浅灰 Viewed）"
+      : "Pinch or click +/− to zoom crisp vector streets (Street / Minimal / Satellite) — tap any pin to preview or WhatsApp.";
     document.getElementById("matchmaking-title").textContent = isZh
       ? "找不到心仪的街道或朝向户型？"
       : "Can't find your exact street or layout in Ipoh?";
@@ -169,6 +199,24 @@
     document.getElementById("lbl-cashflow").textContent = isZh ? "预计每月净现金流:" : "Est. Monthly Net Cashflow:";
   }
 
+  function syncStickyFilterInputs() {
+    const heroSearch = document.getElementById("search-input");
+    const stickySearch = document.getElementById("sticky-search-input");
+    const heroArea = document.getElementById("filter-area");
+    const stickyArea = document.getElementById("sticky-filter-area");
+    const heroBudget = document.getElementById("filter-budget");
+    const stickyBudget = document.getElementById("sticky-filter-budget");
+    const stickyTab = document.getElementById("sticky-filter-tab");
+
+    if (heroSearch && document.activeElement !== heroSearch) heroSearch.value = state.search;
+    if (stickySearch && document.activeElement !== stickySearch) stickySearch.value = state.search;
+    if (heroArea) heroArea.value = state.area;
+    if (stickyArea) stickyArea.value = state.area;
+    if (heroBudget) heroBudget.value = String(state.maxBudget);
+    if (stickyBudget) stickyBudget.value = String(state.maxBudget);
+    if (stickyTab) stickyTab.value = state.searchTab;
+  }
+
   // --- Search Tabs & Lifestyle Filters ---
   window.setSearchTab = function (tab) {
     state.searchTab = tab;
@@ -178,6 +226,7 @@
         ? "search-tab-btn shrink-0 px-4 py-2 rounded-lg search-tab-active font-semibold text-[13px] shadow-sm transition-all"
         : "search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors";
     });
+    syncStickyFilterInputs();
     renderMapPins(true);
     renderProjects();
   };
@@ -218,7 +267,7 @@
 
   window.filterByGuideArea = function (area) {
     state.area = area;
-    document.getElementById("filter-area").value = area;
+    syncStickyFilterInputs();
     renderMapPins(true);
     renderProjects();
     document.getElementById("properties").scrollIntoView({ behavior: "smooth" });
@@ -231,9 +280,7 @@
     state.area = "all";
     state.maxBudget = 99999999;
     state.topic = "all";
-    document.getElementById("search-input").value = "";
-    document.getElementById("filter-area").value = "all";
-    document.getElementById("filter-budget").value = "99999999";
+    syncStickyFilterInputs();
     setSearchTab("all");
     setMapLegendFilter("all");
     renderLifestylePills();
@@ -258,67 +305,47 @@
     });
   }
 
-  // --- #3 Real Interactive Leaflet Ipoh Map & Geospatial Pins ---
-  function createTileLayer(style) {
-    if (style === "satellite") {
-      return window.L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        {
-          maxZoom: 18,
-          attribution: "Imagery &copy; Esri &mdash; World Imagery"
-        }
-      );
-    }
-    return window.L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-      {
-        maxZoom: 18,
-        attribution: "Tiles &copy; Esri &mdash; World Street Map"
-      }
-    );
-  }
+  // --- #3 Crisp Vector Map (MapLibre GL + OpenFreeMap Styles) ---
+  function initVectorMap() {
+    const mapEl = document.getElementById("ipoh-vector-map");
+    if (!mapEl || !window.maplibregl || mapInstance) return;
 
-  function initLeafletMap() {
-    const mapEl = document.getElementById("ipoh-leaflet-map");
-    if (!mapEl || !window.L || leafletMap) return;
-
-    leafletMap = window.L.map(mapEl, {
-      center: [4.602, 101.108],
-      zoom: 12,
-      zoomControl: false,
-      scrollWheelZoom: false
+    mapInstance = new window.maplibregl.Map({
+      container: mapEl,
+      style: MAP_STYLES[mapStyle],
+      center: [101.108, 4.602],
+      zoom: 11.4,
+      attributionControl: true,
+      scrollZoom: false
     });
-
-    mapTileLayer = createTileLayer(mapStyle).addTo(leafletMap);
-    mapMarkersLayer = window.L.layerGroup().addTo(leafletMap);
   }
 
   window.zoomInMap = function () {
-    if (leafletMap) leafletMap.zoomIn();
+    if (mapInstance) mapInstance.zoomIn({ duration: 250 });
   };
 
   window.zoomOutMap = function () {
-    if (leafletMap) leafletMap.zoomOut();
+    if (mapInstance) mapInstance.zoomOut({ duration: 250 });
   };
 
   window.resetMapView = function () {
     fitMapToCoords(getMapFilteredProjects().map((p) => p.coords).filter(Boolean));
   };
 
-  window.toggleMapStyle = function () {
-    if (!leafletMap || !window.L) return;
-    mapStyle = mapStyle === "street" ? "satellite" : "street";
-    if (mapTileLayer) leafletMap.removeLayer(mapTileLayer);
-    mapTileLayer = createTileLayer(mapStyle).addTo(leafletMap);
-
-    const btn = document.getElementById("map-style-btn");
-    if (btn) {
-      btn.className =
-        mapStyle === "satellite"
-          ? "w-8 h-8 rounded-lg btn-brand-primary flex items-center justify-center transition-colors"
-          : "w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors";
-      btn.title = mapStyle === "satellite" ? "Switch to Street Map" : "Switch to Satellite View";
+  window.setMapStyle = function (styleKey) {
+    if (!MAP_STYLES[styleKey]) return;
+    mapStyle = styleKey;
+    if (mapInstance) {
+      mapInstance.setStyle(MAP_STYLES[styleKey]);
     }
+    ["bright", "positron", "satellite"].forEach((key) => {
+      const btn = document.getElementById("map-style-" + key);
+      if (!btn) return;
+      const active = key === styleKey;
+      btn.className = active
+        ? "px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-bold btn-brand-primary transition-colors"
+        : "px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#424655] hover:bg-slate-100 transition-colors";
+    });
   };
 
   function getMapFilteredProjects() {
@@ -330,17 +357,19 @@
   }
 
   function fitMapToCoords(coordsList) {
-    if (!leafletMap || !window.L) return;
+    if (!mapInstance || !window.maplibregl) return;
     const targets = coordsList && coordsList.length ? coordsList : DATA.projects.map((p) => p.coords).filter(Boolean);
     if (!targets.length) return;
     if (targets.length === 1) {
-      leafletMap.flyTo(targets[0], 14, { duration: 0.65 });
+      mapInstance.flyTo({ center: toLngLat(targets[0]), zoom: 13.8, duration: 650 });
       return;
     }
-    leafletMap.fitBounds(window.L.latLngBounds(targets), {
-      padding: [52, 52],
-      maxZoom: 13,
-      animate: true
+    const bounds = new window.maplibregl.LngLatBounds();
+    targets.forEach((c) => bounds.extend(toLngLat(c)));
+    mapInstance.fitBounds(bounds, {
+      padding: { top: 72, bottom: 64, left: 48, right: 48 },
+      maxZoom: 12.8,
+      duration: 650
     });
   }
 
@@ -381,8 +410,9 @@
     const list = getMapFilteredProjects();
     if (countEl) countEl.textContent = list.length;
 
-    if (!leafletMap || !mapMarkersLayer || !window.L) return;
-    mapMarkersLayer.clearLayers();
+    if (!mapInstance || !window.maplibregl) return;
+    activeMapMarkers.forEach((m) => m.remove());
+    activeMapMarkers = [];
 
     const coordsList = [];
 
@@ -409,31 +439,29 @@
       const iconName = isViewed ? "visibility" : p.homestayHot ? "key" : p.category === "Landed" ? "villa" : "sell";
       const shortArea = p.area.split("/")[0].replace("Bandar Seri ", "").trim();
 
-      const html = `
-        <div class="pv-pin-root">
-          <div class="pv-pin-pill px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full ${pillCls} font-extrabold text-[11px] sm:text-xs flex items-center gap-1 ring-2 ring-white/90 whitespace-nowrap">
-            ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : `<span class="material-symbols-outlined text-[13px]">${iconName}</span>`}
-            <span>${formatCompactRM(p.priceFrom)} &bull; ${escapeHtml(shortArea)}</span>
-          </div>
-          <div class="w-2.5 h-2.5 ${tipCls} rotate-45 -mt-1 shadow-sm"></div>
+      const el = document.createElement("div");
+      el.className = "pv-ml-pin-root";
+      el.innerHTML = `
+        <div class="pv-pin-pill px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full ${pillCls} font-extrabold text-[11px] sm:text-xs flex items-center gap-1 ring-2 ring-white/95 whitespace-nowrap">
+          ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : `<span class="material-symbols-outlined text-[13px]">${iconName}</span>`}
+          <span>${formatCompactRM(p.priceFrom)} &bull; ${escapeHtml(shortArea)}</span>
         </div>
+        <div class="w-2.5 h-2.5 ${tipCls} rotate-45 -mt-1 shadow-sm"></div>
       `;
 
-      const icon = window.L.divIcon({
-        className: "pv-leaflet-pin-wrapper",
-        html,
-        iconSize: [0, 0],
-        iconAnchor: [0, 0],
-        popupAnchor: [0, -38]
-      });
-
-      const marker = window.L.marker(p.coords, { icon });
-      marker.bindPopup(buildMapPopupHtml(p), {
+      const popup = new window.maplibregl.Popup({
+        offset: 36,
+        maxWidth: "276px",
         className: "pv-map-popup",
-        maxWidth: 276,
         closeButton: true
-      });
-      marker.addTo(mapMarkersLayer);
+      }).setHTML(buildMapPopupHtml(p));
+
+      const marker = new window.maplibregl.Marker({ element: el, anchor: "bottom" })
+        .setLngLat(toLngLat(p.coords))
+        .setPopup(popup)
+        .addTo(mapInstance);
+
+      activeMapMarkers.push(marker);
     });
 
     if (shouldFit) {
@@ -456,6 +484,8 @@
   function renderProjects() {
     const list = getFilteredProjects();
     document.getElementById("projects-count").textContent = list.length;
+    const stickyCount = document.getElementById("sticky-result-count");
+    if (stickyCount) stickyCount.textContent = list.length;
     const grid = document.getElementById("projects-grid");
 
     if (list.length === 0) {
@@ -1336,23 +1366,86 @@
       <button type="button" onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">Done</button>`;
   };
 
+  function initStickySearchObserver() {
+    const heroCard = document.getElementById("hero-search-card");
+    const stickyBar = document.getElementById("sticky-search-bar");
+    if (!heroCard || !stickyBar) return;
+
+    function updateVisibility() {
+      const rect = heroCard.getBoundingClientRect();
+      stickyBar.classList.toggle("is-visible", rect.bottom < 0);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          const shouldShow = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
+          stickyBar.classList.toggle("is-visible", shouldShow);
+        },
+        { threshold: 0 }
+      );
+      observer.observe(heroCard);
+    }
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+  }
+
   // --- Bind Events & Init ---
   function bindEvents() {
     document.getElementById("search-input").addEventListener("input", (e) => {
       state.search = e.target.value;
+      syncStickyFilterInputs();
       renderMapPins(true);
       renderProjects();
     });
     document.getElementById("filter-area").addEventListener("change", (e) => {
       state.area = e.target.value;
+      syncStickyFilterInputs();
       renderMapPins(true);
       renderProjects();
     });
     document.getElementById("filter-budget").addEventListener("change", (e) => {
       state.maxBudget = Number(e.target.value);
+      syncStickyFilterInputs();
       renderMapPins(true);
       renderProjects();
     });
+
+    const stickySearch = document.getElementById("sticky-search-input");
+    const stickyArea = document.getElementById("sticky-filter-area");
+    const stickyTab = document.getElementById("sticky-filter-tab");
+    const stickyBudget = document.getElementById("sticky-filter-budget");
+
+    if (stickySearch) {
+      stickySearch.addEventListener("input", (e) => {
+        state.search = e.target.value;
+        syncStickyFilterInputs();
+        renderMapPins(true);
+        renderProjects();
+      });
+    }
+    if (stickyArea) {
+      stickyArea.addEventListener("change", (e) => {
+        state.area = e.target.value;
+        syncStickyFilterInputs();
+        renderMapPins(true);
+        renderProjects();
+      });
+    }
+    if (stickyTab) {
+      stickyTab.addEventListener("change", (e) => {
+        setSearchTab(e.target.value);
+      });
+    }
+    if (stickyBudget) {
+      stickyBudget.addEventListener("change", (e) => {
+        state.maxBudget = Number(e.target.value);
+        syncStickyFilterInputs();
+        renderMapPins(true);
+        renderProjects();
+      });
+    }
 
     ["slider-price", "slider-margin", "slider-rate", "slider-tenure", "slider-rent", "calc-foreigner"].forEach(
       (id) => {
@@ -1373,16 +1466,17 @@
 
   function init() {
     bindEvents();
+    initStickySearchObserver();
     setTheme(state.theme);
-    initLeafletMap();
+    initVectorMap();
     updateCalculators();
     updateCompareCounters();
     setLanguage("en");
-    if (leafletMap) {
+    if (mapInstance) {
       setTimeout(function () {
-        leafletMap.invalidateSize();
+        mapInstance.resize();
         resetMapView();
-      }, 250);
+      }, 300);
     }
   }
 
