@@ -1,0 +1,9 @@
+{
+  "name": "primeverse-ipoh-portal",
+  "private": true,
+  "description": "PrimeVerse Ipoh static property portal (Pro + Basic demo).",
+  "scripts": {
+    "build:css": "npx tailwindcss@3.4.17 -i ./src/tailwind.input.css -o ./tailwind.css --minify",
+    "check": "node --check data.js && node --check app.js && node --check basic.js && node --check icons.js && node --check tw-config.js"
+  }
+}

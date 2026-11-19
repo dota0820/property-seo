@@ -12,8 +12,8 @@
   <!-- Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="./images/haven-night.jpg" fetchpriority="high" />
 
   <!-- MapLibre GL Vector Map (Free OpenFreeMap Styles, Zero API Key) -->
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
@@ -24,11 +24,9 @@
     window.dataLayer = window.dataLayer || [];
   </script>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Lucide Icons (for modals/compatibility) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Tailwind CSS (pinned CDN for the demo; `npm run build:css` produces ./tailwind.css for launch) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="./tw-config.js"></script>
 
   <!-- Unified Stitch + 3-Theme Styles -->
   <link rel="stylesheet" href="./styles.css" />
@@ -62,9 +60,11 @@
   }
   </script>
 </head>
-<body data-theme="a" class="antialiased pb-32 md:pb-0 selection:bg-blue-500/15">
+<body data-theme="a" class="antialiased pb-20 md:pb-0 selection:bg-blue-500/15">
+  <script src="./icons.js"></script>
+  <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Client 2-Package & Live 3-Color Theme Switcher Bar -->
+  <!-- Client 2-Package & Live 3-Color Theme Switcher Bar (demo only — remove at launch) -->
   <div class="bg-[#131B2E] text-slate-200 border-b border-slate-800 text-[11px] sm:text-xs">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2">
       <!-- 2 Package Switcher -->
@@ -86,7 +86,7 @@
           <span>A: Tech Blue</span>
         </button>
         <button id="theme-btn-b" onclick="setTheme('b')" class="theme-switch-btn px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 bg-white/10 text-slate-200 hover:bg-white/20 whitespace-nowrap">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#0D9488]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#0F766E]"></span>
           <span class="w-2.5 h-2.5 rounded-full bg-[#D97706] -ml-1"></span>
           <span>B: Ipoh Emerald</span>
         </button>
@@ -100,45 +100,45 @@
   </div>
 
   <!-- Clean White Header (scrolls naturally to hand top bar over to Sticky Search Filter) -->
-  <header class="clean-white-nav relative z-30 text-[#131B2E]">
+  <header class="clean-white-nav relative z-30 text-ink">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
       <a href="#top" class="flex items-center gap-2.5 shrink-0">
         <div class="w-9 h-9 rounded-xl btn-brand-primary flex items-center justify-center shadow-sm">
-          <span class="material-symbols-outlined text-[20px] text-white">domain</span>
+          <svg class="pv-icon w-[20px] h-[20px] text-white" aria-hidden="true"><use href="#i-building"/></svg>
         </div>
         <div>
-          <div class="font-extrabold text-base sm:text-xl tracking-tight flex items-center gap-1.5 text-[#131B2E]">
+          <div class="font-extrabold text-base sm:text-xl tracking-tight flex items-center gap-1.5 text-ink">
             <span>PrimeVerse <span class="text-brand-primary">Ipoh</span></span>
             <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border badge-accent-soft">Perak</span>
           </div>
-          <p class="text-[11px] text-[#424655] hidden md:block" data-i18n="tagline">Ipoh Subsale Specialists · 100% Verified Listings (Example)</p>
+          <p class="text-[11px] text-muted hidden md:block" data-i18n="tagline">Ipoh Subsale Specialists · 100% Verified Listings (Example)</p>
         </div>
       </a>
 
       <!-- Desktop Nav Links -->
-      <nav class="hidden lg:flex items-center gap-5 text-[13px] font-semibold text-[#424655]">
-        <a href="#properties" onclick="setSearchTab('Landed')" class="hover:text-slate-900 transition-colors" data-i18n="navLanded">Ipoh Landed</a>
-        <a href="#properties" onclick="setSearchTab('Condo')" class="hover:text-slate-900 transition-colors" data-i18n="navCondo">Ipoh Condos</a>
-        <a href="#ipoh-map-section" class="hover:text-slate-900 transition-colors" id="nav-map-lbl">Price Map</a>
-        <a href="#guides" class="hover:text-slate-900 transition-colors" data-i18n="navGuides">Ipoh Areas</a>
-        <a href="#compare" class="hover:text-slate-900 transition-colors flex items-center gap-1.5">
+      <nav class="hidden lg:flex items-center gap-4 xl:gap-5 text-[13px] font-semibold text-muted whitespace-nowrap" aria-label="Main">
+        <a href="#properties" onclick="setSearchTab('Landed')" class="hover:text-ink transition-colors" data-i18n="navLanded">Ipoh Landed</a>
+        <a href="#properties" onclick="setSearchTab('Condo')" class="hover:text-ink transition-colors" data-i18n="navCondo">Ipoh Condos</a>
+        <a href="#ipoh-map-section" class="hover:text-ink transition-colors" id="nav-map-lbl">Price Map</a>
+        <a href="#guides" class="hover:text-ink transition-colors" data-i18n="navGuides">Ipoh Areas</a>
+        <a href="#compare" class="hover:text-ink transition-colors flex items-center gap-1.5">
           <span data-i18n="navCompare">Compare</span>
           <span id="nav-compare-count" class="inline-flex items-center justify-center w-5 h-5 text-[11px] font-bold rounded-full badge-brand-accent">2</span>
         </a>
-        <a href="#calculators" class="hover:text-slate-900 transition-colors" data-i18n="navCalculators">DSR Tools</a>
+        <a href="#calculators" class="hover:text-ink transition-colors" data-i18n="navCalculators">DSR Tools</a>
       </nav>
 
       <!-- Language & WhatsApp #25D366 Action -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <div class="inline-flex rounded-full bg-surface-high p-0.5" role="group" aria-label="Language switcher">
-          <button id="lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary">EN</button>
-          <button id="lang-zh" onclick="setLanguage('zh')" class="px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-[#424655] hover:text-[#131B2E]">中文</button>
+        <div class="inline-flex shrink-0 whitespace-nowrap rounded-full bg-surface-high p-0.5" role="group" aria-label="Language switcher">
+          <button type="button" id="lang-en" aria-pressed="true" onclick="setLanguage('en')" class="px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary">EN</button>
+          <button type="button" id="lang-zh" aria-pressed="false" onclick="setLanguage('zh')" class="px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-muted hover:text-ink">中文</button>
         </div>
-        <button onclick="openLeadModal('Ipoh Owner Listing Inquiry')" class="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 hover:border-slate-400 text-[#131B2E] font-semibold text-xs transition-colors">
+        <button type="button" onclick="openLeadModal('Ipoh Owner Listing Inquiry')" class="hidden xl:inline-flex whitespace-nowrap items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 hover:border-slate-400 text-ink font-semibold text-xs transition-colors">
           <span data-i18n="btnListProperty">List Your Property</span>
         </button>
-        <button onclick="openGeneralWhatsApp('General Ipoh Subsale Inquiry')" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg btn-whatsapp text-xs shadow-sm shrink-0">
-          <span class="material-symbols-outlined text-[18px]">call</span>
+        <button type="button" onclick="openGeneralWhatsApp('General Ipoh Subsale Inquiry')" class="inline-flex whitespace-nowrap items-center gap-1.5 px-3 py-2 rounded-lg btn-whatsapp text-xs shadow-sm shrink-0">
+          <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-chat"/></svg>
           <span class="hidden sm:inline" data-i18n="btnWhatsappUs">WhatsApp Agent</span>
           <span class="sm:hidden">Chat</span>
         </button>
@@ -152,8 +152,8 @@
       <div class="flex flex-wrap md:flex-nowrap items-center gap-1.5 sm:gap-2">
         <!-- Keyword Input -->
         <div class="flex items-center gap-1.5 bg-surface-low rounded-xl px-2.5 sm:px-3 py-1.5 flex-1 min-w-[155px] md:min-w-[205px] border border-slate-200/70">
-          <span class="material-symbols-outlined text-[17px] text-brand-primary shrink-0">search</span>
-          <input id="sticky-search-input" type="text" placeholder="Search Botani, Upper East, Haven..." class="bg-transparent text-xs sm:text-sm font-semibold text-[#131B2E] placeholder-slate-400 focus:outline-none w-full" />
+          <svg class="pv-icon w-[17px] h-[17px] text-brand-primary shrink-0" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="sticky-search-input" type="search" aria-label="Search homes" placeholder="Search Botani, Upper East, Haven..." class="bg-transparent text-xs sm:text-sm font-semibold text-ink placeholder-slate-400 focus:outline-none w-full" />
         </div>
 
         <!-- Quick Result Count, Map Jump, Reset & WhatsApp (stays right on md+) -->
@@ -162,22 +162,22 @@
             <span id="sticky-result-count">6</span>
             <span class="hidden sm:inline" id="sticky-homes-lbl">Homes</span>
           </a>
-          <a href="#ipoh-map-section" class="px-2.5 py-1.5 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] text-[11px] font-bold hidden lg:inline-flex items-center gap-1 whitespace-nowrap transition-colors">
-            <span class="material-symbols-outlined text-[15px] text-brand-primary">map</span>
+          <a href="#ipoh-map-section" class="px-2.5 py-1.5 rounded-xl bg-surface-high hover:bg-slate-200 text-ink text-[11px] font-bold hidden lg:inline-flex items-center gap-1 whitespace-nowrap transition-colors">
+            <svg class="pv-icon w-[15px] h-[15px] text-brand-primary" aria-hidden="true"><use href="#i-map"/></svg>
             <span>Map</span>
           </a>
-          <button onclick="resetFilters()" title="Reset Filters" aria-label="Reset Filters" type="button" class="w-8 h-8 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] flex items-center justify-center transition-colors shrink-0">
-            <span class="material-symbols-outlined text-[17px]">restart_alt</span>
+          <button onclick="resetFilters()" title="Reset Filters" aria-label="Reset Filters" type="button" class="w-8 h-8 rounded-xl bg-surface-high hover:bg-slate-200 text-ink flex items-center justify-center transition-colors shrink-0">
+            <svg class="pv-icon w-[17px] h-[17px]" aria-hidden="true"><use href="#i-reset"/></svg>
           </button>
           <button onclick="openGeneralWhatsApp('Sticky Search Filter Inquiry')" title="WhatsApp Agent" aria-label="WhatsApp Agent" type="button" class="px-2.5 sm:px-3 h-8 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm shrink-0">
-            <span class="material-symbols-outlined text-[16px]">chat</span>
+            <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-chat"/></svg>
             <span class="hidden sm:inline">WhatsApp</span>
           </button>
         </div>
 
         <!-- Area / Type / Budget Dropdowns (row 2 swipeable on mobile, inline on desktop) -->
         <div class="w-full md:w-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar md:overflow-visible">
-          <select id="sticky-filter-area" aria-label="Filter Ipoh Area" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-[#131B2E] focus:outline-none cursor-pointer shrink-0">
+          <select id="sticky-filter-area" aria-label="Filter Ipoh Area" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
             <option value="all">All Ipoh Areas</option>
             <option value="Bandar Seri Botani">Bandar Seri Botani</option>
             <option value="Tiger Lane">Tiger Lane</option>
@@ -186,20 +186,20 @@
             <option value="Meru Valley">Meru Valley &amp; Desa Park</option>
             <option value="Station 18">Station 18 &amp; Pasir Puteh</option>
           </select>
-          <select id="sticky-filter-tab" aria-label="Filter Property Type" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-[#131B2E] focus:outline-none cursor-pointer shrink-0">
+          <select id="sticky-filter-tab" aria-label="Filter Property Type" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
             <option value="all">All Types</option>
             <option value="Landed">Landed Terrace / Semi-D</option>
             <option value="Condo">Condo &amp; Resort</option>
             <option value="investment">High-Yield (&gt;6%)</option>
           </select>
-          <select id="sticky-filter-budget" aria-label="Filter Max Budget" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-[#131B2E] focus:outline-none cursor-pointer shrink-0">
+          <select id="sticky-filter-budget" aria-label="Filter Max Budget" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
             <option value="99999999">Any Price</option>
             <option value="400000">Under RM 400k</option>
             <option value="550000">Under RM 550k</option>
             <option value="750000">Under RM 750k</option>
           </select>
-          <a href="#ipoh-map-section" class="lg:hidden px-2.5 py-1.5 rounded-xl bg-surface-high text-[#131B2E] text-[11px] font-bold flex items-center gap-1 shrink-0">
-            <span class="material-symbols-outlined text-[14px] text-brand-primary">map</span>
+          <a href="#ipoh-map-section" class="lg:hidden px-2.5 py-1.5 rounded-xl bg-surface-high text-ink text-[11px] font-bold flex items-center gap-1 shrink-0">
+            <svg class="pv-icon w-[14px] h-[14px] text-brand-primary" aria-hidden="true"><use href="#i-map"/></svg>
             <span>Map</span>
           </a>
         </div>
@@ -207,72 +207,56 @@
     </div>
   </div>
 
-  <!-- 1. STITCH HERO & MULTIFUNCTION SEARCH SYSTEM -->
-  <div id="top" class="relative w-full overflow-hidden bg-white border-b border-slate-200/70">
-    <!-- Top Ambient Glow -->
-    <div class="hidden sm:block absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-ambient-glow rounded-full blur-3xl opacity-70 pointer-events-none"></div>
+  <main id="main">
+  <!-- 1. FULL-BLEED PHOTO HERO + SEARCH CARD -->
+  <div id="top" class="pv-hero">
+    <div class="pv-hero-media" aria-hidden="true">
+      <img src="./images/haven-night.jpg" alt="" width="1600" height="1000" fetchpriority="high" />
+    </div>
 
-    <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 sm:pt-10 sm:pb-12">
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div class="max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-high text-brand-primary text-[11px] font-bold uppercase tracking-wider mb-3">
-            <span class="inline-block w-2 h-2 rounded-full bg-[#16A34A] animate-pulse"></span>
-            <span data-i18n="heroBadge">Ipoh &amp; Kinta Valley Verified Subsale Feed Active (Example)</span>
-          </div>
-          <h1 class="text-[28px] sm:text-[36px] font-extrabold tracking-tight text-[#131B2E] leading-[1.2]" data-i18n="heroTitle">
-            Find Your Dream Subsale Home in Ipoh, Perak
-          </h1>
-          <p class="text-sm sm:text-base text-[#424655] mt-2 leading-relaxed" data-i18n="heroSubtitle">
-            Curated subsale terraces, semi-Ds, and luxury condos across Bandar Seri Botani, Tiger Lane, Canning Garden, Tambun Sunway, Meru Valley, and Station 18.
-          </p>
+    <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 sm:pt-16 sm:pb-12" aria-labelledby="hero-title">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-white text-[11px] font-bold uppercase tracking-wider mb-4 backdrop-blur-sm">
+          <span class="inline-block w-2 h-2 rounded-full bg-[#25D366]"></span>
+          <span data-i18n="heroBadge">Ipoh Verified Subsale · Direct Owner Listings</span>
         </div>
-
-        <!-- Stitch Quick Stats Pill Strip -->
-        <div class="flex items-center justify-between sm:justify-start gap-4 sm:gap-5 bg-surface-low px-4 py-3 rounded-xl border border-slate-200/60 shrink-0">
-          <div class="text-left">
-            <div class="text-lg sm:text-xl font-bold text-[#131B2E]">6 Areas</div>
-            <div class="text-[11px] font-bold text-[#424655]">Ipoh Hotspots</div>
-          </div>
-          <div class="h-8 w-px bg-slate-300/70"></div>
-          <div class="text-left">
-            <div class="text-lg sm:text-xl font-bold text-[#006B2E]">RM 295–460</div>
-            <div class="text-[11px] font-bold text-[#424655]">Avg. Subsale PSF</div>
-          </div>
-          <div class="h-8 w-px bg-slate-300/70"></div>
-          <div class="text-left">
-            <div class="text-lg sm:text-xl font-bold text-brand-primary">100%</div>
-            <div class="text-[11px] font-bold text-[#424655]">Example Verified</div>
-          </div>
-        </div>
+        <h1 id="hero-title" class="text-[30px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.1] text-white" style="text-wrap: balance" data-i18n="heroTitle">
+          Find Verified Subsale Homes in Ipoh.
+        </h1>
+        <p class="text-sm sm:text-lg text-white/85 mt-3 max-w-2xl leading-relaxed" data-i18n="heroSubtitle">
+          Real market prices, live street maps, and instant DSR checks — curated by local Ipoh specialists.
+        </p>
+        <ul class="flex flex-wrap gap-2 mt-5" aria-label="Portal highlights">
+          <li class="pv-hero-chip"><svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="heroChipAreas">6 Ipoh Hotspots</span></li>
+          <li class="pv-hero-chip"><svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-chart"/></svg><span data-i18n="heroChipPsf">RM 295+ Avg. PSF</span></li>
+          <li class="pv-hero-chip"><svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-camera"/></svg><span data-i18n="heroChipPhotos">Real Unit Photos</span></li>
+        </ul>
       </div>
 
-      <!-- Stitch Multifunction Search Container -->
-      <div id="hero-search-card" class="w-full bg-white rounded-2xl shadow-xl border border-slate-100 p-4 md:p-6">
+      <!-- Multifunction Search Card -->
+      <div id="hero-search-card" class="w-full bg-white text-ink rounded-2xl shadow-2xl border border-white/60 p-4 md:p-5 mt-7 sm:mt-9">
         <!-- Search Type Tabs -->
-        <div id="search-tabs" class="flex items-center gap-2 mb-4 overflow-x-auto no-scrollbar pb-0.5">
-          <button data-tab="all" onclick="setSearchTab('all')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg search-tab-active font-semibold text-[13px] shadow-sm transition-all" data-i18n="tabAll">All Ipoh Subsale</button>
-          <button data-tab="Landed" onclick="setSearchTab('Landed')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors" data-i18n="tabLanded">Landed Terrace / Semi-D</button>
-          <button data-tab="Condo" onclick="setSearchTab('Condo')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors" data-i18n="tabCondo">Condo &amp; Resort Homes</button>
-          <button data-tab="investment" onclick="setSearchTab('investment')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors" data-i18n="tabInvestment">High-Yield / Homestay (&gt;6%)</button>
+        <div id="search-tabs" class="flex items-center gap-2 mb-4 overflow-x-auto no-scrollbar pb-0.5" role="group" aria-label="Property type">
+          <button type="button" data-tab="all" onclick="setSearchTab('all')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg search-tab-active font-semibold text-[13px] shadow-sm transition-all" data-i18n="tabAll">All Ipoh Subsale</button>
+          <button type="button" data-tab="Landed" onclick="setSearchTab('Landed')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-muted hover:text-ink font-semibold text-[13px] transition-colors" data-i18n="tabLanded">Landed Terrace / Semi-D</button>
+          <button type="button" data-tab="Condo" onclick="setSearchTab('Condo')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-muted hover:text-ink font-semibold text-[13px] transition-colors" data-i18n="tabCondo">Condo &amp; Resort Homes</button>
+          <button type="button" data-tab="investment" onclick="setSearchTab('investment')" class="search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-muted hover:text-ink font-semibold text-[13px] transition-colors" data-i18n="tabInvestment">High-Yield / Homestay (&gt;6%)</button>
         </div>
 
-        <!-- Stitch Labeled Surface Input Boxes -->
         <div class="grid grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-stretch">
-          <!-- Keyword Input -->
           <div class="col-span-2 lg:col-span-4 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
-            <label class="text-[11px] font-bold text-[#424655] flex items-center gap-1" for="search-input">
-              <span class="material-symbols-outlined text-[15px] text-brand-primary">search</span> Keyword / Condo
+            <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="search-input">
+              <svg class="pv-icon w-[15px] h-[15px] text-brand" aria-hidden="true"><use href="#i-search"/></svg> <span data-i18n="lblKeyword">Keyword / Condo</span>
             </label>
-            <input id="search-input" type="text" placeholder="Botani, Upper East, Haven, Station 18..." class="bg-transparent font-semibold text-sm sm:text-base text-[#131B2E] placeholder-slate-400 focus:outline-none w-full mt-0.5" />
+            <input id="search-input" type="search" placeholder="Botani, Upper East, Haven, Station 18..." class="bg-transparent font-semibold text-sm sm:text-base text-ink placeholder-slate-400 focus:outline-none w-full mt-0.5" />
           </div>
 
-          <!-- Area Selector -->
           <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
-            <label class="text-[11px] font-bold text-[#424655] flex items-center gap-1" for="filter-area">
-              <span class="material-symbols-outlined text-[15px] text-brand-primary">location_on</span> Key Township / Area
+            <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="filter-area">
+              <svg class="pv-icon w-[15px] h-[15px] text-brand" aria-hidden="true"><use href="#i-pin"/></svg> <span data-i18n="lblArea">Area</span>
             </label>
-            <select id="filter-area" class="bg-transparent font-semibold text-xs sm:text-sm text-[#131B2E] focus:outline-none cursor-pointer w-full mt-0.5">
-              <option value="all">All Ipoh Enclaves</option>
+            <select id="filter-area" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full mt-0.5">
+              <option value="all">All Ipoh Areas</option>
               <option value="Bandar Seri Botani">Bandar Seri Botani</option>
               <option value="Tiger Lane">Tiger Lane</option>
               <option value="Tambun / Sunway">Tambun &amp; Sunway City</option>
@@ -282,12 +266,11 @@
             </select>
           </div>
 
-          <!-- Budget Range -->
           <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
-            <label class="text-[11px] font-bold text-[#424655] flex items-center gap-1" for="filter-budget">
-              <span class="material-symbols-outlined text-[15px] text-[#9D4300]">payments</span> Max Budget (MYR)
+            <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="filter-budget">
+              <svg class="pv-icon w-[15px] h-[15px] text-brand-accent" aria-hidden="true"><use href="#i-wallet"/></svg> <span data-i18n="lblBudget">Max Budget</span>
             </label>
-            <select id="filter-budget" class="bg-transparent font-semibold text-xs sm:text-sm text-[#131B2E] focus:outline-none cursor-pointer w-full mt-0.5">
+            <select id="filter-budget" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full mt-0.5">
               <option value="99999999">Any Price</option>
               <option value="400000">Under RM 400k</option>
               <option value="550000">Under RM 550k</option>
@@ -295,22 +278,21 @@
             </select>
           </div>
 
-          <!-- Search CTA + Reset -->
           <div class="col-span-2 lg:col-span-2 flex gap-2">
             <a href="#properties" class="flex-1 min-h-[54px] rounded-xl btn-brand-primary font-bold text-sm flex items-center justify-center gap-1.5 shadow-md">
-              <span class="material-symbols-outlined text-[20px]">search</span>
+              <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-search"/></svg>
               <span data-i18n="btnSearch">Search Ipoh</span>
             </a>
-            <button onclick="resetFilters()" title="Reset Filters" class="px-3.5 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] flex items-center justify-center transition-colors">
-              <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+            <button type="button" onclick="resetFilters()" title="Reset filters" aria-label="Reset filters" class="min-w-[54px] px-3.5 rounded-xl bg-surface-high hover:bg-slate-200 text-ink flex items-center justify-center transition-colors">
+              <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-reset"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- Horizontal Swipeable Quick Filter Pills -->
+        <!-- Swipeable Quick Filter Pills -->
         <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
-          <span class="text-[11px] font-bold text-[#424655] shrink-0 mr-1 flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px]">tune</span>
+          <span class="text-[11px] font-bold text-muted shrink-0 mr-1 flex items-center gap-1">
+            <svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-sliders"/></svg>
             <span data-i18n="lifestyleLabel">Quick Filters:</span>
           </span>
           <div id="lifestyle-pills-container" class="flex gap-2 shrink-0"></div>
@@ -319,19 +301,41 @@
     </section>
   </div>
 
+  <!-- 1b. TRUST STRIP -->
+  <section class="bg-white border-b border-line" aria-label="Why PrimeVerse Ipoh">
+    <ul class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <li class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center shrink-0"><svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-shield-check"/></svg></span>
+        <div><strong class="block text-sm text-ink" data-i18n="trust1">Verified units</strong><span class="text-xs text-muted" data-i18n="trust1Sub">Owner &amp; title checked before listing</span></div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center shrink-0"><svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-camera"/></svg></span>
+        <div><strong class="block text-sm text-ink" data-i18n="trust2">Real photos</strong><span class="text-xs text-muted" data-i18n="trust2Sub">No renders, no stock images</span></div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center shrink-0"><svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-chart"/></svg></span>
+        <div><strong class="block text-sm text-ink" data-i18n="trust3">Real market PSF</strong><span class="text-xs text-muted" data-i18n="trust3Sub">Benchmarked to recent Ipoh deals</span></div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-11 h-11 rounded-xl bg-brand-soft text-brand flex items-center justify-center shrink-0"><svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-key"/></svg></span>
+        <div><strong class="block text-sm text-ink" data-i18n="trust4">Direct viewing</strong><span class="text-xs text-muted" data-i18n="trust4Sub">Licensed REN · E(1) 2048 (Example)</span></div>
+      </li>
+    </ul>
+  </section>
+
   <!-- 2. STITCH INTERACTIVE GEOSPATIAL IPOH VALLEY PRICE MAP -->
   <section id="ipoh-map-section" class="w-full bg-surface-low py-8 sm:py-10 border-b border-slate-200/70">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5">
         <div>
           <div class="inline-flex items-center gap-1 text-[11px] font-bold text-brand-primary uppercase tracking-wide">
-            <span class="material-symbols-outlined text-[16px]">travel_explore</span>
+            <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-compass"/></svg>
             <span id="map-eyebrow">Geospatial Property Radar</span>
           </div>
-          <h2 class="text-xl sm:text-3xl font-bold text-[#131B2E] tracking-tight mt-0.5" id="map-section-title">
+          <h2 class="text-xl sm:text-3xl font-bold text-ink tracking-tight mt-0.5" id="map-section-title">
             Ipoh Valley Price Distribution Map
           </h2>
-          <p class="text-xs sm:text-sm text-[#424655]" id="map-strip-title">
+          <p class="text-xs sm:text-sm text-muted" id="map-strip-title">
             Pinch or click +/− to zoom real Ipoh streets &amp; landmarks &mdash; tap any price pin to preview or WhatsApp directly.
           </p>
         </div>
@@ -341,19 +345,19 @@
           <button onclick="setMapLegendFilter('all')" id="legend-btn-all" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-brand-soft border text-xs font-bold">
             <span>All Pins</span>
           </button>
-          <button onclick="setMapLegendFilter('sale')" id="legend-btn-sale" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-[#424655] text-xs font-semibold">
+          <button onclick="setMapLegendFilter('sale')" id="legend-btn-sale" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-muted text-xs font-semibold">
             <span class="w-2.5 h-2.5 rounded-full bg-brand-primary"></span>
             <span>For Sale</span>
           </button>
-          <button onclick="setMapLegendFilter('homestay')" id="legend-btn-homestay" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-[#424655] text-xs font-semibold">
+          <button onclick="setMapLegendFilter('homestay')" id="legend-btn-homestay" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-muted text-xs font-semibold">
             <span class="w-2.5 h-2.5 rounded-full bg-[#7C3AED]"></span>
             <span>Homestay / Rent</span>
           </button>
-          <span class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 text-[#424655] text-xs font-semibold">
+          <span class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 text-muted text-xs font-semibold">
             <span class="w-2.5 h-2.5 rounded-full bg-[#16A34A]"></span>
             <span>New</span>
           </span>
-          <span class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 text-[#424655] text-xs font-semibold">
+          <span class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 text-muted text-xs font-semibold">
             <span class="w-2.5 h-2.5 rounded-full bg-[#94A3B8]"></span>
             <span>Viewed</span>
           </span>
@@ -369,34 +373,34 @@
           <button onclick="setMapStyle('bright')" id="map-style-bright" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-bold btn-brand-primary transition-colors">
             Street
           </button>
-          <button onclick="setMapStyle('positron')" id="map-style-positron" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#424655] hover:bg-slate-100 transition-colors">
+          <button onclick="setMapStyle('positron')" id="map-style-positron" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-muted hover:bg-slate-100 transition-colors">
             Minimal
           </button>
-          <button onclick="setMapStyle('satellite')" id="map-style-satellite" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#424655] hover:bg-slate-100 transition-colors">
+          <button onclick="setMapStyle('satellite')" id="map-style-satellite" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-muted hover:bg-slate-100 transition-colors">
             Satellite
           </button>
         </div>
 
         <!-- Top-Right Interactive Map Controls (+, -, Recenter) -->
         <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex flex-col gap-1 bg-white/95 backdrop-blur-md p-1.5 rounded-xl shadow-md border border-slate-200/80">
-          <button onclick="zoomInMap()" title="Zoom In" aria-label="Zoom In" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors" type="button">
-            <span class="material-symbols-outlined text-[18px]">add</span>
+          <button onclick="zoomInMap()" title="Zoom In" aria-label="Zoom In" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-ink transition-colors" type="button">
+            <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-plus"/></svg>
           </button>
-          <button onclick="zoomOutMap()" title="Zoom Out" aria-label="Zoom Out" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors" type="button">
-            <span class="material-symbols-outlined text-[18px]">remove</span>
+          <button onclick="zoomOutMap()" title="Zoom Out" aria-label="Zoom Out" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-ink transition-colors" type="button">
+            <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-minus"/></svg>
           </button>
-          <button onclick="resetMapView()" title="Recenter All Ipoh Pins" aria-label="Recenter All Ipoh Pins" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors" type="button">
-            <span class="material-symbols-outlined text-[18px]">my_location</span>
+          <button onclick="resetMapView()" title="Recenter All Ipoh Pins" aria-label="Recenter All Ipoh Pins" class="w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-ink transition-colors" type="button">
+            <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-locate"/></svg>
           </button>
         </div>
 
         <!-- Floating Map Footer Status -->
         <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-20 flex items-center justify-between pointer-events-none gap-2">
-          <div class="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-sm text-[11px] sm:text-xs text-[#424655] pointer-events-auto border border-slate-100">
-            Showing <strong id="map-pin-count" class="text-[#131B2E] font-bold">6</strong> verified Ipoh submarkets &middot; Vector Map
+          <div class="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-sm text-[11px] sm:text-xs text-muted pointer-events-auto border border-slate-100">
+            Showing <strong id="map-pin-count" class="text-ink font-bold">6</strong> verified Ipoh submarkets &middot; Vector Map
           </div>
           <a href="#properties" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white text-brand-primary font-bold text-xs shadow-md hover:bg-slate-50 transition-colors pointer-events-auto border border-slate-100">
-            <span class="material-symbols-outlined text-[16px]">grid_view</span>
+            <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-grid"/></svg>
             <span>Browse Cards Below</span>
           </a>
         </div>
@@ -404,399 +408,386 @@
     </div>
   </section>
 
-  <!-- 3. STITCH EDITORIAL FEATURED SUBSALE PROPERTY LISTINGS -->
-  <section id="properties" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+  <!-- 3. FEATURED SUBSALE LISTINGS -->
+  <section id="properties" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="properties-title">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-7">
       <div>
-        <div class="flex items-center gap-1.5 text-[#FD761A] font-bold text-xs uppercase tracking-wider mb-1">
-          <span class="material-symbols-outlined text-[18px]">workspace_premium</span>
-          <span>Curated Editorial Selection</span>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#131B2E] tracking-tight">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-accent mb-1" data-i18n="propertiesEyebrow">Featured Subsale</p>
+        <h2 id="properties-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
           <span id="projects-count" class="text-brand-primary mr-1">6</span>
-          <span data-i18n="propertiesHeadingSuffix">Featured Ipoh Subsale Developments (Examples)</span>
+          <span data-i18n="propertiesHeadingSuffix">Featured Ipoh Subsale Homes</span>
         </h2>
-        <p class="text-xs sm:text-sm text-[#424655] mt-1" data-i18n="propertiesSub">
-          All sample developments reflect real Ipoh subsale benchmarks from PropertyGuru with direct specialist units.
+        <p class="text-sm text-muted mt-1" data-i18n="propertiesSub">
+          Benchmarked to live Ipoh subsale prices. Tap any home for full photos &amp; units.
         </p>
       </div>
-      <a href="#compare" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:border-slate-400 text-[#131B2E] text-xs font-bold transition-colors shadow-sm self-start md:self-auto">
-        <span class="material-symbols-outlined text-[17px] text-brand-primary">compare_arrows</span>
-        <span>Compare (<span id="btn-compare-count">2</span>/3)</span>
+      <a href="#compare" class="inline-flex items-center gap-1.5 min-h-[44px] px-4 rounded-xl bg-white border border-line hover:border-slate-400 text-ink text-xs font-bold transition-colors shadow-sm self-start md:self-auto">
+        <svg class="pv-icon w-[17px] h-[17px] text-brand-primary" aria-hidden="true"><use href="#i-compare"/></svg>
+        <span><span data-i18n="navCompare">Compare</span> (<span id="btn-compare-count">2</span>/3)</span>
       </a>
     </div>
 
-    <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-live="polite"></div>
 
-    <!-- Stitch Secondary Callout Strip: Request Private Matchmaking -->
-    <div class="mt-10 bg-surface-low rounded-2xl p-5 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border border-slate-200/60">
+    <!-- Private Matchmaking Callout -->
+    <div class="mt-10 bg-surface-low rounded-2xl p-5 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border border-line">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl btn-brand-primary flex items-center justify-center shrink-0 shadow-sm">
-          <span class="material-symbols-outlined text-[26px] text-white">notification_important</span>
+          <svg class="pv-icon w-6 h-6" aria-hidden="true"><use href="#i-bell"/></svg>
         </div>
         <div>
-          <h4 class="font-bold text-base text-[#131B2E]" id="matchmaking-title">Can't find your exact street or layout in Ipoh?</h4>
-          <p class="text-xs sm:text-sm text-[#424655]" id="matchmaking-sub">Our Ipoh licensed agent network sources off-market subsales across Gunong Rapat, Tambun, Botani, and Canning Garden.</p>
+          <h3 class="font-bold text-base text-ink" id="matchmaking-title">Looking for a specific street or budget in Ipoh?</h3>
+          <p class="text-xs sm:text-sm text-muted" id="matchmaking-sub">Tell us what you need — we source off-market Ipoh subsales directly from owners.</p>
         </div>
       </div>
-      <button onclick="openLeadModal('Private Ipoh Off-Market Property Matchmaking')" class="px-5 py-3 rounded-xl bg-white text-brand-primary hover:bg-surface-high font-bold text-xs sm:text-sm transition-colors shrink-0 shadow-sm flex items-center gap-1.5">
-        <span id="matchmaking-cta">Request Private Matchmaking</span>
-        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+      <button type="button" onclick="openLeadModal('Private Ipoh Off-Market Property Matchmaking')" class="min-h-[44px] px-5 rounded-xl bg-white text-brand-primary hover:bg-surface-high font-bold text-sm transition-colors shrink-0 shadow-sm flex items-center gap-1.5">
+        <span id="matchmaking-cta">Match Me a Home</span>
+        <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-chevron-right"/></svg>
       </button>
     </div>
   </section>
 
-  <!-- 4. STITCH IPOH MORTGAGE & DSR ESTIMATOR -->
-  <section id="calculators" class="w-full bg-surface-low py-10 sm:py-14 border-y border-slate-200/70">
+  <!-- 4. IPOH LOAN, DSR & STAMP DUTY CALCULATOR -->
+  <section id="calculators" class="w-full bg-surface-low py-12 sm:py-16 border-y border-line" aria-labelledby="calc-title">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl border border-slate-100">
-        <div class="max-w-3xl mb-6">
-          <div class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#006B2E] uppercase tracking-wide mb-1">
-            <span class="material-symbols-outlined text-[16px]">account_balance</span>
-            <span>Bank Eligibility &amp; Perak Housing Scheme</span>
+      <div class="max-w-3xl mb-6">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-success mb-1 flex items-center gap-1.5">
+          <svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-landmark"/></svg>
+          <span data-i18n="calcEyebrow">Ipoh Loan &amp; DSR Check</span>
+        </p>
+        <h2 id="calc-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight" data-i18n="calcTitle">How Much Can You Afford in Ipoh?</h2>
+        <p class="text-sm text-muted mt-1" data-i18n="calcSub">Pick a preset or slide to check monthly repayment, 70% DSR income &amp; MOT stamp duty.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+        <!-- Inputs -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-line space-y-5">
+          <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" role="group" aria-label="Quick presets">
+            <button type="button" onclick="applyDsrExample(338000, 1750)" class="shrink-0 min-h-[40px] px-3.5 rounded-xl bg-brand-soft border text-xs font-bold transition-colors">Station 18 · RM 338k</button>
+            <button type="button" onclick="applyDsrExample(538000, 2200)" class="shrink-0 min-h-[40px] px-3.5 rounded-xl badge-accent-soft border text-xs font-bold transition-colors">Botani · RM 538k</button>
+            <button type="button" onclick="applyDsrExample(630000, 2900)" class="shrink-0 min-h-[40px] px-3.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition-colors">Tiger Lane · RM 630k</button>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-bold text-[#131B2E] tracking-tight" data-i18n="calcTitle">
-            Ipoh Property Mortgage &amp; DSR Estimator
-          </h2>
-          <p class="text-xs sm:text-sm text-[#424655] mt-1" data-i18n="calcSub">
-            Tailored to Ipoh subsale prices (RM 300k–RM 800k). Click an Ipoh DSR example or adjust sliders to check installment, 70% DSR income &amp; MOT stamp duty.
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-sm sm:text-base font-semibold text-ink" id="calc-lbl-price" for="slider-price">Target Home Price</label>
+              <output class="text-xl font-extrabold text-brand-primary" id="calc-val-price" for="slider-price">RM 480,000</output>
+            </div>
+            <input id="slider-price" type="range" min="200000" max="1500000" step="10000" value="480000" class="w-full custom-range" />
+            <div class="flex justify-between text-[11px] text-muted mt-1" aria-hidden="true"><span>RM 200k</span><span>RM 850k</span><span>RM 1.5M</span></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between text-xs sm:text-sm font-semibold text-ink mb-1.5">
+                <label id="calc-lbl-loan" for="slider-margin">Loan Margin</label>
+                <output id="calc-val-loan" for="slider-margin" class="text-brand-primary font-bold">90%</output>
+              </div>
+              <input id="slider-margin" type="range" min="60" max="90" step="5" value="90" class="w-full custom-range" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs sm:text-sm font-semibold text-ink mb-1.5">
+                <label id="calc-lbl-rate" for="slider-rate">Interest Rate</label>
+                <output id="calc-val-rate" for="slider-rate" class="text-brand-primary font-bold">4.00%</output>
+              </div>
+              <input id="slider-rate" type="range" min="3.2" max="5.2" step="0.05" value="4.0" class="w-full custom-range" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs sm:text-sm font-semibold text-ink mb-1.5">
+                <label id="calc-lbl-tenure" for="slider-tenure">Loan Tenure</label>
+                <output id="calc-val-tenure" for="slider-tenure" class="text-brand-primary font-bold">35 Years</output>
+              </div>
+              <input id="slider-tenure" type="range" min="10" max="35" step="5" value="35" class="w-full custom-range" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs sm:text-sm font-semibold text-ink mb-1.5">
+                <label id="calc-lbl-rent" for="slider-rent">Est. Monthly Rent</label>
+                <output id="calc-val-rent" for="slider-rent" class="text-brand-primary font-bold">RM 2,200</output>
+              </div>
+              <input id="slider-rent" type="range" min="800" max="6000" step="100" value="2200" class="w-full custom-range" />
+            </div>
+          </div>
+
+          <div>
+            <label id="calc-lbl-buyer" for="calc-buyer" class="block text-xs sm:text-sm font-semibold text-ink mb-1.5">Buyer Type</label>
+            <select id="calc-buyer" class="pv-input cursor-pointer">
+              <option value="local">Malaysian (upgrading / 2nd home)</option>
+              <option value="first">Malaysian, first home</option>
+              <option value="foreign">Foreign buyer (8% flat MOT)</option>
+            </select>
+            <p class="text-[11px] text-muted mt-1.5 flex items-start gap-1.5" id="calc-first-note">
+              <svg class="pv-icon w-4 h-4 text-success shrink-0" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              <span id="calc-first-note-text">First-time Malaysian buyers may enjoy 100% MOT exemption for homes up to RM 500k.</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="lg:col-span-5 space-y-3" aria-live="polite">
+          <div class="rounded-2xl bg-ink text-white p-5 sm:p-6 shadow-lg">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-white/70" id="calc-summary-heading">Estimated Monthly Repayment</span>
+            <div class="text-3xl sm:text-4xl font-extrabold mt-1 tabular-nums" id="out-monthly">RM 1,913 <span class="text-sm font-semibold text-white/70">/ month</span></div>
+            <div class="text-xs text-white/70 mt-1"><span id="out-lbl-principal">Loan Principal</span>: <strong class="text-white" id="out-loan-amount">RM 432,000</strong></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="out-lbl-income">Min. Income (70% DSR)</div>
+              <div class="text-lg font-bold text-ink mt-0.5 tabular-nums" id="out-income">RM 2,733</div>
+            </div>
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="lbl-downpayment">Downpayment</div>
+              <div class="text-lg font-bold text-ink mt-0.5 tabular-nums" id="out-downpayment">RM 48,000</div>
+            </div>
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="out-lbl-mot">MOT Stamp Duty</div>
+              <div class="text-lg font-bold text-ink mt-0.5 tabular-nums" id="out-mot">RM 0</div>
+              <div class="text-[11px] text-muted mt-0.5" id="out-mot-note">1–4% tiers</div>
+            </div>
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="out-lbl-legal">Legal + Loan Duty</div>
+              <div class="text-lg font-bold text-ink mt-0.5 tabular-nums" id="out-legal">RM 0</div>
+              <div class="text-[11px] text-muted mt-0.5" id="out-legal-note">SRO scale (SPA + loan)</div>
+            </div>
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="out-lbl-roi">Gross Rental Yield</div>
+              <div class="text-lg font-bold text-ink mt-0.5 tabular-nums" id="out-roi">5.50%</div>
+            </div>
+            <div class="bg-white rounded-xl border border-line p-4">
+              <div class="text-[11px] font-bold text-muted uppercase tracking-wide" id="lbl-cashflow">Net Cashflow / Month</div>
+              <div class="text-lg mt-0.5 tabular-nums"><strong id="out-cashflow" class="text-success font-bold">+RM 287</strong></div>
+            </div>
+          </div>
+
+          <button type="button" onclick="openDsrWhatsApp()" class="w-full min-h-[52px] px-4 rounded-xl btn-whatsapp text-sm flex items-center justify-center gap-2 shadow-md">
+            <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>
+            <span id="calc-cta-text">Send Estimate to WhatsApp</span>
+          </button>
+          <p class="text-[11px] text-muted leading-relaxed" id="calc-disclaimer">
+            Estimates only. MOT uses the 1/2/3/4% tiers for Malaysians and a flat 8% for foreign buyers; the first-home exemption assumes an eligible citizen buying at RM 500k or below. Legal fees follow the Solicitors' Remuneration Order scale. Confirm with your lawyer and bank.
           </p>
-        </div>
-
-        <!-- Ipoh Quick DSR Example Presets -->
-        <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1">
-          <button onclick="applyDsrExample(338000, 1750)" class="shrink-0 px-3.5 py-2 rounded-xl bg-brand-soft border text-xs font-bold transition-colors">
-            Example A: Station 18 Condo (RM 338k)
-          </button>
-          <button onclick="applyDsrExample(538000, 2200)" class="shrink-0 px-3.5 py-2 rounded-xl badge-accent-soft border text-xs font-bold transition-colors">
-            Example B: Botani 2-Storey Terrace (RM 538k)
-          </button>
-          <button onclick="applyDsrExample(630000, 2900)" class="shrink-0 px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition-colors">
-            Example C: Tiger Lane Upper East (RM 630k)
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
-          <!-- Left 7 Cols: Interactive Sliders + Sub-Inputs + MOT Exemption Callout -->
-          <div class="lg:col-span-7 space-y-5">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-sm sm:text-base font-semibold text-[#131B2E]" id="calc-lbl-price" for="slider-price">Target Home Price</label>
-                <span class="text-xl font-extrabold text-brand-primary" id="calc-val-price">RM 480,000</span>
-              </div>
-              <input id="slider-price" type="range" min="200000" max="1500000" step="10000" value="480000" class="w-full custom-range" />
-              <div class="flex justify-between text-[11px] text-[#424655] mt-1"><span>RM 200k</span><span>RM 850k</span><span>RM 1.5M</span></div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <div class="flex justify-between text-xs sm:text-sm font-semibold text-[#131B2E] mb-1.5">
-                  <span id="calc-lbl-loan">Loan Margin</span>
-                  <span id="calc-val-loan" class="text-brand-primary font-bold">90%</span>
-                </div>
-                <input id="slider-margin" type="range" min="60" max="90" step="5" value="90" class="w-full custom-range" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs sm:text-sm font-semibold text-[#131B2E] mb-1.5">
-                  <span id="calc-lbl-rate">Interest Rate</span>
-                  <span id="calc-val-rate" class="text-brand-primary font-bold">4.00%</span>
-                </div>
-                <input id="slider-rate" type="range" min="3.2" max="5.2" step="0.1" value="4.0" class="w-full custom-range" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs sm:text-sm font-semibold text-[#131B2E] mb-1.5">
-                  <span id="calc-lbl-tenure">Loan Tenure</span>
-                  <span id="calc-val-tenure" class="text-brand-primary font-bold">35 Years</span>
-                </div>
-                <input id="slider-tenure" type="range" min="15" max="35" step="5" value="35" class="w-full custom-range" />
-              </div>
-              <div>
-                <div class="flex justify-between text-xs sm:text-sm font-semibold text-[#131B2E] mb-1.5">
-                  <span id="calc-lbl-rent">Est. Monthly Rent</span>
-                  <span id="calc-val-rent" class="text-brand-primary font-bold">RM 2,200</span>
-                </div>
-                <input id="slider-rent" type="range" min="800" max="6000" step="100" value="2200" class="w-full custom-range" />
-              </div>
-            </div>
-
-            <!-- Stitch 2-Column Sub-inputs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div class="bg-surface-low p-4 rounded-xl">
-                <div class="text-[11px] font-bold text-[#424655]" id="lbl-downpayment">Downpayment</div>
-                <div class="text-lg font-bold text-[#131B2E] mt-0.5" id="out-downpayment">RM 48,000</div>
-                <div class="text-[11px] text-[#006B2E] mt-1 flex items-center gap-1 font-medium">
-                  <span class="material-symbols-outlined text-[14px]">check_circle</span> 0% Down options for 1st-Time Perak Buyers
-                </div>
-              </div>
-              <div class="bg-surface-low p-4 rounded-xl">
-                <div class="text-[11px] font-bold text-[#424655]" id="out-lbl-mot">MOT Stamp Duty &amp; Legal Est.</div>
-                <div class="text-lg font-bold text-[#131B2E] mt-0.5" id="out-mot">RM 8,600</div>
-                <div class="text-[11px] text-[#424655] mt-1">Legal (SPA + Loan): <strong id="out-legal">RM 8,560</strong></div>
-              </div>
-            </div>
-
-            <!-- Stitch MOT Exemption & Foreigner Toggle -->
-            <div class="flex flex-col gap-2.5 p-3.5 rounded-xl bg-surface-high text-[#131B2E]">
-              <div class="flex items-start gap-2.5">
-                <span class="material-symbols-outlined text-brand-primary text-[20px] shrink-0 mt-0.5">verified_user</span>
-                <div class="text-xs leading-relaxed">
-                  <strong class="text-brand-primary font-bold">100% MOT Stamp Duty Exemption</strong> may apply to qualifying first-time Malaysian buyers for subsale homes priced up to RM 500,000.
-                </div>
-              </div>
-              <label class="inline-flex items-center gap-2 text-xs font-semibold text-[#424655] cursor-pointer pl-7">
-                <input id="calc-foreigner" type="checkbox" class="rounded border-slate-300" />
-                <span id="calc-lbl-foreigner">Foreign Buyer (8% Flat MOT Stamp Duty Rate)</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Right 5 Cols: Stitch Gradient Result Box -->
-          <div class="lg:col-span-5 bg-gradient-to-br from-surface-low to-surface-high p-5 sm:p-7 rounded-2xl flex flex-col justify-between border border-slate-200/60">
-            <div>
-              <span class="text-[11px] font-bold text-[#424655] uppercase tracking-wider" id="calc-summary-heading">Estimated Monthly Repayment</span>
-              <div class="text-3xl sm:text-4xl font-extrabold text-brand-primary mt-1" id="out-monthly">
-                RM 1,913 <span class="text-sm font-semibold text-[#424655]">/ month</span>
-              </div>
-              <div class="text-xs text-[#424655] mt-1">
-                Loan Principal: <strong class="text-[#131B2E]" id="out-loan-amount">RM 432,000</strong>
-              </div>
-
-              <div class="mt-5 pt-5 border-t border-slate-300/60 space-y-2.5 text-xs">
-                <div class="flex items-center justify-between">
-                  <span class="text-[#424655]" id="out-lbl-income">Min. Income (70% DSR):</span>
-                  <strong class="text-[#131B2E] font-bold text-sm" id="out-income">RM 2,733 / mo</strong>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-[#424655]" id="out-lbl-roi">Est. Gross Rental Yield:</span>
-                  <span class="px-2 py-0.5 rounded bg-[#66FF8E]/60 text-[#002109] font-bold" id="out-roi">5.50%</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-[#424655]" id="lbl-cashflow">Est. Monthly Net Cashflow:</span>
-                  <strong id="out-cashflow" class="text-[#006B2E] font-bold">+RM 287 / mo</strong>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-[#424655]">Govt LPPSA Loan Compatible:</span>
-                  <strong class="text-[#006B2E] font-semibold">Yes (Eligible Civil Servants)</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6 pt-3">
-              <button onclick="openDsrWhatsApp()" class="w-full py-3.5 px-4 rounded-xl btn-whatsapp text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md">
-                <span class="material-symbols-outlined text-[20px]">chat</span>
-                <span id="calc-cta-text">Check Bank Eligibility via WhatsApp</span>
-              </button>
-              <p class="text-[11px] text-center text-[#424655] mt-2">
-                Free pre-assessment with Maybank, Public Bank, CIMB &amp; Hong Leong panel bankers.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. STITCH NEIGHBOURHOOD AREA GUIDES -->
-  <section id="guides" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-7">
-      <div class="max-w-2xl">
-        <div class="text-xs font-bold text-brand-primary uppercase tracking-wider mb-1">Kinta Valley Submarket Analysis</div>
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#131B2E] tracking-tight" data-i18n="guidesTitle">Explore Popular Ipoh Neighbourhoods</h2>
-        <p class="text-xs sm:text-sm text-[#424655] mt-1" data-i18n="guidesSub">Click any Ipoh neighbourhood below to inspect real subsale PSF, rental yields, and filter curated listings.</p>
-      </div>
+  <!-- 5. NEIGHBOURHOOD AREA GUIDES -->
+  <section id="guides" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="guides-title">
+    <div class="max-w-2xl mb-7">
+      <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-primary mb-1" data-i18n="guidesEyebrow">Area Guides</p>
+      <h2 id="guides-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight" data-i18n="guidesTitle">Popular Ipoh Neighbourhoods</h2>
+      <p class="text-sm text-muted mt-1" data-i18n="guidesSub">Tap an area to filter subsale homes and compare PSF &amp; rental yield.</p>
     </div>
-
     <div id="area-guides-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
   </section>
 
-  <!-- 6. IPOH SIDE-BY-SIDE COMPARISON -->
-  <section id="compare" class="bg-white border-y border-slate-200 py-10 sm:py-14">
+  <!-- 6. SIDE-BY-SIDE COMPARISON -->
+  <section id="compare" class="bg-white border-y border-line py-12 sm:py-16" aria-labelledby="compare-title">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
         <div class="max-w-2xl">
-          <h2 class="text-2xl sm:text-3xl font-bold text-[#131B2E] tracking-tight" data-i18n="compareTitle">Ipoh Property Side-by-Side Comparison</h2>
-          <p class="text-xs sm:text-sm text-[#424655] mt-1" data-i18n="compareSub">Compare Ipoh landed terraces vs resort condos across price, PSF, maintenance fees, school/hospital drive time, and rental yield.</p>
+          <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-primary mb-1" data-i18n="compareEyebrow">Compare</p>
+          <h2 id="compare-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight" data-i18n="compareTitle">Compare Ipoh Homes Side-by-Side</h2>
+          <p class="text-sm text-muted mt-1" data-i18n="compareSub">Price, PSF, fees, and rental yield in one clean view.</p>
         </div>
-        <div class="flex items-center gap-2 text-xs overflow-x-auto no-scrollbar pb-1">
-          <span class="text-[#424655] font-medium shrink-0">Presets:</span>
-          <button onclick="setComparePreset(['upper-east-tiger-lane', 'the-haven-tambun'])" class="shrink-0 px-3 py-1.5 rounded-lg bg-surface-low hover:bg-surface-high font-semibold text-[#131B2E]">Upper East vs The Haven</button>
-          <button onclick="setComparePreset(['botani-seri-meranti', 'meru-desa-park'])" class="shrink-0 px-3 py-1.5 rounded-lg bg-surface-low hover:bg-surface-high font-semibold text-[#131B2E]">Botani vs Meru</button>
-          <button onclick="setComparePreset(['canning-garden-terrace', 'manhattan-station-18'])" class="shrink-0 px-3 py-1.5 rounded-lg bg-surface-low hover:bg-surface-high font-semibold text-[#131B2E]">Canning vs Station 18</button>
+        <div class="flex items-center gap-2 text-xs overflow-x-auto no-scrollbar pb-1" role="group" aria-label="Comparison presets">
+          <button type="button" onclick="setComparePreset(['upper-east-tiger-lane', 'the-haven-tambun'])" class="shrink-0 min-h-[40px] px-3.5 rounded-full border border-line bg-white hover:border-brand-primary font-semibold text-ink">Upper East vs The Haven</button>
+          <button type="button" onclick="setComparePreset(['botani-seri-meranti', 'meru-desa-park'])" class="shrink-0 min-h-[40px] px-3.5 rounded-full border border-line bg-white hover:border-brand-primary font-semibold text-ink">Botani vs Meru</button>
+          <button type="button" onclick="setComparePreset(['canning-garden-terrace', 'manhattan-station-18'])" class="shrink-0 min-h-[40px] px-3.5 rounded-full border border-line bg-white hover:border-brand-primary font-semibold text-ink">Canning vs Station 18</button>
         </div>
       </div>
-
-      <div id="compare-table-wrapper" class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm bg-white"></div>
+      <div id="compare-table-wrapper" class="overflow-x-auto rounded-2xl border border-line shadow-sm bg-white"></div>
+      <p class="text-[11px] text-muted mt-3" data-i18n="compareHint">✓ marks the best value in each row. Add homes with the compare button on any listing card.</p>
     </div>
   </section>
 
-  <!-- 7. STITCH AGENT CONCIERGE TRUST BAR & IPOH SPECIALISTS ROSTER -->
-  <section id="agents" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-    <!-- Stitch Concierge Trust Bar -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 mb-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
+  <!-- 7. SPECIALISTS: COMPANY CARD + ROSTER -->
+  <section id="agents" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="agents-title">
+    <div class="rounded-2xl bg-ink text-white p-5 sm:p-7 mb-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 shadow-lg">
       <div class="flex items-center gap-4">
         <div class="relative shrink-0">
           <div class="w-16 h-16 rounded-full btn-brand-primary flex items-center justify-center text-lg font-extrabold shadow-md">JL</div>
-          <span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#25D366] border-2 border-white" title="Agent Online Now"></span>
+          <span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#25D366] border-2 border-white" title="Agent online now"></span>
         </div>
         <div>
-          <div class="inline-flex items-center gap-1 text-[11px] font-bold text-[#006B2E]">
-            <span class="material-symbols-outlined text-[16px]">verified</span> LPPEH Registered Real Estate Firm (E(1) 2048 · Example)
+          <div class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300">
+            <svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-shield-check"/></svg> LPPEH Registered Real Estate Firm (E(1) 2048 · Example)
           </div>
-          <h3 class="text-lg sm:text-xl font-bold text-[#131B2E] mt-0.5" data-i18n="agentsTitle">
-            Talk directly with an Ipoh Subsale Specialist
-          </h3>
-          <p class="text-xs sm:text-sm text-[#424655]" data-i18n="agentsSub">
-            Clarify title types (Freehold vs Leasehold 99), State Consent applications, valuation reports, and lawyer fees.
-          </p>
+          <h2 id="agents-title" class="text-lg sm:text-2xl font-bold mt-0.5" data-i18n="agentsTitle">Speak Directly with an Ipoh Specialist</h2>
+          <p class="text-xs sm:text-sm text-white/75" data-i18n="agentsSub">Freehold/Leasehold checks, bank valuation &amp; viewing keys — zero middlemen.</p>
         </div>
       </div>
       <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto">
-        <button onclick="openAgentWhatsApp('jason-leong')" class="w-full sm:w-auto px-5 py-3 rounded-xl btn-whatsapp text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm">
-          <span class="material-symbols-outlined text-[18px]">chat</span>
-          <span>Direct WhatsApp Specialist</span>
+        <button type="button" onclick="openAgentWhatsApp('jason-leong')" class="w-full sm:w-auto min-h-[48px] px-5 rounded-xl btn-whatsapp text-sm flex items-center justify-center gap-2 shadow-sm">
+          <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-chat"/></svg>
+          <span data-i18n="btnDirectSpecialist">WhatsApp a Specialist</span>
         </button>
-        <button onclick="openLeadModal('Book In-Person Ipoh Viewing')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] font-semibold text-xs sm:text-sm transition-colors">
-          Book In-Person Viewing
-        </button>
+        <a href="#inquiry" class="w-full sm:w-auto min-h-[48px] px-5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold text-sm transition-colors flex items-center justify-center" data-i18n="btnBookViewing">Book a Viewing</a>
       </div>
     </div>
 
     <div id="agents-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6"></div>
-    <div id="agent-listings-preview" class="mt-6 rounded-2xl bg-white border border-slate-200 p-4 sm:p-5 shadow-sm hidden"></div>
+    <div id="agent-listings-preview" class="mt-6 rounded-2xl bg-white border border-line p-4 sm:p-5 shadow-sm hidden"></div>
   </section>
 
-  <!-- Clean Light Footer -->
-  <footer class="w-full bg-surface-low border-t border-slate-200/70 py-10">
+  <!-- 8. INLINE INQUIRY FORM -->
+  <section id="inquiry" class="bg-white border-t border-line py-12 sm:py-16" aria-labelledby="inquiry-title">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-5">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-primary mb-1" data-i18n="inqEyebrow">Next Step</p>
+        <h2 id="inquiry-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight" data-i18n="inqTitle">Schedule a Viewing or Request Unit Details</h2>
+        <p class="text-sm text-muted mt-2" data-i18n="inqSub">We reply on WhatsApp, usually within the hour during office hours.</p>
+        <ul class="mt-5 space-y-3 text-sm text-ink">
+          <li class="flex items-start gap-2.5"><svg class="pv-icon w-5 h-5 text-success shrink-0" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="inqPoint1">Real photos &amp; unit checklist</span></li>
+          <li class="flex items-start gap-2.5"><svg class="pv-icon w-5 h-5 text-success shrink-0" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="inqPoint2">Free bank valuation estimate</span></li>
+          <li class="flex items-start gap-2.5"><svg class="pv-icon w-5 h-5 text-success shrink-0" aria-hidden="true"><use href="#i-check-circle"/></svg><span data-i18n="inqPoint3">Viewing slots with the area specialist</span></li>
+        </ul>
+      </div>
+      <form id="inline-inquiry-form" class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-surface-low rounded-2xl border border-line p-5 sm:p-6" novalidate onsubmit="submitInlineInquiry(event)">
+        <div class="sm:col-span-2">
+          <label for="inq-topic" class="block text-sm font-semibold text-ink mb-1.5" data-i18n="inqTopicLbl">What do you need?</label>
+          <select id="inq-topic" class="pv-input cursor-pointer">
+            <option value="viewing" data-i18n="inqTopic1">Schedule a viewing</option>
+            <option value="details" data-i18n="inqTopic2">Request unit details &amp; photos</option>
+            <option value="loan" data-i18n="inqTopic3">Loan &amp; valuation breakdown</option>
+            <option value="sell" data-i18n="inqTopic4">List my property</option>
+          </select>
+        </div>
+        <div>
+          <label for="inq-name" class="block text-sm font-semibold text-ink mb-1.5" data-i18n="inqNameLbl">Your name</label>
+          <input id="inq-name" class="pv-input" autocomplete="name" required aria-describedby="inq-name-err" />
+          <p class="pv-error" id="inq-name-err"></p>
+        </div>
+        <div>
+          <label for="inq-phone" class="block text-sm font-semibold text-ink mb-1.5" data-i18n="inqPhoneLbl">WhatsApp number</label>
+          <input id="inq-phone" class="pv-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="012-345 6789" required aria-describedby="inq-phone-err" />
+          <p class="pv-error" id="inq-phone-err"></p>
+        </div>
+        <div class="sm:col-span-2">
+          <button type="submit" class="w-full min-h-[52px] rounded-xl btn-whatsapp text-sm flex items-center justify-center gap-2 shadow-sm">
+            <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>
+            <span data-i18n="inqSend">Send Request via WhatsApp</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-surface-low border-t border-line py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-200">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-line">
         <div class="md:col-span-5">
-          <div class="flex items-center gap-2.5 text-[#131B2E] font-extrabold text-lg mb-2.5">
+          <div class="flex items-center gap-2.5 text-ink font-extrabold text-lg mb-2.5">
             <div class="w-8 h-8 rounded-lg btn-brand-primary flex items-center justify-center">
-              <span class="material-symbols-outlined text-[18px] text-white">domain</span>
+              <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-building"/></svg>
             </div>
             <span>PrimeVerse <span class="text-brand-primary">Ipoh</span></span>
           </div>
-          <p class="text-xs text-[#424655] leading-relaxed mb-3" data-i18n="footerAbout">
-            PrimeVerse Ipoh Realty focuses exclusively on Ipoh subsale residential homes, gated communities, and tourism-yield condos with 100% verified listings.
+          <p class="text-xs text-muted leading-relaxed mb-3" data-i18n="footerAbout">
+            Exclusive Ipoh subsale portal — 100% verified local homes, transparent pricing, direct specialist viewings.
           </p>
-          <div class="text-[11px] text-slate-500">PrimeVerse Ipoh Realty Sdn. Bhd. E(1) 2048 (Example Demo)</div>
+          <div class="text-[11px] text-muted">PrimeVerse Ipoh Realty Sdn. Bhd. E(1) 2048 (Example Demo)</div>
         </div>
 
-        <div class="md:col-span-2 text-xs space-y-2 text-[#424655]">
-          <div class="font-bold text-[#131B2E] uppercase tracking-wider mb-3" data-i18n="footerQuickLinks">Explore Ipoh</div>
+        <nav class="md:col-span-2 text-xs space-y-2 text-muted" aria-label="Explore">
+          <div class="font-bold text-ink uppercase tracking-wider mb-3" data-i18n="footerQuickLinks">Explore Ipoh</div>
           <div><a href="#properties" class="hover:text-brand-primary" data-i18n="navLanded">Ipoh Landed</a></div>
           <div><a href="#guides" class="hover:text-brand-primary" data-i18n="navGuides">Ipoh Area Guides</a></div>
           <div><a href="#compare" class="hover:text-brand-primary" data-i18n="navCompare">Compare</a></div>
           <div><a href="#calculators" class="hover:text-brand-primary" data-i18n="navCalculators">Ipoh DSR Calculator</a></div>
+        </nav>
+
+        <div class="md:col-span-2 text-xs space-y-2 text-muted">
+          <div class="font-bold text-ink uppercase tracking-wider mb-3" data-i18n="footerAreas">Hot Ipoh Areas</div>
+          <div><button type="button" onclick="filterByGuideArea('Bandar Seri Botani')" class="hover:text-brand-primary">Bandar Seri Botani</button></div>
+          <div><button type="button" onclick="filterByGuideArea('Tiger Lane')" class="hover:text-brand-primary">Tiger Lane</button></div>
+          <div><button type="button" onclick="filterByGuideArea('Canning / Ipoh Garden')" class="hover:text-brand-primary">Canning Garden</button></div>
+          <div><button type="button" onclick="filterByGuideArea('Tambun / Sunway')" class="hover:text-brand-primary">Tambun Sunway</button></div>
         </div>
 
-        <div class="md:col-span-2 text-xs space-y-2 text-[#424655]">
-          <div class="font-bold text-[#131B2E] uppercase tracking-wider mb-3" data-i18n="footerAreas">Hot Ipoh Areas</div>
-          <div><button onclick="filterByGuideArea('Bandar Seri Botani')" class="hover:text-brand-primary">Bandar Seri Botani</button></div>
-          <div><button onclick="filterByGuideArea('Tiger Lane')" class="hover:text-brand-primary">Tiger Lane</button></div>
-          <div><button onclick="filterByGuideArea('Canning / Ipoh Garden')" class="hover:text-brand-primary">Canning Garden</button></div>
-          <div><button onclick="filterByGuideArea('Tambun / Sunway')" class="hover:text-brand-primary">Tambun Sunway</button></div>
-        </div>
-
-        <div class="md:col-span-3 text-xs space-y-2 text-[#424655]">
-          <div class="font-bold text-[#131B2E] uppercase tracking-wider mb-3" data-i18n="footerContact">Ipoh Office (Example)</div>
+        <div class="md:col-span-3 text-xs space-y-2 text-muted">
+          <div class="font-bold text-ink uppercase tracking-wider mb-3" data-i18n="footerContact">Ipoh Office (Example)</div>
           <p class="leading-relaxed" id="footer-address">No. 18, Persiaran Greentown 6, Greentown Business Centre, 30450 Ipoh, Perak (Example)</p>
-          <p class="font-semibold text-[#006B2E]">WhatsApp: +60 12-508 2048</p>
-          <button onclick="openLeadModal('Ipoh Owner Property Listing Inquiry')" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-[#131B2E] font-semibold">
+          <p class="font-semibold text-success">WhatsApp: +60 12-508 2048</p>
+          <button type="button" onclick="openLeadModal('Ipoh Owner Property Listing Inquiry')" class="mt-2 inline-flex items-center gap-1.5 min-h-[40px] px-3 rounded-lg bg-white border border-line hover:bg-slate-50 text-ink font-semibold">
             <span data-i18n="btnListProperty">List Your Property</span>
           </button>
         </div>
       </div>
 
-      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#424655]">
-        <div>&copy; 2026 PrimeVerse Ipoh Realty Sdn. Bhd. (Licensed Ipoh Real Estate Portal Demo)</div>
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-muted">
+        <div>&copy; 2026 PrimeVerse Ipoh Realty Sdn. Bhd. (Example)</div>
         <div>LPPSA &amp; Perak State Guidelines Ready</div>
       </div>
     </div>
   </footer>
 
-  <!-- Stitch Mobile Floating Agent Dock (above bottom bar) -->
-  <aside aria-label="Quick Agent Chat" class="md:hidden fixed bottom-[68px] left-3 right-3 z-40 bg-white/95 backdrop-blur-md rounded-2xl p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-slate-200/70 flex items-center justify-between">
-    <div class="flex items-center gap-2.5 min-w-0">
-      <div class="relative shrink-0">
-        <div class="w-9 h-9 rounded-full btn-brand-primary flex items-center justify-center text-xs font-extrabold">JL</div>
-        <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#25D366] ring-2 ring-white"></span>
-      </div>
-      <div class="truncate">
-        <div class="font-bold text-xs text-[#131B2E] leading-tight truncate">Jason Leong (Ipoh Agent)</div>
-        <div class="text-[10px] text-[#006B2E] font-medium">Online now &bull; Typical reply: 2 mins</div>
-      </div>
-    </div>
-    <button onclick="openAgentWhatsApp('jason-leong')" class="px-3.5 py-2 rounded-xl btn-whatsapp text-xs flex items-center gap-1 shadow-sm shrink-0">
-      <span class="material-symbols-outlined text-[16px]">chat</span>
-      <span>WhatsApp</span>
-    </button>
-  </aside>
-
-  <!-- Sticky Mobile Bottom Bar (Clean White) -->
-  <nav class="mobile-bottom-nav md:hidden fixed bottom-0 inset-x-0 z-40 text-[#424655] text-[10px] font-bold">
-    <div class="grid grid-cols-5 h-15 py-1.5">
-      <a href="#properties" class="flex flex-col items-center justify-center gap-0.5 text-brand-primary">
-        <span class="material-symbols-outlined text-[20px]">home</span>
-        <span>Homes</span>
+  <!-- Mobile Bottom Bar: 4 nav shortcuts + WhatsApp -->
+  <nav class="mobile-bottom-nav md:hidden fixed bottom-0 inset-x-0 z-40 text-muted text-[10px] font-bold" aria-label="Quick navigation">
+    <div class="grid grid-cols-5 items-stretch gap-1 px-2 py-1.5">
+      <a href="#properties" class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl text-brand-primary">
+        <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-home"/></svg>
+        <span data-i18n="mnavHomes">Homes</span>
       </a>
-      <a href="#ipoh-map-section" class="flex flex-col items-center justify-center gap-0.5 hover:text-[#131B2E]">
-        <span class="material-symbols-outlined text-[20px]">map</span>
-        <span>Map</span>
+      <a href="#ipoh-map-section" class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl hover:text-ink">
+        <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-map"/></svg>
+        <span data-i18n="mnavMap">Map</span>
       </a>
-      <a href="#compare" class="flex flex-col items-center justify-center gap-0.5 hover:text-[#131B2E]">
-        <span class="material-symbols-outlined text-[20px]">compare_arrows</span>
-        <span>Compare</span>
-      </a>
-      <a href="#calculators" class="flex flex-col items-center justify-center gap-0.5 hover:text-[#131B2E]">
-        <span class="material-symbols-outlined text-[20px]">calculate</span>
+      <a href="#calculators" class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl hover:text-ink">
+        <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-calculator"/></svg>
         <span>DSR</span>
       </a>
-      <a href="./basic.html" class="flex flex-col items-center justify-center gap-0.5 hover:text-[#131B2E]">
-        <span class="material-symbols-outlined text-[20px]">layers</span>
-        <span>Basic</span>
+      <a href="#compare" class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl hover:text-ink">
+        <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-compare"/></svg>
+        <span data-i18n="mnavCompare">Compare</span>
       </a>
+      <button type="button" onclick="openAgentWhatsApp('jason-leong')" class="flex flex-col items-center justify-center gap-0.5 min-h-[48px] rounded-xl btn-whatsapp">
+        <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-chat"/></svg>
+        <span>WhatsApp</span>
+      </button>
     </div>
   </nav>
 
   <!-- Property Development Detail Modal -->
-  <div id="project-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm p-0 sm:p-6 flex items-end sm:items-center justify-center">
+  <div id="project-modal" role="dialog" aria-modal="true" aria-label="Property details" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm p-0 sm:p-6 flex items-end sm:items-center justify-center">
     <div class="max-w-4xl w-full bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden modal-animate max-h-[92vh] flex flex-col">
       <div id="project-modal-content" class="flex flex-col max-h-[92vh]"></div>
     </div>
   </div>
 
   <!-- Buyer Inquiry Modal -->
-  <div id="lead-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm p-0 sm:p-4 flex items-end sm:items-center justify-center">
+  <div id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm p-0 sm:p-4 flex items-end sm:items-center justify-center">
     <div class="max-w-md w-full bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 modal-animate relative">
-      <button onclick="closeLeadModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
-        <i data-lucide="x" class="w-4 h-4"></i>
+      <button type="button" onclick="closeLeadModal()" aria-label="Close" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+        <svg class="pv-icon w-4 h-4" aria-hidden="true"><use href="#i-x"/></svg>
       </button>
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#25D366]/15 text-[#006B2E] text-[11px] font-bold mb-2">
-        <span class="material-symbols-outlined text-[14px]">chat</span>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-success text-[11px] font-bold mb-2">
+        <svg class="pv-icon w-[14px] h-[14px]" aria-hidden="true"><use href="#i-chat"/></svg>
         <span>WhatsApp Concierge</span>
       </div>
-      <h3 class="text-lg sm:text-xl font-extrabold text-[#131B2E]" data-i18n="leadModalTitle">Schedule an Ipoh Viewing or Request Unit Details</h3>
-      <p class="text-xs text-[#424655] mt-1 mb-4" data-i18n="leadModalSub">Leave your details and our Ipoh specialist will send the full unit checklist, bank valuation estimate, and viewing slots via WhatsApp.</p>
+      <h3 id="lead-modal-title" class="text-lg sm:text-xl font-extrabold text-ink" data-i18n="leadModalTitle">Schedule an Ipoh Viewing or Request Unit Details</h3>
+      <p class="text-xs text-muted mt-1 mb-4" data-i18n="leadModalSub">Leave your details and our Ipoh specialist will send the full unit checklist, bank valuation estimate, and viewing slots via WhatsApp.</p>
 
       <form id="lead-form" onsubmit="submitLeadForm(event)" class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Inquiry Topic</label>
-          <input id="lead-context" type="text" readonly class="w-full px-3 py-2 rounded-xl bg-surface-low text-xs font-semibold text-[#131B2E] border border-slate-200" />
+          <label for="lead-context" class="block text-xs font-semibold text-slate-700 mb-1">Inquiry Topic</label>
+          <input id="lead-context" type="text" readonly class="w-full px-3 py-2 rounded-xl bg-surface-low text-xs font-semibold text-ink border border-slate-200" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Your Name</label>
+          <label for="lead-name" class="block text-xs font-semibold text-slate-700 mb-1">Your Name</label>
           <input id="lead-name" type="text" required placeholder="e.g. Mr. Tan" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-slate-500" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp Number</label>
+          <label for="lead-phone" class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp Number</label>
           <input id="lead-phone" type="tel" required placeholder="+60 12-508 6789" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-slate-500" />
         </div>
         <button type="submit" class="w-full py-3 rounded-xl btn-whatsapp text-sm">
           Send Request via WhatsApp
         </button>
         <div class="text-center pt-1">
-          <a id="lead-direct-wa-link" href="https://wa.me/60125082048" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('whatsapp_direct_skip', { topic: document.getElementById('lead-context').value });" class="inline-flex items-center gap-1 text-[11px] font-bold text-[#006B2E] hover:underline">
+          <a id="lead-direct-wa-link" href="https://wa.me/60125082048" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('whatsapp_direct_skip', { topic: document.getElementById('lead-context').value });" class="inline-flex items-center gap-1 text-[11px] font-bold text-success hover:underline">
             <span>Prefer not to wait? Chat directly on WhatsApp &rarr;</span>
           </a>
         </div>

@@ -2,14 +2,16 @@
 
 :root {
   --canvas-white: #ffffff;
-  --canvas-slate: #f8fafc;
-  --whatsapp-green: #25d366;
-  --whatsapp-green-hover: #1ebe5d;
+  --whatsapp-green: #15803d;        /* AA-contrast WhatsApp green for white text (brand #25D366 kept for online dots) */
+  --whatsapp-green-hover: #166534;
   --pin-rent: #7c3aed;
   --pin-viewed: #94a3b8;
   --badge-new-green: #16a34a;
+  --success: #006b2e;
+  --warn: #b45309;
+  --radius-card: 16px;
 
-  /* Default Theme A: Tech Blue + Vibrant Orange + Stitch Surface Tint */
+  /* Default Theme A: Tech Blue + Vibrant Orange */
   --brand-primary: #006aff;
   --brand-primary-hover: #0053cc;
   --brand-primary-soft: #eff6ff;
@@ -20,6 +22,11 @@
   --brand-accent-soft: #fff7ed;
   --brand-accent-border: #fed7aa;
   --brand-dark: #131b2e;
+  --ink: #131b2e;
+  --muted-ink: #424655;
+  --canvas: #faf8ff;
+  --line: #e2e8f0;
+  --hero-tint: 10, 18, 40;
 }
 
 body[data-theme="a"] {
@@ -33,11 +40,17 @@ body[data-theme="a"] {
   --brand-accent-soft: #fff7ed;
   --brand-accent-border: #fed7aa;
   --brand-dark: #131b2e;
+  --ink: #131b2e;
+  --muted-ink: #424655;
+  --canvas: #faf8ff;
+  --line: #e2e8f0;
+  --hero-tint: 10, 18, 40;
 }
 
+/* Theme B: Ipoh Emerald (deep teal #0F766E passes WCAG AA with white text) */
 body[data-theme="b"] {
-  --brand-primary: #0d9488;
-  --brand-primary-hover: #15803d;
+  --brand-primary: #0f766e;
+  --brand-primary-hover: #0d5f59;
   --brand-primary-soft: #f0fdfa;
   --brand-primary-border: #99f6e4;
   --surface-low: #f0fdfa;
@@ -45,7 +58,12 @@ body[data-theme="b"] {
   --brand-accent: #d97706;
   --brand-accent-soft: #fffbeb;
   --brand-accent-border: #fde68a;
-  --brand-dark: #064e3b;
+  --brand-dark: #134e4a;
+  --ink: #134e4a;
+  --muted-ink: #475569;
+  --canvas: #f6fdfb;
+  --line: #cdefe9;
+  --hero-tint: 6, 32, 30;
 }
 
 body[data-theme="c"] {
@@ -59,6 +77,11 @@ body[data-theme="c"] {
   --brand-accent-soft: #f1f5f9;
   --brand-accent-border: #cbd5e1;
   --brand-dark: #1e293b;
+  --ink: #1e293b;
+  --muted-ink: #475569;
+  --canvas: #fffafa;
+  --line: #f1e1e4;
+  --hero-tint: 30, 20, 28;
 }
 
 html {
@@ -88,9 +111,13 @@ section[id] {
 }
 
 body {
-  font-family: 'Inter', 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
-  background-color: #faf8ff;
-  color: #131b2e;
+  font-family: "Plus Jakarta Sans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  background-color: var(--canvas);
+  color: var(--ink);
+}
+
+html[lang^="zh"] body {
+  line-height: 1.7;
 }
 
 h1, h2, h3, h4, .font-display {
@@ -184,12 +211,12 @@ h1, h2, h3, h4, .font-display {
   background-color: var(--whatsapp-green);
   color: #ffffff;
   font-weight: 700;
-  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-whatsapp:hover {
-  filter: brightness(0.95);
-  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+  background-color: var(--whatsapp-green-hover);
+  box-shadow: 0 6px 18px rgba(21, 128, 61, 0.3);
 }
 
 /* Map Price Pin States */
@@ -335,7 +362,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
 .blog-prose h4 {
   font-size: 1rem;
   font-weight: 800;
-  color: #131b2e;
+  color: var(--ink);
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
@@ -343,7 +370,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
 .blog-prose p {
   font-size: 0.875rem;
   line-height: 1.7;
-  color: #334155;
+  color: var(--muted-ink);
   margin-bottom: 0.85rem;
 }
 
@@ -356,7 +383,7 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
 .blog-prose li {
   font-size: 0.85rem;
   line-height: 1.65;
-  color: #334155;
+  color: var(--muted-ink);
   margin-bottom: 0.35rem;
 }
 
@@ -455,4 +482,145 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
 
 .pv-toast-animate {
   animation: pvToastIn 0.2s ease-out forwards;
+}
+
+/* --- Merged UI (2026-11-19): SVG icons, photo hero, trust strip, accessibility --- */
+.pv-icon {
+  display: inline-block;
+  flex: none;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+
+.pv-icon.is-filled {
+  fill: currentColor;
+}
+
+/* Skip link (keyboard users) */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -64px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--brand-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand-primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Full-bleed photo hero */
+.pv-hero {
+  position: relative;
+  overflow: hidden;
+  background-color: rgb(var(--hero-tint));
+  color: #ffffff;
+}
+
+.pv-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+.pv-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pv-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--hero-tint), 0.62) 0%,
+    rgba(var(--hero-tint), 0.38) 42%,
+    rgba(var(--hero-tint), 0.88) 100%
+  );
+}
+
+.pv-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Compare table: best value per row */
+.pv-best {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.pv-best::after {
+  content: " ✓";
+  font-size: 0.85em;
+}
+
+/* Inline inquiry form validation */
+.pv-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.pv-input:focus {
+  border-color: var(--brand-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--brand-primary-soft);
+}
+
+.pv-input[aria-invalid="true"] {
+  border-color: #b91c1c;
+}
+
+.pv-error {
+  min-height: 1.1em;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #b91c1c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

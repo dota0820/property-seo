@@ -32,14 +32,24 @@
     "Bandar Seri Botani": { en: "High Growth", zh: "热门成长区", cls: "bg-brand-soft border" },
     "Tiger Lane": { en: "Ultra Luxury", zh: "名门富人区", cls: "badge-accent-soft border" },
     "Tambun / Sunway": { en: "Resort & Homestay", zh: "度假民宿区", cls: "bg-purple-50 text-[#7C3AED] border border-purple-200" },
-    "Canning / Ipoh Garden": { en: "Heritage & Food", zh: "成熟美食圈", cls: "bg-emerald-50 text-[#006B2E] border border-emerald-200" },
+    "Canning / Ipoh Garden": { en: "Heritage & Food", zh: "成熟美食圈", cls: "bg-emerald-50 text-success border border-emerald-200" },
     "Meru Valley": { en: "Golf & School", zh: "高尔夫与学区", cls: "bg-sky-50 text-sky-700 border border-sky-200" },
     "Station 18": { en: "Best Entry Value", zh: "首购高性价比", cls: "bg-amber-50 text-amber-800 border border-amber-200" }
   };
 
+  function readStoredTheme() {
+    try {
+      return localStorage.getItem("pv_theme") || "a";
+    } catch (e) {
+      return "a";
+    }
+  }
+
+  const NEW_PROJECT_IDS = ["botani-seri-meranti", "manhattan-station-18"];
+
   const state = {
     lang: "en",
-    theme: localStorage.getItem("pv_theme") || "a",
+    theme: readStoredTheme(),
     search: "",
     searchTab: "all", // 'all' | 'Landed' | 'Condo' | 'investment'
     mapLegend: "all", // 'all' | 'sale' | 'homestay'
@@ -91,17 +101,20 @@
     return DATA.projects.find((p) => p.id === projectId);
   }
 
-  function refreshIcons() {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    }
+  function icon(name, cls) {
+    return window.pvIcon ? window.pvIcon(name, cls) : "";
   }
 
   // --- Live 3-Theme Switcher (Schemes A, B, C) ---
   window.setTheme = function (themeId) {
+    if (["a", "b", "c"].indexOf(themeId) === -1) themeId = "a";
     state.theme = themeId;
     document.body.setAttribute("data-theme", themeId);
-    localStorage.setItem("pv_theme", themeId);
+    try {
+      localStorage.setItem("pv_theme", themeId);
+    } catch (e) {
+      /* private mode: theme still applies for this visit */
+    }
 
     ["a", "b", "c"].forEach((id) => {
       const btn = document.getElementById("theme-btn-" + id);
@@ -121,13 +134,17 @@
 
     if (lang === "zh") {
       zhBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary";
-      enBtn.className = "px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-[#424655] hover:text-[#131B2E]";
+      enBtn.className = "px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-muted hover:text-ink";
     } else {
       enBtn.className = "px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary";
-      zhBtn.className = "px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-[#424655] hover:text-[#131B2E]";
+      zhBtn.className = "px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-muted hover:text-ink";
     }
 
     document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+    zhBtn.setAttribute("aria-pressed", String(lang === "zh"));
+    enBtn.setAttribute("aria-pressed", String(lang !== "zh"));
+    const navMapLbl = document.getElementById("nav-map-lbl");
+    if (navMapLbl) navMapLbl.textContent = lang === "zh" ? "房价地图" : "Price Map";
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
@@ -151,23 +168,22 @@
       stickyHomesLbl.textContent = isZh ? "个楼盘" : "Homes";
     }
     document.getElementById("footer-address").textContent = isZh ? DATA.brand.addressZh : DATA.brand.addressEn;
-    document.getElementById("calc-cta-text").textContent = isZh
-      ? "WhatsApp 免费银行贷款评估与估价"
-      : "Check Bank Eligibility via WhatsApp";
-    document.getElementById("map-eyebrow").textContent = isZh ? "怡保地理房价雷达" : "Geospatial Property Radar";
-    document.getElementById("map-section-title").textContent = isZh ? "怡保各区房价分布地图" : "Ipoh Valley Price Distribution Map";
+    document.getElementById("calc-cta-text").textContent = isZh ? "发预算给顾问免费查贷款" : "Send Estimate to WhatsApp";
+    document.getElementById("map-eyebrow").textContent = isZh ? "怡保地图找房" : "Live Ipoh Street Map";
+    document.getElementById("map-section-title").textContent = isZh ? "按社区看怡保真实房价" : "Explore Ipoh Prices by Neighbourhood";
     document.getElementById("map-strip-title").textContent = isZh
-      ? "可切换 Street / Minimal / 卫星视图并双指缩放（点击气泡预览详情并直连 WhatsApp，看过变浅灰 Viewed）"
-      : "Pinch or click +/− to zoom crisp vector streets (Street / Minimal / Satellite) — tap any pin to preview or WhatsApp.";
+      ? "放大查看学校、医院与大道距离，点击价格气泡即可预览并直连 WhatsApp。"
+      : "Zoom into schools, parks & highways. Tap any price pin to preview or WhatsApp.";
     document.getElementById("matchmaking-title").textContent = isZh
-      ? "找不到心仪的街道或朝向户型？"
-      : "Can't find your exact street or layout in Ipoh?";
+      ? "没找到心仪的街道或户型？"
+      : "Looking for a specific street or budget in Ipoh?";
     document.getElementById("matchmaking-sub").textContent = isZh
-      ? "我们的怡保持牌顾问网络可帮您匹配 Gunong Rapat、Tambun、Botani 与桂和园未公开二手实盘。"
-      : "Our Ipoh licensed agent network sources off-market subsales across Gunong Rapat, Tambun, Botani, and Canning Garden.";
-    document.getElementById("matchmaking-cta").textContent = isZh ? "委托顾问私密配对" : "Request Private Matchmaking";
+      ? "告诉我们预算与区域，顾问直接帮您匹配未公开屋主实盘。"
+      : "Tell us what you need — we source off-market Ipoh subsales directly from owners.";
+    document.getElementById("matchmaking-cta").textContent = isZh ? "免费帮我找房" : "Match Me a Home";
 
     updateCalculatorLabels();
+    updateCalculators();
     renderLifestylePills();
     renderMapPins(false);
     renderProjects();
@@ -176,7 +192,6 @@
     renderAgents();
     if (state.activeAgentId) renderAgentPortfolio(state.activeAgentId);
     if (state.activeProjectId) renderProjectModalContent();
-    refreshIcons();
   };
 
   function updateCalculatorLabels() {
@@ -186,17 +201,29 @@
     document.getElementById("calc-lbl-rate").textContent = isZh ? "银行利率 (Rate)" : "Interest Rate";
     document.getElementById("calc-lbl-tenure").textContent = isZh ? "贷款年限 (Tenure)" : "Loan Tenure";
     document.getElementById("calc-lbl-rent").textContent = isZh ? "预期月租 (Est. Rent)" : "Est. Monthly Rent";
-    document.getElementById("calc-lbl-foreigner").textContent = isZh
-      ? "外籍买家税率（适用 8% 统一 MOT 印花税）"
-      : "Foreign Buyer (8% Flat MOT Stamp Duty Rate)";
-    document.getElementById("calc-summary-heading").textContent = isZh
-      ? "预计每月供款 (Estimated Monthly Repayment)"
-      : "Estimated Monthly Repayment";
-    document.getElementById("out-lbl-income").textContent = isZh ? "最低净月入 (70% DSR):" : "Min. Income (70% DSR):";
-    document.getElementById("out-lbl-mot").textContent = isZh ? "MOT 产权印花税与律师费" : "MOT Stamp Duty & Legal Est.";
-    document.getElementById("out-lbl-roi").textContent = isZh ? "预估毛租金回报:" : "Est. Gross Rental Yield:";
-    document.getElementById("lbl-downpayment").textContent = isZh ? "首付资金 (Downpayment)" : "Downpayment";
-    document.getElementById("lbl-cashflow").textContent = isZh ? "预计每月净现金流:" : "Est. Monthly Net Cashflow:";
+    document.getElementById("calc-lbl-buyer").textContent = isZh ? "买家身份" : "Buyer Type";
+    const buyerSel = document.getElementById("calc-buyer");
+    const buyerLabels = isZh
+      ? ["大马公民（换房 / 第二套）", "大马公民（首购）", "外国买家（MOT 统一 8%）"]
+      : ["Malaysian (upgrading / 2nd home)", "Malaysian, first home", "Foreign buyer (8% flat MOT)"];
+    Array.prototype.forEach.call(buyerSel.options, (opt, i) => {
+      opt.textContent = buyerLabels[i];
+    });
+    document.getElementById("calc-first-note-text").textContent = isZh
+      ? "大马首购族购买 RM 500k 以内二手房，可享 100% MOT 印花税减免。"
+      : "First-time Malaysian buyers may enjoy 100% MOT exemption for homes up to RM 500k.";
+    document.getElementById("calc-summary-heading").textContent = isZh ? "预计每月供款" : "Estimated Monthly Repayment";
+    document.getElementById("out-lbl-principal").textContent = isZh ? "贷款本金" : "Loan Principal";
+    document.getElementById("out-lbl-income").textContent = isZh ? "最低月入（70% DSR）" : "Min. Income (70% DSR)";
+    document.getElementById("out-lbl-mot").textContent = isZh ? "MOT 产权印花税" : "MOT Stamp Duty";
+    document.getElementById("out-lbl-legal").textContent = isZh ? "律师费 + 贷款印花税" : "Legal + Loan Duty";
+    document.getElementById("out-legal-note").textContent = isZh ? "按律师收费令（SPA + 贷款）" : "SRO scale (SPA + loan)";
+    document.getElementById("out-lbl-roi").textContent = isZh ? "毛租金回报" : "Gross Rental Yield";
+    document.getElementById("lbl-downpayment").textContent = isZh ? "首付" : "Downpayment";
+    document.getElementById("lbl-cashflow").textContent = isZh ? "每月净现金流" : "Net Cashflow / Month";
+    document.getElementById("calc-disclaimer").textContent = isZh
+      ? "仅供估算。大马公民 MOT 按 1/2/3/4% 分级计算，外国买家统一 8%；首购豁免假设为合资格公民且房价 ≤ RM 50 万。律师费按律师收费令（SRO）计算。请以律师与银行为准。"
+      : "Estimates only. MOT uses the 1/2/3/4% tiers for Malaysians and a flat 8% for foreign buyers; the first-home exemption assumes an eligible citizen buying at RM 500k or below. Legal fees follow the Solicitors' Remuneration Order scale. Confirm with your lawyer and bank.";
   }
 
   function syncStickyFilterInputs() {
@@ -224,7 +251,7 @@
       const active = btn.getAttribute("data-tab") === tab;
       btn.className = active
         ? "search-tab-btn shrink-0 px-4 py-2 rounded-lg search-tab-active font-semibold text-[13px] shadow-sm transition-all"
-        : "search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors";
+        : "search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-muted hover:text-ink font-semibold text-[13px] transition-colors";
     });
     syncStickyFilterInputs();
     renderMapPins(true);
@@ -239,7 +266,7 @@
       const active = key === legend;
       btn.className = active
         ? "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-brand-soft border text-xs font-bold"
-        : "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-[#424655] text-xs font-semibold";
+        : "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-muted text-xs font-semibold";
     });
     renderMapPins(true);
   };
@@ -252,7 +279,7 @@
         const label = pick(item, "labelEn", "labelZh");
         const cls = active
           ? "lifestyle-pill-active font-bold"
-          : "bg-surface-high text-[#424655] border-transparent hover:text-[#131B2E]";
+          : "bg-surface-high text-muted border-transparent hover:text-ink";
         return `<button onclick="selectLifestyleFilter('${item.id}')" class="shrink-0 whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs border transition-all ${cls}">${escapeHtml(label)}</button>`;
       })
       .join("");
@@ -344,7 +371,7 @@
       const active = key === styleKey;
       btn.className = active
         ? "px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-bold btn-brand-primary transition-colors"
-        : "px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#424655] hover:bg-slate-100 transition-colors";
+        : "px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-semibold text-muted hover:bg-slate-100 transition-colors";
     });
   };
 
@@ -381,7 +408,7 @@
         <div class="relative h-28 bg-slate-200 overflow-hidden">
           <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(shortName)}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-black/15"></div>
-          <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 text-[#131B2E] text-[10px] font-bold shadow-sm">
+          <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 text-ink text-[10px] font-bold shadow-sm">
             ${escapeHtml(p.area)} &bull; ${escapeHtml(p.tenure)}
           </span>
           <div class="absolute bottom-2 left-2.5 right-2.5 text-white font-extrabold text-sm">
@@ -389,11 +416,11 @@
           </div>
         </div>
         <div class="p-3">
-          <div class="font-bold text-xs text-[#131B2E] leading-snug line-clamp-1">${escapeHtml(shortName)}</div>
-          <div class="text-[11px] text-[#424655] mt-0.5 truncate">${escapeHtml(p.bedsSummary)} &bull; ${escapeHtml(p.sqftSummary)}</div>
-          <div class="text-[10px] text-[#006B2E] font-semibold mt-0.5 truncate">${escapeHtml(p.landmark || p.amenityDrive)}</div>
+          <div class="font-bold text-xs text-ink leading-snug line-clamp-1">${escapeHtml(shortName)}</div>
+          <div class="text-[11px] text-muted mt-0.5 truncate">${escapeHtml(p.bedsSummary)} &bull; ${escapeHtml(p.sqftSummary)}</div>
+          <div class="text-[10px] text-success font-semibold mt-0.5 truncate">${escapeHtml(p.landmark || p.amenityDrive)}</div>
           <div class="grid grid-cols-2 gap-1.5 mt-2.5">
-            <button type="button" onclick="openProjectModal('${p.id}')" class="py-1.5 px-2 rounded-lg bg-surface-high hover:bg-slate-200 text-[#131B2E] font-bold text-[11px] transition-colors">
+            <button type="button" onclick="openProjectModal('${p.id}')" class="py-1.5 px-2 rounded-lg bg-surface-high hover:bg-slate-200 text-ink font-bold text-[11px] transition-colors">
               ${detailsLbl} &rarr;
             </button>
             <button type="button" onclick="openProjectWhatsApp('${p.id}')" class="py-1.5 px-2 rounded-lg btn-whatsapp text-[11px] flex items-center justify-center gap-1">
@@ -421,7 +448,7 @@
       coordsList.push(p.coords);
 
       const isViewed = state.viewedIds.has(p.id);
-      const isNew = p.id === "botani-seri-meranti" || p.id === "manhattan-station-18";
+      const isNew = NEW_PROJECT_IDS.indexOf(p.id) > -1;
 
       let pillCls = "map-pin-sale";
       let tipCls = "map-pin-sale-tip";
@@ -436,14 +463,14 @@
         tipCls = "map-pin-new-tip";
       }
 
-      const iconName = isViewed ? "visibility" : p.homestayHot ? "key" : p.category === "Landed" ? "villa" : "sell";
+      const iconName = isViewed ? "eye" : p.homestayHot ? "key" : p.category === "Landed" ? "home" : "tag";
       const shortArea = p.area.split("/")[0].replace("Bandar Seri ", "").trim();
 
       const el = document.createElement("div");
       el.className = "pv-ml-pin-root";
       el.innerHTML = `
         <div class="pv-pin-pill px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full ${pillCls} font-extrabold text-[11px] sm:text-xs flex items-center gap-1 ring-2 ring-white/95 whitespace-nowrap">
-          ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : `<span class="material-symbols-outlined text-[13px]">${iconName}</span>`}
+          ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : icon(iconName, "w-[13px] h-[13px]")}
           <span>${formatCompactRM(p.priceFrom)} &bull; ${escapeHtml(shortArea)}</span>
         </div>
         <div class="w-2.5 h-2.5 ${tipCls} rotate-45 -mt-1 shadow-sm"></div>
@@ -480,9 +507,10 @@
     renderProjects();
   };
 
-  // --- Stitch Editorial Property Cards Grid ---
+  // --- Listing Cards (5 layers: photo · price/PSF · name · area · specs + actions) ---
   function renderProjects() {
     const list = getFilteredProjects();
+    const isZh = state.lang === "zh";
     document.getElementById("projects-count").textContent = list.length;
     const stickyCount = document.getElementById("sticky-result-count");
     if (stickyCount) stickyCount.textContent = list.length;
@@ -490,122 +518,81 @@
 
     if (list.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-8 sm:p-10 text-center">
-          <p class="text-[#424655] font-semibold mb-3">${
-            state.lang === "zh" ? "当前筛选条件下暂无匹配怡保房源" : "No Ipoh properties match your current filters."
-          }</p>
-          <button onclick="resetFilters()" class="px-4 py-2 rounded-xl btn-brand-primary font-bold text-xs">${
-            state.lang === "zh" ? "查看全部怡保严选楼盘" : "Show All Ipoh Properties"
+        <div class="col-span-full bg-white rounded-2xl border border-dashed border-line p-8 sm:p-10 text-center">
+          <p class="text-muted font-semibold mb-3">${isZh ? "当前筛选条件下暂无匹配怡保房源" : "No Ipoh homes match these filters."}</p>
+          <button type="button" onclick="resetFilters()" class="min-h-[44px] px-5 rounded-xl btn-brand-primary font-bold text-sm">${
+            isZh ? "查看全部怡保房源" : "Show all Ipoh homes"
           }</button>
         </div>`;
       return;
     }
 
     grid.innerHTML = list
-      .map((p, idx) => {
-        const agent = findAgent(p.specialistId);
+      .map((p) => {
         const inCompare = state.compareIds.includes(p.id);
         const isViewed = state.viewedIds.has(p.id);
         const isFav = state.favoriteIds.has(p.id);
-        const badge = pick(p, "badgeEn", "badgeZh");
-        const summary = pick(p, "summaryEn", "summaryZh");
-        const isNew = idx === 0 || idx === 5;
+        const isNew = NEW_PROJECT_IDS.indexOf(p.id) > -1;
         const firstPlan = p.floorPlans[0] || { beds: 3, baths: 2, sqft: 1200 };
+        const name = p.name.replace(" (Example)", "");
+        const statusBadge = isViewed
+          ? `<span class="px-2.5 py-1 rounded-full bg-slate-600 text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">${isZh ? "已看过" : "Viewed"}</span>`
+          : isNew
+          ? `<span class="px-2.5 py-1 rounded-full badge-price-drop text-[10px] font-bold uppercase tracking-wide shadow-sm">${isZh ? "新上架" : "New"}</span>`
+          : "";
 
         return `
-          <article class="prop-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-slate-200/70 transition-all flex flex-col justify-between group">
-            <div>
-              <!-- Stitch 16:10 Media Area -->
-              <div onclick="openProjectModal('${p.id}')" class="relative w-full aspect-[16/10] overflow-hidden bg-slate-200 cursor-pointer">
-                <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(p.name)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/15"></div>
-
-                <!-- Top-Left Overlay Badges -->
-                <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center z-10">
-                  <span class="px-2.5 py-1 rounded-full ${isViewed ? "bg-slate-500 text-white" : "badge-brand-accent"} text-[10px] font-bold uppercase tracking-wide shadow-sm">
-                    ${isViewed ? "Viewed" : escapeHtml(badge.replace("Example · ", ""))}
-                  </span>
-                  <span class="px-2.5 py-1 rounded-full bg-[#283044]/85 backdrop-blur-sm text-white text-[10px] font-bold">
-                    ${escapeHtml(p.tenure)}
-                  </span>
-                  ${isNew ? `<span class="px-2 py-1 rounded-full badge-price-drop text-[10px] font-bold">New</span>` : ""}
-                </div>
-
-                <!-- Top-Right Heart Button -->
-                <button onclick="toggleFavorite('${p.id}', event)" aria-label="Save to favorites" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/85 backdrop-blur-md flex items-center justify-center ${isFav ? "text-[#E11D48]" : "text-[#131B2E] hover:text-[#E11D48]"} transition-colors shadow-sm z-10" type="button">
-                  <span class="material-symbols-outlined text-[20px]" style="${isFav ? "font-variation-settings:'FILL' 1;" : ""}">favorite</span>
-                </button>
-
-                <!-- Bottom-Left Frosted Location Tag -->
-                <div class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded bg-white/95 backdrop-blur-sm text-[11px] font-bold text-[#131B2E] shadow-sm">
-                  Subsale &bull; ${escapeHtml(p.area)}
-                </div>
-
-                <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/55 backdrop-blur-sm text-[10px] font-semibold text-white">
-                  ${p.images.length} Photos
-                </div>
+          <article class="prop-card rounded-2xl overflow-hidden shadow-sm border border-line flex flex-col">
+            <div class="relative w-full aspect-[4/3] overflow-hidden bg-slate-200">
+              <button type="button" onclick="openProjectModal('${p.id}')" class="absolute inset-0 w-full h-full" aria-label="${escapeHtml(isZh ? "查看 " + name : "View " + name)}">
+                <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(name)}" loading="lazy" width="800" height="600" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
+              </button>
+              <div class="absolute top-3 left-3 flex gap-1.5 items-center pointer-events-none">
+                <span class="px-2.5 py-1 rounded-full bg-white/95 text-ink text-[10px] font-bold uppercase tracking-wide shadow-sm">${escapeHtml(p.tenure)}</span>
+                ${statusBadge}
               </div>
-
-              <!-- Stitch Content Stack -->
-              <div class="p-4 sm:p-5">
-                <div class="flex items-baseline justify-between gap-2 mb-1.5">
-                  <div class="text-xl font-extrabold text-brand-primary">
-                    ${formatRM(p.priceFrom)}
-                  </div>
-                  <div class="text-xs font-bold text-[#424655]">
-                    RM ${p.psfAvg} PSF &bull; <span class="text-[#006B2E]">${p.rentalYield}% Yield</span>
-                  </div>
-                </div>
-
-                <h3 onclick="openProjectModal('${p.id}')" class="font-bold text-base text-[#131B2E] line-clamp-1 hover:text-brand-primary cursor-pointer transition-colors">
-                  ${escapeHtml(p.name)}
-                </h3>
-                <p class="text-xs text-[#424655] flex items-center gap-1 mt-1">
-                  <span class="material-symbols-outlined text-[15px] text-[#727787] shrink-0">pin_drop</span>
-                  <span class="truncate">${escapeHtml(p.amenityDrive)}</span>
-                </p>
-
-                <!-- Stitch 3-Box Icon Specs Grid -->
-                <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-100">
-                  <div class="flex flex-col items-center p-2 rounded-lg bg-surface-low text-center">
-                    <span class="material-symbols-outlined text-[18px] text-brand-primary">bed</span>
-                    <span class="text-xs font-bold text-[#131B2E] mt-0.5">${firstPlan.beds} Beds</span>
-                  </div>
-                  <div class="flex flex-col items-center p-2 rounded-lg bg-surface-low text-center">
-                    <span class="material-symbols-outlined text-[18px] text-brand-primary">bathtub</span>
-                    <span class="text-xs font-bold text-[#131B2E] mt-0.5">${firstPlan.baths} Baths</span>
-                  </div>
-                  <div class="flex flex-col items-center p-2 rounded-lg bg-surface-low text-center">
-                    <span class="material-symbols-outlined text-[18px] text-brand-primary">square_foot</span>
-                    <span class="text-xs font-bold text-[#131B2E] mt-0.5">${firstPlan.sqft} sq.ft</span>
-                  </div>
-                </div>
-
-                <p class="text-xs text-[#424655] mt-3 line-clamp-2 leading-relaxed">${escapeHtml(summary)}</p>
-              </div>
+              <button type="button" onclick="toggleFavorite('${p.id}', event)" aria-label="${isZh ? "收藏" : "Save to favourites"}" aria-pressed="${isFav}" class="absolute top-2.5 right-2.5 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center ${
+                isFav ? "text-[#E11D48]" : "text-ink hover:text-[#E11D48]"
+              } transition-colors shadow-sm">
+                ${icon("heart", "w-5 h-5" + (isFav ? " is-filled" : ""))}
+              </button>
+              <span class="absolute bottom-3 right-3 px-2 py-0.5 rounded-md bg-black/60 text-[11px] font-semibold text-white flex items-center gap-1 pointer-events-none">
+                ${icon("camera", "w-3.5 h-3.5")} ${p.images.length}
+              </span>
             </div>
 
-            <!-- Dual Action Buttons + PK Compare -->
-            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-2">
-              <div class="flex items-center justify-between text-[11px] text-[#424655] mb-3 pt-2 border-t border-slate-100">
-                <span class="font-semibold truncate">${escapeHtml(agent.name.replace(" (Example)", ""))} (${escapeHtml(agent.renCode)})</span>
-                <span class="px-2 py-0.5 rounded bg-slate-100 font-medium shrink-0">${escapeHtml(p.maintenanceLabel)}</span>
+            <div class="p-4 sm:p-5 flex flex-col gap-2 flex-1">
+              <p class="flex items-baseline flex-wrap gap-x-2">
+                <span class="text-[22px] font-extrabold text-ink tabular-nums">${formatRM(p.priceFrom)}</span>
+                <span class="text-xs font-semibold text-muted">RM ${p.psfAvg} psf</span>
+              </p>
+              <h3 class="font-bold text-base text-ink leading-snug line-clamp-1">
+                <button type="button" onclick="openProjectModal('${p.id}')" class="text-left hover:text-brand-primary transition-colors">${escapeHtml(name)}</button>
+              </h3>
+              <p class="text-sm text-muted flex items-center gap-1.5">
+                ${icon("pin", "w-4 h-4 shrink-0")}
+                <span class="truncate">${escapeHtml(p.area)}</span>
+              </p>
+              <div class="flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-muted pt-2.5 mt-0.5 border-t border-line">
+                <span class="inline-flex items-center gap-1.5">${icon("bed", "w-4 h-4")}${firstPlan.beds} ${isZh ? "房" : "bed"}</span>
+                <span class="inline-flex items-center gap-1.5">${icon("bath", "w-4 h-4")}${firstPlan.baths} ${isZh ? "浴" : "bath"}</span>
+                <span class="inline-flex items-center gap-1.5">${icon("area", "w-4 h-4")}${Number(firstPlan.sqft).toLocaleString("en-US")} sf</span>
+                <span class="inline-flex items-center gap-1.5 text-success font-semibold">${icon("chart", "w-4 h-4")}${p.rentalYield}%</span>
               </div>
-              <div class="grid grid-cols-12 gap-2">
-                <button onclick="openProjectModal('${p.id}')" class="col-span-5 py-2.5 px-2 rounded-lg bg-surface-high hover:bg-slate-200 text-[#131B2E] font-bold text-xs transition-colors flex items-center justify-center gap-1" type="button">
-                  <span>${state.lang === "zh" ? "看详情" : "Details"}</span>
-                  <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+
+              <div class="grid grid-cols-[1fr_1fr_auto] gap-2 mt-auto pt-3">
+                <button type="button" onclick="openProjectModal('${p.id}')" class="min-h-[44px] px-2 rounded-xl bg-surface-high hover:bg-slate-200 text-ink font-bold text-xs transition-colors flex items-center justify-center gap-1">
+                  <span>${isZh ? "看详情" : "Details"}</span>${icon("arrow-right", "w-4 h-4")}
                 </button>
-                <button onclick="openProjectWhatsApp('${p.id}')" class="col-span-5 py-2.5 px-2 rounded-lg btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm" type="button">
-                  <span class="material-symbols-outlined text-[16px]">chat</span>
-                  <span>WhatsApp</span>
+                <button type="button" onclick="openProjectWhatsApp('${p.id}')" class="min-h-[44px] px-2 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
+                  ${icon("chat", "w-4 h-4")}<span>WhatsApp</span>
                 </button>
-                <button onclick="toggleCompare('${p.id}')" title="Compare" class="col-span-2 py-2.5 rounded-lg border text-[11px] font-bold transition-colors ${
-                  inCompare
-                    ? "btn-brand-primary border-transparent"
-                    : "bg-white border-slate-200 text-slate-700 hover:border-slate-400"
+                <button type="button" onclick="toggleCompare('${p.id}')" aria-pressed="${inCompare}" aria-label="${
+                  inCompare ? (isZh ? "移出对比" : "Remove from compare") : isZh ? "加入对比" : "Add to compare"
+                }" title="${isZh ? "对比" : "Compare"}" class="min-h-[44px] min-w-[44px] rounded-xl border flex items-center justify-center transition-colors ${
+                  inCompare ? "btn-brand-primary border-transparent" : "bg-white border-line text-ink hover:border-slate-400"
                 }">
-                  ${inCompare ? "✓" : "+PK"}
+                  ${icon(inCompare ? "check" : "compare", "w-[18px] h-[18px]")}
                 </button>
               </div>
             </div>
@@ -623,24 +610,24 @@
         const badgeInfo = AREA_BADGES[g.area] || { en: "Popular", zh: "热门区", cls: "bg-brand-soft border" };
         const badgeLabel = state.lang === "zh" ? badgeInfo.zh : badgeInfo.en;
         return `
-          <div onclick="filterByGuideArea('${escapeHtml(g.area)}')" class="guide-card bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-slate-200/70 transition-all cursor-pointer flex flex-col justify-between">
+          <button type="button" onclick="filterByGuideArea('${escapeHtml(g.area)}')" class="guide-card text-left w-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-line transition-all cursor-pointer flex flex-col justify-between">
             <div>
               <div class="relative h-36 bg-slate-200 overflow-hidden">
-                <img src="${escapeHtml(g.image)}" alt="${escapeHtml(g.area)}" class="guide-photo w-full h-full object-cover" onerror="this.style.display='none'" />
+                <img src="${escapeHtml(g.image)}" alt="" loading="lazy" class="guide-photo w-full h-full object-cover" onerror="this.style.display='none'" />
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
                 <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md ${badgeInfo.cls} text-[11px] font-bold shadow-sm">${escapeHtml(badgeLabel)}</span>
-                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 text-[#131B2E] text-[11px] font-extrabold shadow-sm">${escapeHtml(g.avgYield)} ROI</span>
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 text-ink text-[11px] font-extrabold shadow-sm">${escapeHtml(g.avgYield)} ROI</span>
               </div>
               <div class="p-4 sm:p-5">
-                <h3 class="text-lg font-bold text-[#131B2E]">${escapeHtml(pick(g, "titleEn", "titleZh"))}</h3>
-                <p class="text-xs text-[#424655] mt-1.5 leading-relaxed line-clamp-2">${escapeHtml(pick(g, "descEn", "descZh"))}</p>
+                <h3 class="text-lg font-bold text-ink">${escapeHtml(pick(g, "titleEn", "titleZh"))}</h3>
+                <p class="text-xs text-muted mt-1.5 leading-relaxed line-clamp-2">${escapeHtml(pick(g, "descEn", "descZh"))}</p>
               </div>
             </div>
             <div class="px-4 sm:px-5 pb-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <div class="text-[#424655]">Avg Subsale: <strong class="text-[#131B2E]">${escapeHtml(g.avgPsf)}/psf</strong></div>
+              <div class="text-muted">${state.lang === "zh" ? "二手均价" : "Avg subsale"}: <strong class="text-ink">${escapeHtml(g.avgPsf)}/psf</strong></div>
               <span class="text-brand-primary font-bold">${state.lang === "zh" ? "查看房源 →" : "Explore →"}</span>
             </div>
-          </div>`;
+          </button>`;
       })
       .join("");
   }
@@ -649,7 +636,7 @@
   window.toggleCompare = function (projectId) {
     const idx = state.compareIds.indexOf(projectId);
     if (idx > -1) {
-      if (state.compareIds.length <= 2) return;
+      if (state.compareIds.length <= 1) return;
       state.compareIds.splice(idx, 1);
     } else {
       if (state.compareIds.length >= 3) state.compareIds.shift();
@@ -680,11 +667,13 @@
     const rows = [
       {
         label: state.lang === "zh" ? "区域 & 类型" : "Area & Type",
-        render: (p) => `<span class="font-semibold text-[#131B2E]">${escapeHtml(p.area)}</span><br class="sm:hidden" /><span class="hidden sm:inline"> &bull; </span><span class="text-[11px] text-[#424655]">${escapeHtml(p.category)} (${escapeHtml(p.tenure)})</span>`
+        render: (p) => `<span class="font-semibold text-ink">${escapeHtml(p.area)}</span><br class="sm:hidden" /><span class="hidden sm:inline"> &bull; </span><span class="text-[11px] text-muted">${escapeHtml(p.category)} (${escapeHtml(p.tenure)})</span>`
       },
       {
         label: state.lang === "zh" ? "参考价起" : "Entry Price",
-        render: (p) => `<span class="font-extrabold text-brand-primary">${formatRM(p.priceFrom)}</span>`
+        value: (p) => p.priceFrom,
+        best: "min",
+        render: (p) => `<span class="font-extrabold">${formatRM(p.priceFrom)}</span>`
       },
       {
         label: state.lang === "zh" ? "房型面积" : "Layout & Size",
@@ -692,10 +681,14 @@
       },
       {
         label: state.lang === "zh" ? "参考尺价" : "Avg PSF",
+        value: (p) => p.psfAvg,
+        best: "min",
         render: (p) => `RM ${p.psfAvg} / sqft`
       },
       {
         label: state.lang === "zh" ? "租金回报" : "Est. Yield",
+        value: (p) => p.rentalYield,
+        best: "max",
         render: (p) => `<span class="px-2 py-0.5 rounded bg-brand-soft border font-bold text-[11px] sm:text-xs">${p.rentalYield}%</span>`
       },
       {
@@ -711,15 +704,15 @@
     wrapper.innerHTML = `
       <table class="w-full text-left border-collapse ${minTableWidth}">
         <thead>
-          <tr class="bg-surface-low border-b border-slate-200 text-[#131B2E]">
-            <th class="p-2.5 sm:p-4 text-[10px] sm:text-xs font-bold uppercase tracking-wider w-24 sm:w-44 text-[#424655]">${state.lang === "zh" ? "对比项" : "Metric"}</th>
+          <tr class="bg-surface-low border-b border-slate-200 text-ink">
+            <th class="p-2.5 sm:p-4 text-[10px] sm:text-xs font-bold uppercase tracking-wider w-24 sm:w-44 text-muted">${state.lang === "zh" ? "对比项" : "Metric"}</th>
             ${selected
               .map(
                 (p) => `
               <th class="p-2.5 sm:p-4 align-top">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                   <div>
-                    <div class="text-xs sm:text-sm font-extrabold leading-snug text-[#131B2E]">${escapeHtml(p.name)}</div>
+                    <div class="text-xs sm:text-sm font-extrabold leading-snug text-ink">${escapeHtml(p.name)}</div>
                     <div class="text-[10px] sm:text-[11px] text-brand-primary font-semibold">${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example" : "Examples"}</div>
                   </div>
                   <button onclick="openProjectModal('${p.id}')" class="self-start sm:self-auto px-2.5 py-1 rounded-lg btn-brand-primary text-[10px] sm:text-[11px] font-bold">
@@ -736,8 +729,20 @@
             .map(
               (r) => `
             <tr class="hover:bg-slate-50/80">
-              <td class="p-2.5 sm:p-4 font-bold text-[11px] sm:text-xs text-[#424655] bg-surface-low/50">${r.label}</td>
-              ${selected.map((p) => `<td class="p-2.5 sm:p-4 text-[11px] sm:text-sm align-top">${r.render(p)}</td>`).join("")}
+              <th scope="row" class="p-2.5 sm:p-4 font-bold text-[11px] sm:text-xs text-muted bg-surface-low text-left">${r.label}</th>
+              ${(function () {
+                let bestVal = null;
+                if (r.value && selected.length > 1) {
+                  const vals = selected.map(r.value);
+                  bestVal = r.best === "min" ? Math.min.apply(null, vals) : Math.max.apply(null, vals);
+                }
+                return selected
+                  .map((p) => {
+                    const isBest = bestVal !== null && r.value(p) === bestVal;
+                    return `<td class="p-2.5 sm:p-4 text-[11px] sm:text-sm align-top ${isBest ? "pv-best" : "text-ink"}">${r.render(p)}</td>`;
+                  })
+                  .join("");
+              })()}
             </tr>`
             )
             .join("")}
@@ -757,8 +762,12 @@
     updateCalculators();
   };
 
-  function calculateMalaysiaMOT(price, isForeigner) {
-    if (isForeigner) return price * 0.08;
+  // MOT (instrument of transfer) stamp duty.
+  // Malaysians: 1% / 2% / 3% / 4% tiers. Foreign buyers: flat 8%.
+  // First home <= RM 500k: treated as fully exempt (i-Miliki style exemption, eligibility to be confirmed by lawyer).
+  function calculateMalaysiaMOT(price, buyerType) {
+    if (buyerType === "foreign") return price * 0.08;
+    if (buyerType === "first" && price <= 500000) return 0;
     let duty = 0;
     let remaining = price;
     const tiers = [
@@ -776,13 +785,22 @@
     return duty;
   }
 
+  // Solicitors' Remuneration Order scale: 1.25% on the first RM 500k, 1% on the next RM 7.5M, minimum RM 500.
+  function sroLegalFee(amount) {
+    const first = Math.min(amount, 500000) * 0.0125;
+    const next = Math.max(0, Math.min(amount, 8000000) - 500000) * 0.01;
+    return Math.max(500, first + next);
+  }
+
   function updateCalculators() {
     const price = Number(document.getElementById("slider-price").value);
     const margin = Number(document.getElementById("slider-margin").value) / 100;
     const rate = Number(document.getElementById("slider-rate").value) / 100;
     const years = Number(document.getElementById("slider-tenure").value);
     const rent = Number(document.getElementById("slider-rent").value);
-    const isForeigner = document.getElementById("calc-foreigner").checked;
+    const buyerType = document.getElementById("calc-buyer").value;
+    const isForeigner = buyerType === "foreign";
+    const isZh = state.lang === "zh";
 
     const loanAmount = price * margin;
     const monthlyRate = rate / 12;
@@ -792,11 +810,13 @@
       (Math.pow(1 + monthlyRate, months) - 1);
 
     const minIncome = monthlyInstallment / 0.7;
-    const mot = calculateMalaysiaMOT(price, isForeigner);
+    const mot = calculateMalaysiaMOT(price, buyerType);
     const grossYield = ((rent * 12) / price) * 100;
     const cashflow = rent - monthlyInstallment;
     const downpayment = price * (1 - margin);
-    const legalEstimate = price * 0.012 + 2800;
+    const firstHomeExempt = buyerType === "first" && price <= 500000;
+    const loanStampDuty = firstHomeExempt ? 0 : loanAmount * 0.005;
+    const legalEstimate = sroLegalFee(price) + sroLegalFee(loanAmount) + loanStampDuty;
 
     state.calcSnapshot = {
       price,
@@ -805,6 +825,8 @@
       years,
       rent,
       isForeigner,
+      buyerType,
+      legalEstimate,
       loanAmount,
       monthlyInstallment,
       minIncome,
@@ -812,7 +834,7 @@
       downpayment,
       grossYield,
       cashflow,
-      motExemptionEligible: !isForeigner && price <= 500000
+      motExemptionEligible: firstHomeExempt
     };
 
     document.getElementById("calc-val-price").textContent = formatRM(price);
@@ -821,17 +843,23 @@
     document.getElementById("calc-val-tenure").textContent = `${years} ${state.lang === "zh" ? "年" : "Years"}`;
     document.getElementById("calc-val-rent").textContent = formatRM(rent);
 
-    document.getElementById("out-monthly").innerHTML = `${formatRM(monthlyInstallment)} <span class="text-sm font-semibold text-[#424655]">/ ${state.lang === "zh" ? "月" : "month"}</span>`;
+    document.getElementById("out-monthly").innerHTML = `${formatRM(monthlyInstallment)} <span class="text-sm font-semibold text-white/70">/ ${isZh ? "月" : "month"}</span>`;
     document.getElementById("out-loan-amount").textContent = `${formatRM(loanAmount)} (${Math.round(margin * 100)}%)`;
-    document.getElementById("out-income").textContent = `${formatRM(minIncome)} / mo`;
+    document.getElementById("out-income").textContent = `${formatRM(minIncome)} / ${isZh ? "月" : "mo"}`;
     document.getElementById("out-mot").textContent = formatRM(mot);
+    document.getElementById("out-mot-note").textContent = isForeigner
+      ? isZh ? "外国买家统一 8%" : "8% flat (foreign buyer)"
+      : firstHomeExempt
+      ? isZh ? "首购 ≤ RM50万 全免" : "First-home exemption applied"
+      : isZh ? "按 1–4% 分级" : "1–4% tiers";
+    document.getElementById("calc-first-note").classList.toggle("hidden", isForeigner);
     document.getElementById("out-roi").textContent = `${grossYield.toFixed(2)}%`;
     document.getElementById("out-downpayment").textContent = formatRM(downpayment);
     document.getElementById("out-legal").textContent = formatRM(legalEstimate);
 
     const cfEl = document.getElementById("out-cashflow");
-    cfEl.textContent = `${cashflow >= 0 ? "+" : "-"}${formatRM(Math.abs(cashflow))} / mo`;
-    cfEl.className = cashflow >= 0 ? "text-[#006B2E] font-bold" : "text-[#9D4300] font-bold";
+    cfEl.textContent = `${cashflow >= 0 ? "+" : "−"}${formatRM(Math.abs(cashflow))} / ${isZh ? "月" : "mo"}`;
+    cfEl.className = cashflow >= 0 ? "text-success font-bold" : "text-warn font-bold";
   }
 
   // --- Ipoh Specialists Roster ---
@@ -841,31 +869,31 @@
       .map((a) => {
         const isSelected = state.activeAgentId === a.id;
         return `
-          <div class="bg-white rounded-2xl border ${isSelected ? "border-brand-primary ring-2 ring-blue-500/15" : "border-slate-200/80"} p-4 sm:p-5 flex flex-col justify-between shadow-sm">
+          <div class="bg-white rounded-2xl border ${isSelected ? "border-brand-primary ring-2 ring-brand-soft" : "border-slate-200/80"} p-4 sm:p-5 flex flex-col justify-between shadow-sm">
             <div>
               <div class="flex items-center gap-3.5 mb-3">
                 <div class="w-12 h-12 rounded-2xl btn-brand-primary font-extrabold flex items-center justify-center shadow-sm shrink-0">${a.initials}</div>
                 <div>
-                  <h3 class="font-extrabold text-[#131B2E] flex flex-wrap items-center gap-1.5">
+                  <h3 class="font-extrabold text-ink flex flex-wrap items-center gap-1.5">
                     <span>${escapeHtml(a.name)}</span>
-                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-surface-low text-[#424655]">${escapeHtml(a.renCode)}</span>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-surface-low text-muted">${escapeHtml(a.renCode)}</span>
                   </h3>
                   <p class="text-xs text-brand-primary font-semibold">${escapeHtml(pick(a, "roleEn", "roleZh"))}</p>
                 </div>
               </div>
-              <p class="text-xs text-[#424655] leading-relaxed mb-4">${escapeHtml(pick(a, "bioEn", "bioZh"))}</p>
+              <p class="text-xs text-muted leading-relaxed mb-4">${escapeHtml(pick(a, "bioEn", "bioZh"))}</p>
               <div class="grid grid-cols-3 gap-2 text-center bg-surface-low rounded-xl p-2.5 mb-4 text-xs">
-                <div><div class="font-extrabold text-[#131B2E]">${a.dealsClosed}</div><div class="text-[10px] text-[#424655]">${state.lang === "zh" ? "累计成交" : "Deals"}</div></div>
-                <div><div class="font-extrabold text-brand-primary">${a.avgReplyMin} min</div><div class="text-[10px] text-[#424655]">${state.lang === "zh" ? "响应速度" : "Avg Reply"}</div></div>
-                <div><div class="font-extrabold text-[#131B2E]">${a.verifiedUnitsCount}</div><div class="text-[10px] text-[#424655]">${state.lang === "zh" ? "负责房源" : "Listings"}</div></div>
+                <div><div class="font-extrabold text-ink">${a.dealsClosed}</div><div class="text-[10px] text-muted">${state.lang === "zh" ? "累计成交" : "Deals"}</div></div>
+                <div><div class="font-extrabold text-brand-primary">${a.avgReplyMin} min</div><div class="text-[10px] text-muted">${state.lang === "zh" ? "响应速度" : "Avg Reply"}</div></div>
+                <div><div class="font-extrabold text-ink">${a.verifiedUnitsCount}</div><div class="text-[10px] text-muted">${state.lang === "zh" ? "负责房源" : "Listings"}</div></div>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-2">
-              <button onclick="selectAgentPortfolio('${a.id}')" class="py-2.5 px-3 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] text-xs font-bold transition-colors">
+              <button onclick="selectAgentPortfolio('${a.id}')" class="py-2.5 px-3 rounded-xl bg-surface-high hover:bg-slate-200 text-ink text-xs font-bold transition-colors">
                 ${state.lang === "zh" ? "查看负责楼盘" : "View Listings"}
               </button>
               <button onclick="openAgentWhatsApp('${a.id}')" class="py-2.5 px-3 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1">
-                <span class="material-symbols-outlined text-[16px]">chat</span>
+                <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-chat"/></svg>
                 <span>WhatsApp</span>
               </button>
             </div>
@@ -891,7 +919,7 @@
       <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-200">
         <div>
           <div class="text-xs text-brand-primary font-bold">${escapeHtml(agent.areas.join(" · "))} · ${escapeHtml(agent.languages.join(" / "))}</div>
-          <h4 class="text-base sm:text-lg font-extrabold text-[#131B2E]">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
+          <h4 class="text-base sm:text-lg font-extrabold text-ink">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
         </div>
         <button onclick="openAgentWhatsApp('${agent.id}')" class="px-4 py-2 rounded-xl btn-whatsapp text-xs">
           ${state.lang === "zh" ? "联系顾问看房" : "WhatsApp Specialist"}
@@ -903,8 +931,8 @@
             (p) => `
           <div class="bg-surface-low rounded-xl border border-slate-200/70 p-4 flex items-center justify-between gap-3">
             <div>
-              <div class="text-sm font-extrabold text-[#131B2E]">${escapeHtml(p.name)}</div>
-              <div class="text-xs text-[#424655]">${escapeHtml(p.area)} &middot; ${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 房源" : "Example Units"} &middot; ${formatRM(p.priceFrom)}+</div>
+              <div class="text-sm font-extrabold text-ink">${escapeHtml(p.name)}</div>
+              <div class="text-xs text-muted">${escapeHtml(p.area)} &middot; ${p.verifiedUnits.length} ${state.lang === "zh" ? "套 Example 房源" : "Example Units"} &middot; ${formatRM(p.priceFrom)}+</div>
             </div>
             <button onclick="openProjectModal('${p.id}')" class="px-3 py-1.5 rounded-lg btn-brand-primary text-xs font-bold shrink-0">
               ${state.lang === "zh" ? "查看" : "View"}
@@ -948,7 +976,6 @@
     document.getElementById("project-modal").classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
     renderProjectModalContent();
-    refreshIcons();
   };
 
   window.closeProjectModal = function () {
@@ -960,7 +987,6 @@
   window.switchModalTab = function (tab) {
     state.activeModalTab = tab;
     renderProjectModalContent();
-    refreshIcons();
   };
 
   window.selectModalPhoto = function (idx) {
@@ -994,26 +1020,26 @@
     let bodyHtml = "";
     if (state.activeModalTab === "overview") {
       bodyHtml = `
-        <p class="text-xs sm:text-sm text-[#424655] leading-relaxed mb-4 sm:mb-5">${escapeHtml(pick(p, "summaryEn", "summaryZh"))}</p>
+        <p class="text-xs sm:text-sm text-muted leading-relaxed mb-4 sm:mb-5">${escapeHtml(pick(p, "summaryEn", "summaryZh"))}</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 mb-4 sm:mb-5">
           <div class="rounded-2xl bg-brand-soft border p-4">
-            <h4 class="font-extrabold text-[#131B2E] text-xs sm:text-sm mb-2">✓ ${
+            <h4 class="font-extrabold text-ink text-xs sm:text-sm mb-2">✓ ${
               state.lang === "zh" ? "怡保买家喜欢的原因" : "Why Ipoh Buyers Love This Area"
             }</h4>
             <ul class="space-y-1.5 text-xs text-slate-700">${pros.map((item) => `<li>&bull; ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
           <div class="rounded-2xl badge-accent-soft border p-4">
-            <h4 class="font-extrabold text-[#131B2E] text-xs sm:text-sm mb-2">⚠ ${
+            <h4 class="font-extrabold text-ink text-xs sm:text-sm mb-2">⚠ ${
               state.lang === "zh" ? "买二手房前要注意" : "Good to Check Before Buying"
             }</h4>
             <ul class="space-y-1.5 text-xs text-slate-700">${cons.map((item) => `<li>&bull; ${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
         </div>
         <div class="rounded-2xl bg-surface-low border border-slate-200/70 p-3.5 sm:p-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div><span class="text-[#424655] block">${state.lang === "zh" ? "周边车程" : "Key Amenities"}</span><strong class="text-[#131B2E]">${escapeHtml(p.amenityDrive)}</strong></div>
-          <div><span class="text-[#424655] block">${state.lang === "zh" ? "保安 / 管理费" : "Maint. / Guard"}</span><strong class="text-[#131B2E]">${escapeHtml(p.maintenanceLabel)}</strong></div>
-          <div><span class="text-[#424655] block">${state.lang === "zh" ? "产权状态" : "Tenure"}</span><strong class="text-[#131B2E]">${escapeHtml(p.tenure)}</strong></div>
-          <div><span class="text-[#424655] block">${state.lang === "zh" ? "参考租金回报" : "Est. Yield"}</span><strong class="text-brand-primary">${p.rentalYield}%</strong></div>
+          <div><span class="text-muted block">${state.lang === "zh" ? "周边车程" : "Key Amenities"}</span><strong class="text-ink">${escapeHtml(p.amenityDrive)}</strong></div>
+          <div><span class="text-muted block">${state.lang === "zh" ? "保安 / 管理费" : "Maint. / Guard"}</span><strong class="text-ink">${escapeHtml(p.maintenanceLabel)}</strong></div>
+          <div><span class="text-muted block">${state.lang === "zh" ? "产权状态" : "Tenure"}</span><strong class="text-ink">${escapeHtml(p.tenure)}</strong></div>
+          <div><span class="text-muted block">${state.lang === "zh" ? "参考租金回报" : "Est. Yield"}</span><strong class="text-brand-primary">${p.rentalYield}%</strong></div>
         </div>
       `;
     } else if (state.activeModalTab === "units") {
@@ -1035,8 +1061,8 @@
                   <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded btn-brand-primary">${escapeHtml(u.code)}</span>
                   <span class="text-xs font-bold badge-accent-soft border px-2 py-0.5 rounded">${escapeHtml(pick(u, "tagEn", "tagZh"))}</span>
                 </div>
-                <div class="font-extrabold text-[#131B2E] text-sm">${escapeHtml(u.layout)} &middot; ${escapeHtml(u.level)}</div>
-                <div class="text-xs text-[#424655]">${escapeHtml(u.furnishing)} &middot; ~RM ${u.psf} psf</div>
+                <div class="font-extrabold text-ink text-sm">${escapeHtml(u.layout)} &middot; ${escapeHtml(u.level)}</div>
+                <div class="text-xs text-muted">${escapeHtml(u.furnishing)} &middot; ~RM ${u.psf} psf</div>
               </div>
               <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                 <div class="text-base sm:text-lg font-extrabold text-brand-primary">${formatRM(u.price)}</div>
@@ -1057,10 +1083,10 @@
               (fp, idx) => `
             <div class="rounded-2xl border border-slate-200 p-4 bg-surface-low">
               ${renderFloorPlanSvg(fp, isLanded)}
-              <div class="font-extrabold text-[#131B2E] text-sm mb-1">${escapeHtml(fp.type)}</div>
-              <div class="text-xs text-[#424655] mb-3">${fp.sqft} sqft &middot; ${fp.beds} Bed &middot; ${fp.baths} Bath &middot; Est. Rent: <strong class="text-brand-primary">${escapeHtml(fp.estRent)}</strong></div>
+              <div class="font-extrabold text-ink text-sm mb-1">${escapeHtml(fp.type)}</div>
+              <div class="text-xs text-muted mb-3">${fp.sqft} sqft &middot; ${fp.beds} Bed &middot; ${fp.baths} Bath &middot; Est. Rent: <strong class="text-brand-primary">${escapeHtml(fp.estRent)}</strong></div>
               <div class="flex items-center justify-between pt-2 border-t border-slate-200">
-                <span class="font-extrabold text-[#131B2E]">${escapeHtml(fp.price)}</span>
+                <span class="font-extrabold text-ink">${escapeHtml(fp.price)}</span>
                 <button onclick="openFloorPlanLead('${p.id}', ${idx})" class="text-xs font-bold text-brand-primary hover:underline">
                   ${state.lang === "zh" ? "索取视频与估价 →" : "Get Video & Bank Value →"}
                 </button>
@@ -1077,8 +1103,8 @@
             .map(
               (f) => `
             <div class="rounded-2xl border border-slate-200 p-4 bg-white">
-              <div class="font-bold text-[#131B2E] text-sm mb-1.5">Q: ${escapeHtml(pick(f, "qEn", "qZh"))}</div>
-              <p class="text-xs text-[#424655] leading-relaxed">A: ${escapeHtml(pick(f, "aEn", "aZh"))}</p>
+              <div class="font-bold text-ink text-sm mb-1.5">Q: ${escapeHtml(pick(f, "qEn", "qZh"))}</div>
+              <p class="text-xs text-muted leading-relaxed">A: ${escapeHtml(pick(f, "aEn", "aZh"))}</p>
             </div>`
             )
             .join("")}
@@ -1091,8 +1117,8 @@
         <img id="main-gallery-photo" src="${escapeHtml(p.images[state.activePhotoIdx])}" alt="${escapeHtml(p.name)}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-black/25"></div>
 
-        <button onclick="closeProjectModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-sm">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button type="button" onclick="closeProjectModal()" aria-label="Close" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/55 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-sm">
+          <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg>
         </button>
 
         <div class="absolute bottom-3.5 left-4 right-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2.5">
@@ -1123,7 +1149,7 @@
           <button onclick="switchModalTab('${tb.id}')" class="py-3 text-xs font-bold whitespace-nowrap border-b-2 transition-colors ${
               state.activeModalTab === tb.id
                 ? "border-brand-primary text-brand-primary"
-                : "border-transparent text-[#424655] hover:text-[#131B2E]"
+                : "border-transparent text-muted hover:text-ink"
             }">${tb.label}</button>`
           )
           .join("")}
@@ -1135,16 +1161,16 @@
         <div class="flex items-center gap-2 min-w-0 text-xs">
           <div class="w-8 h-8 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${agent.initials}</div>
           <div class="truncate">
-            <div class="font-bold text-[#131B2E] truncate">${escapeHtml(agent.name)}</div>
-            <div class="text-[#424655] text-[11px]">${escapeHtml(agent.renCode)} &middot; ${agent.avgReplyMin}m reply</div>
+            <div class="font-bold text-ink truncate">${escapeHtml(agent.name)}</div>
+            <div class="text-muted text-[11px]">${escapeHtml(agent.renCode)} &middot; ${agent.avgReplyMin}m reply</div>
           </div>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="hidden sm:inline-flex px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-[#131B2E] font-bold text-xs">
+          <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="hidden sm:inline-flex px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-ink font-bold text-xs">
             ${state.lang === "zh" ? "预约时段" : "Book Viewing"}
           </button>
           <button onclick="openProjectWhatsApp('${p.id}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shadow-sm flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px]">chat</span>
+            <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-chat"/></svg>
             <span>WhatsApp</span>
           </button>
         </div>
@@ -1209,12 +1235,10 @@
     if (!window.PVConcierge) return;
     if (!state.calcSnapshot) updateCalculators();
     const c = state.calcSnapshot;
-    const motNoteEn = c.motExemptionEligible
-      ? `Est. MOT ${formatRM(c.mot)} (1st-Time Buyer RM500k Exemption check)`
-      : `Est. MOT ${formatRM(c.mot)}`;
-    const motNoteZh = c.motExemptionEligible
-      ? `MOT 印花税约 ${formatRM(c.mot)}（50万内首购免税适用确认）`
-      : `MOT 印花税约 ${formatRM(c.mot)}`;
+    const buyerEn = { local: "Malaysian", first: "Malaysian first-home buyer", foreign: "Foreign buyer" }[c.buyerType] || "Malaysian";
+    const buyerZh = { local: "大马公民", first: "大马首购", foreign: "外国买家" }[c.buyerType] || "大马公民";
+    const motNoteEn = `Est. MOT ${formatRM(c.mot)}${c.motExemptionEligible ? " (first-home exemption)" : ""}, legal + loan duty ${formatRM(c.legalEstimate)} · ${buyerEn}`;
+    const motNoteZh = `MOT 印花税约 ${formatRM(c.mot)}${c.motExemptionEligible ? "（首购豁免）" : ""}，律师费 + 贷款印花税约 ${formatRM(c.legalEstimate)} · ${buyerZh}`;
 
     const msg =
       state.lang === "zh"
@@ -1340,7 +1364,7 @@
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
-          <div class="font-bold text-[#131B2E]">怡保对接顾问：${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
+          <div class="font-bold text-ink">怡保对接顾问：${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
           <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内回复</div>
         </div>
       </div>
@@ -1355,7 +1379,7 @@
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
-          <div class="font-bold text-[#131B2E]">Ipoh Specialist: ${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
+          <div class="font-bold text-ink">Ipoh Specialist: ${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
           <div class="text-slate-500">Typically replies within ${assignedAgent.avgReplyMin} mins</div>
         </div>
       </div>
@@ -1364,6 +1388,63 @@
         <span>Open WhatsApp Chat Now &rarr;</span>
       </a>
       <button type="button" onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">Done</button>`;
+  };
+
+  // --- Inline Inquiry Form (#inquiry section) ---
+  window.submitInlineInquiry = function (e) {
+    e.preventDefault();
+    const isZh = state.lang === "zh";
+    const nameEl = document.getElementById("inq-name");
+    const phoneEl = document.getElementById("inq-phone");
+    const topicEl = document.getElementById("inq-topic");
+    const name = nameEl.value.trim();
+    const phone = phoneEl.value.trim();
+    let ok = true;
+
+    function setErr(el, errId, msg) {
+      el.setAttribute("aria-invalid", msg ? "true" : "false");
+      document.getElementById(errId).textContent = msg || "";
+      if (msg) ok = false;
+    }
+    setErr(nameEl, "inq-name-err", name ? "" : isZh ? "请输入您的称呼" : "Please enter your name");
+    setErr(
+      phoneEl,
+      "inq-phone-err",
+      /^\+?[\d\s-]{9,}$/.test(phone) ? "" : isZh ? "请输入有效的 WhatsApp 号码" : "Please enter a valid WhatsApp number"
+    );
+    if (!ok) {
+      (nameEl.getAttribute("aria-invalid") === "true" ? nameEl : phoneEl).focus();
+      return;
+    }
+
+    const topic = topicEl.options[topicEl.selectedIndex].textContent.trim();
+    const agent = DATA.agents[state.roundRobinIndex % DATA.agents.length];
+    state.roundRobinIndex += 1;
+    const agentShort = agent.name.replace(" (Example)", "");
+    const dsrNote = getDsrSummaryLine(false);
+    const msg = isZh
+      ? `你好 ${agentShort}，我是 ${name}（${phone}），想在 PrimeVerse Ipoh 咨询：「${topic}」。${dsrNote}`
+      : `Hi ${agentShort}, I'm ${name} (${phone}). I'd like help with: "${topic}" on PrimeVerse Ipoh.${dsrNote}`;
+
+    if (window.PVConcierge) {
+      window.PVConcierge.trackLeadEvent("form_lead", {
+        package: "pro",
+        source: "inline_inquiry",
+        name,
+        phone,
+        topic,
+        agentId: agent.id,
+        agentName: agent.name,
+        lang: state.lang
+      });
+      window.PVConcierge.launchWhatsApp({
+        message: msg,
+        agent,
+        eventName: "inline_inquiry_whatsapp",
+        meta: { package: "pro", topic, label: topic },
+        lang: state.lang
+      });
+    }
   };
 
   function initStickySearchObserver() {
@@ -1447,7 +1528,7 @@
       });
     }
 
-    ["slider-price", "slider-margin", "slider-rate", "slider-tenure", "slider-rent", "calc-foreigner"].forEach(
+    ["slider-price", "slider-margin", "slider-rate", "slider-tenure", "slider-rent", "calc-buyer"].forEach(
       (id) => {
         document.getElementById(id).addEventListener("input", function () {
           state.calcTouched = true;

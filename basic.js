@@ -137,7 +137,7 @@
       furnishingZh: "阳台直望高尔夫球场绿景",
       descEn: "Quiet, airy golf-resort apartment surrounded by lush fairways and hills in Meru Valley — popular with retirees and out-of-state weekend homeowners.",
       descZh: "环境清幽空气极佳，阳台直望高尔夫球场绿地，深受跨州退休族与居家办公人士喜爱。",
-      image: "./images/meru-ecovillage.jpg",
+      image: "./images/meru-clubhouse.jpg",
       agentId: "kenny-yeoh"
     }
   ];
@@ -264,7 +264,13 @@
 
   const state = {
     lang: "en",
-    theme: localStorage.getItem("pv_theme") || "a",
+    theme: (function () {
+      try {
+        return localStorage.getItem("pv_theme") || "a";
+      } catch (e) {
+        return "a";
+      }
+    })(),
     search: "",
     area: "all",
     type: "all",
@@ -292,24 +298,27 @@
     return DATA.agents.find((a) => a.id === id) || DATA.agents[0];
   }
 
-  function refreshIcons() {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
-      window.lucide.createIcons();
-    }
+  function icon(name, cls) {
+    return window.pvIcon ? window.pvIcon(name, cls) : "";
   }
 
   // --- Live 3-Theme Switcher ---
   window.setBasicTheme = function (themeId) {
+    if (["a", "b", "c"].indexOf(themeId) === -1) themeId = "a";
     state.theme = themeId;
     document.body.setAttribute("data-theme", themeId);
-    localStorage.setItem("pv_theme", themeId);
+    try {
+      localStorage.setItem("pv_theme", themeId);
+    } catch (e) {
+      /* private mode: theme still applies for this visit */
+    }
 
     ["a", "b", "c"].forEach((id) => {
       const btn = document.getElementById("theme-btn-" + id);
       if (!btn) return;
       const active = id === themeId;
       btn.className = active
-        ? "px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 bg-white text-slate-900 whitespace-nowrap shadow-sm"
+        ? "px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 bg-white text-ink whitespace-nowrap shadow-sm"
         : "px-2.5 py-1 rounded-full text-[11px] font-semibold flex items-center gap-1.5 bg-white/10 text-slate-200 hover:bg-white/20 whitespace-nowrap";
     });
   };
@@ -321,13 +330,16 @@
 
     if (lang === "en") {
       enBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all btn-brand-primary";
-      zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 hover:text-slate-900";
+      zhBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-muted hover:text-ink";
     } else {
       zhBtn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all btn-brand-primary";
-      enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 hover:text-slate-900";
+      enBtn.className = "px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-muted hover:text-ink";
     }
 
     const isZh = lang === "zh";
+    document.documentElement.lang = isZh ? "zh-Hans" : "en";
+    enBtn.setAttribute("aria-pressed", String(!isZh));
+    zhBtn.setAttribute("aria-pressed", String(isZh));
     document.getElementById("basic-tagline").textContent = isZh
       ? "怡保二手房源与房产部落格网站 (Basic 精简版)"
       : "Ipoh Subsale Listings & Local Property Blog (Example)";
@@ -336,14 +348,22 @@
     document.getElementById("nav-team-lbl").textContent = isZh ? "顾问团队" : "Our Team";
     document.getElementById("btn-wa-lbl").textContent = isZh ? "WhatsApp 咨询" : "WhatsApp Us";
     document.getElementById("basic-hero-badge").textContent = isZh
-      ? "Basic 精简版方案 · 房源展示 + SEO 部落格文章"
-      : "Basic Package Demo · Clean Listings + SEO Blog";
+      ? "怡保二手好房 · 本地买房指南"
+      : "Ipoh Subsale Homes · Local Buying Guides";
     document.getElementById("basic-hero-title").textContent = isZh
-      ? "怡保严选二手房源与本地买房部落格"
-      : "Ipoh Subsale Homes & Local Market Blog";
+      ? "怡保严选二手房与本地买房指南"
+      : "Ipoh Subsale Homes & Local Market Guides";
     document.getElementById("basic-hero-sub").textContent = isZh
-      ? "清爽直观的经纪/团队官网方案：顾客快速搜房看图，并用本地买房干货文章吸引 Google 自然搜寻流量。"
-      : "A simple, fast website for buyers to browse verified Ipoh subsale units and read helpful local neighbourhood guides — easy to maintain and clean on mobile.";
+      ? "浏览实勘核实的怡保二手房源，阅读本地顾问写的真实社区与贷款指南。"
+      : "Browse verified Ipoh subsale units and read honest neighbourhood guides from local specialists.";
+    const trustCopy = isZh
+      ? [["实勘核实", "上架前核对屋主与地契"], ["真实照片", "无效果图、无图库照"], ["本地指南", "房价、学区与贷款讲清楚"], ["直接带看", "持牌 REN · E(1) 2048（示例）"]]
+      : [["Verified units", "Owner & title checked before listing"], ["Real photos", "No renders, no stock images"], ["Local guides", "Prices, schools & loans explained"], ["Direct viewing", "Licensed REN · E(1) 2048 (Example)"]];
+    trustCopy.forEach((pair, i) => {
+      document.getElementById("basic-trust" + (i + 1)).textContent = pair[0];
+      document.getElementById("basic-trust" + (i + 1) + "-sub").textContent = pair[1];
+    });
+    document.getElementById("basic-blog-badge").textContent = isZh ? "买房指南" : "Buying Guides";
     document.getElementById("basic-listings-heading").textContent = isZh
       ? "套怡保二手在售房源 (Example)"
       : "Ipoh Subsale Listings (Examples)";
@@ -354,8 +374,8 @@
       ? "怡保买房指南与市场部落格 (Blog)"
       : "Ipoh Real Estate Blog & Buying Guides";
     document.getElementById("basic-blog-sub").textContent = isZh
-      ? "用真实解答怡保买家疑问的文章获取 Google 排名，自然导流至你的房源。"
-      : "Practical articles answering common Ipoh homebuyer questions to bring organic Google traffic directly to your listings.";
+      ? "直接回答怡保买家最常问的问题：选区、房价、贷款与律师费。"
+      : "Straight answers to the questions Ipoh homebuyers ask most — areas, prices, loans and legal fees.";
     document.getElementById("basic-team-heading").textContent = isZh
       ? "怡保主理顾问团队 (Example)"
       : "Your Ipoh Property Team (Example)";
@@ -372,7 +392,6 @@
     renderListings();
     renderBlogs();
     renderTeam();
-    refreshIcons();
   };
 
   function syncBasicStickyInputs() {
@@ -427,8 +446,8 @@
 
     if (list.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-8 text-center">
-          <p class="text-sm font-semibold text-slate-600 mb-3">${
+        <div class="col-span-full bg-white rounded-2xl border border-line p-8 text-center">
+          <p class="text-sm font-semibold text-muted mb-3">${
             state.lang === "zh" ? "未找到符合条件的怡保房源" : "No matching Ipoh listings found."
           }</p>
           <button onclick="resetBasicFilters()" class="px-4 py-2 rounded-xl btn-brand-primary text-xs font-bold">${
@@ -440,37 +459,35 @@
 
     grid.innerHTML = list
       .map((item) => {
-        const agent = findAgent(item.agentId);
         const isViewed = state.viewedIds.has(item.id);
+        const isZh = state.lang === "zh";
+        const title = pick(item, "titleEn", "titleZh").replace(" (Example)", "");
+        const statusBadge = isViewed
+          ? `<span class="px-2.5 py-1 rounded-full bg-slate-600 text-white text-[10px] font-bold uppercase tracking-wide shadow-sm">${isZh ? "已看过" : "Viewed"}</span>`
+          : item.isNew
+          ? `<span class="px-2.5 py-1 rounded-full badge-price-drop text-[10px] font-bold uppercase tracking-wide shadow-sm">${isZh ? "新上架" : "New"}</span>`
+          : "";
         return `
-          <article onclick="openListingModal('${item.id}')" class="prop-card rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col justify-between shadow-sm">
-            <div>
-              <div class="relative h-44 bg-slate-200 overflow-hidden">
-                <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.titleEn)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                <div class="absolute top-2.5 left-2.5 right-2.5 flex justify-between gap-1.5">
-                  <div class="flex items-center gap-1">
-                    <span class="px-2 py-0.5 rounded-full ${isViewed ? "bg-slate-400 text-white" : "btn-brand-primary"} text-[10px] font-extrabold">${isViewed ? "Viewed" : "For Sale"}</span>
-                    ${item.isNew ? `<span class="px-2 py-0.5 rounded-full badge-price-drop text-[10px] font-bold">New</span>` : ""}
-                  </div>
-                  <span class="px-2 py-0.5 rounded-full bg-white/95 text-slate-800 text-[10px] font-bold">${escapeHtml(item.tenure)}</span>
-                </div>
-                <div class="absolute bottom-2.5 left-3 right-3 text-white font-extrabold text-base">
-                  ${formatRM(item.price)}
-                </div>
-              </div>
+          <article class="prop-card rounded-2xl border border-line overflow-hidden flex flex-col shadow-sm">
+            <button type="button" onclick="openListingModal('${item.id}')" class="relative block w-full aspect-[4/3] bg-slate-200 overflow-hidden" aria-label="${escapeHtml((isZh ? "查看 " : "View ") + title)}">
+              <img src="${escapeHtml(item.image)}" alt="${escapeHtml(title)}" loading="lazy" width="800" height="600" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
+              <span class="absolute top-3 left-3 flex gap-1.5 items-center">
+                <span class="px-2.5 py-1 rounded-full bg-white/95 text-ink text-[10px] font-bold uppercase tracking-wide shadow-sm">${escapeHtml(item.tenure)}</span>
+                ${statusBadge}
+              </span>
+            </button>
 
-              <div class="p-3.5">
-                <div class="text-[11px] font-bold text-brand-primary mb-0.5">${escapeHtml(item.area)}</div>
-                <h3 class="text-sm font-extrabold text-slate-900 leading-snug mb-1.5 line-clamp-2">${escapeHtml(pick(item, "titleEn", "titleZh"))}</h3>
-                <div class="text-xs text-slate-500 mb-2">${escapeHtml(item.specs)}</div>
-                <div class="text-[11px] text-slate-600 bg-[#F8FAFC] border border-slate-100 rounded-lg px-2.5 py-1.5">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</div>
+            <div class="p-4 flex flex-col gap-1.5 flex-1">
+              <p class="text-xl font-extrabold text-ink tabular-nums">${formatRM(item.price)}</p>
+              <h3 class="text-sm font-bold text-ink leading-snug line-clamp-2">
+                <button type="button" onclick="openListingModal('${item.id}')" class="text-left hover:text-brand-primary transition-colors">${escapeHtml(title)}</button>
+              </h3>
+              <p class="text-[13px] text-muted flex items-center gap-1.5">${icon("pin", "w-4 h-4 shrink-0")}<span class="truncate">${escapeHtml(item.area)}</span></p>
+              <p class="text-[13px] text-muted pt-2 mt-0.5 border-t border-line flex items-center gap-1.5">${icon("bed", "w-4 h-4 shrink-0")}${escapeHtml(item.specs)}</p>
+              <div class="grid grid-cols-2 gap-2 mt-auto pt-3">
+                <button type="button" onclick="openListingModal('${item.id}')" class="min-h-[44px] rounded-xl bg-surface-high hover:bg-slate-200 text-ink font-bold text-xs transition-colors">${isZh ? "看详情" : "Details"}</button>
+                <button type="button" onclick="openBasicListingWhatsApp('${item.id}')" class="min-h-[44px] rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5">${icon("chat", "w-4 h-4")}<span>WhatsApp</span></button>
               </div>
-            </div>
-
-            <div class="px-3.5 pb-3.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span class="text-slate-500 truncate">${escapeHtml(agent.name.replace(" (Example)", ""))}</span>
-              <span class="font-bold text-brand-primary shrink-0">${state.lang === "zh" ? "看详情 →" : "View →"}</span>
             </div>
           </article>`;
       })
@@ -481,7 +498,7 @@
     const grid = document.getElementById("basic-blog-grid");
     grid.innerHTML = BLOG_POSTS.map(
       (post) => `
-      <article onclick="openBlogModal('${post.id}')" class="prop-card bg-[#F8FAFC] rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col sm:flex-row">
+      <article onclick="openBlogModal('${post.id}')" class="prop-card bg-canvas rounded-2xl border border-line overflow-hidden cursor-pointer flex flex-col sm:flex-row">
         <div class="sm:w-44 h-44 sm:h-auto shrink-0 bg-slate-200 overflow-hidden">
           <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.titleEn)}" class="card-photo w-full h-full object-cover" onerror="this.style.display='none'" />
         </div>
@@ -491,8 +508,8 @@
               <span class="px-2 py-0.5 rounded badge-accent-soft border font-bold">${escapeHtml(pick(post, "categoryEn", "categoryZh"))}</span>
               <span class="text-slate-400">${escapeHtml(post.date)} &middot; ${escapeHtml(post.readTime)}</span>
             </div>
-            <h3 class="text-base font-extrabold text-slate-900 leading-snug mb-2">${escapeHtml(pick(post, "titleEn", "titleZh"))}</h3>
-            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">${escapeHtml(pick(post, "excerptEn", "excerptZh"))}</p>
+            <h3 class="text-base font-extrabold text-ink leading-snug mb-2">${escapeHtml(pick(post, "titleEn", "titleZh"))}</h3>
+            <p class="text-xs text-muted leading-relaxed line-clamp-3">${escapeHtml(pick(post, "excerptEn", "excerptZh"))}</p>
           </div>
           <div class="mt-3 text-xs font-bold text-brand-primary">${state.lang === "zh" ? "阅读全文 →" : "Read Full Article →"}</div>
         </div>
@@ -505,12 +522,12 @@
     grid.innerHTML = DATA.agents
       .map(
         (a) => `
-      <div class="bg-white rounded-2xl border border-slate-200 p-4 flex items-center justify-between gap-3 shadow-sm">
+      <div class="bg-white rounded-2xl border border-line p-4 flex items-center justify-between gap-3 shadow-sm">
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-11 h-11 rounded-xl btn-brand-primary font-bold flex items-center justify-center shrink-0">${a.initials}</div>
           <div class="min-w-0">
-            <div class="font-extrabold text-sm text-slate-900 truncate">${escapeHtml(a.name)}</div>
-            <div class="text-xs text-slate-500 truncate">${escapeHtml(pick(a, "roleEn", "roleZh"))}</div>
+            <div class="font-extrabold text-sm text-ink truncate">${escapeHtml(a.name)}</div>
+            <div class="text-xs text-muted truncate">${escapeHtml(pick(a, "roleEn", "roleZh"))}</div>
             <div class="text-[11px] text-brand-primary font-semibold">${escapeHtml(a.renCode)}</div>
           </div>
         </div>
@@ -608,8 +625,8 @@
       <div class="relative h-56 sm:h-64 shrink-0 bg-slate-900 overflow-hidden">
         <img src="${escapeHtml(item.image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-black/25"></div>
-        <button onclick="closeBasicModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 text-white flex items-center justify-center">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button type="button" onclick="closeBasicModal()" aria-label="Close" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/55 text-white flex items-center justify-center">
+          <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg>
         </button>
         <div class="absolute bottom-4 left-4 right-4 text-white">
           <div class="text-xs font-bold text-slate-200">${escapeHtml(item.area)} &middot; ${escapeHtml(item.tenure)}</div>
@@ -618,16 +635,16 @@
         </div>
       </div>
       <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 space-y-4 bg-white">
-        <div class="grid grid-cols-2 gap-3 text-xs bg-[#F8FAFC] rounded-xl p-3.5 border border-slate-200">
-          <div><span class="text-slate-400 block">Specs</span><strong class="text-slate-900">${escapeHtml(item.specs)}</strong></div>
-          <div><span class="text-slate-400 block">Condition</span><strong class="text-slate-900">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</strong></div>
+        <div class="grid grid-cols-2 gap-3 text-xs bg-canvas rounded-xl p-3.5 border border-line">
+          <div><span class="text-slate-400 block">Specs</span><strong class="text-ink">${escapeHtml(item.specs)}</strong></div>
+          <div><span class="text-slate-400 block">Condition</span><strong class="text-ink">${escapeHtml(pick(item, "furnishingEn", "furnishingZh"))}</strong></div>
         </div>
         <p class="text-sm text-slate-700 leading-relaxed">${escapeHtml(pick(item, "descEn", "descZh"))}</p>
       </div>
-      <div class="p-4 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+      <div class="p-4 bg-canvas border-t border-line flex items-center justify-between gap-3 shrink-0">
         <div class="text-xs">
-          <div class="font-bold text-slate-900">${escapeHtml(agent.name)}</div>
-          <div class="text-slate-500">${escapeHtml(agent.renCode)}</div>
+          <div class="font-bold text-ink">${escapeHtml(agent.name)}</div>
+          <div class="text-muted">${escapeHtml(agent.renCode)}</div>
         </div>
         <button onclick="openBasicListingWhatsApp('${item.id}')" class="px-5 py-2.5 rounded-xl btn-whatsapp text-xs">
           ${state.lang === "zh" ? "WhatsApp 预约看房" : "Inquire on WhatsApp"}
@@ -635,7 +652,6 @@
       </div>`;
     document.getElementById("basic-modal").classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
-    refreshIcons();
   };
 
   window.openBlogModal = function (id) {
@@ -647,8 +663,8 @@
       <div class="relative h-48 sm:h-56 shrink-0 bg-slate-900 overflow-hidden">
         <img src="${escapeHtml(post.image)}" alt="${escapeHtml(title)}" class="w-full h-full object-cover opacity-85" />
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-black/25"></div>
-        <button onclick="closeBasicModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/55 text-white flex items-center justify-center">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button type="button" onclick="closeBasicModal()" aria-label="Close" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/55 text-white flex items-center justify-center">
+          <svg class="pv-icon w-5 h-5" aria-hidden="true"><use href="#i-x"/></svg>
         </button>
         <div class="absolute bottom-4 left-4 right-4 text-white">
           <div class="text-xs font-bold text-slate-200 mb-1">${escapeHtml(pick(post, "categoryEn", "categoryZh"))} &middot; ${escapeHtml(post.readTime)}</div>
@@ -658,15 +674,14 @@
       <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 blog-prose bg-white">
         ${pick(post, "bodyEn", "bodyZh")}
       </div>
-      <div class="p-4 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
-        <span class="text-xs text-slate-600">${state.lang === "zh" ? "想找文中提到的社区房源？" : "Looking for homes mentioned in this guide?"}</span>
+      <div class="p-4 bg-canvas border-t border-line flex items-center justify-between gap-3 shrink-0">
+        <span class="text-xs text-muted">${state.lang === "zh" ? "想找文中提到的社区房源？" : "Looking for homes mentioned in this guide?"}</span>
         <button onclick="openBasicBlogWhatsApp('${post.id}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shrink-0">
           ${state.lang === "zh" ? "WhatsApp 咨询顾问" : "WhatsApp Ipoh Agent"}
         </button>
       </div>`;
     document.getElementById("basic-modal").classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
-    refreshIcons();
   };
 
   window.closeBasicModal = function () {
@@ -722,14 +737,14 @@
       state.lang === "zh"
         ? `<div class="font-bold text-emerald-800">✓ 资料已记录，点击下方一键发送 WhatsApp！</div>
            <p class="text-emerald-900/90">顾问将优先跟进 ${escapeHtml(name)}（${escapeHtml(phone)}）关于「${escapeHtml(ctx)}」的请求：</p>
-           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-slate-600 leading-relaxed">${escapeHtml(waMsg)}</div>
+           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-muted leading-relaxed">${escapeHtml(waMsg)}</div>
            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'basic', topic: document.getElementById('basic-inq-ctx').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
              <span>立即在 WhatsApp 发送消息 &rarr;</span>
            </a>
            <button type="button" onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">关闭</button>`
         : `<div class="font-bold text-emerald-800">✓ Details Saved! Tap below to open WhatsApp:</div>
            <p class="text-emerald-900/90">Ready for <strong>${escapeHtml(name)}</strong> (${escapeHtml(phone)}) regarding "${escapeHtml(ctx)}":</p>
-           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-slate-600 leading-relaxed">${escapeHtml(waMsg)}</div>
+           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-muted leading-relaxed">${escapeHtml(waMsg)}</div>
            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'basic', topic: document.getElementById('basic-inq-ctx').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
              <span>Open WhatsApp Chat Now &rarr;</span>
            </a>
