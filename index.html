@@ -101,15 +101,15 @@
 
   <!-- Clean White Header (scrolls naturally to hand top bar over to Sticky Search Filter) -->
   <header class="clean-white-nav relative z-30 text-ink">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
-      <a href="#top" class="flex items-center gap-2.5 shrink-0">
-        <div class="w-9 h-9 rounded-xl btn-brand-primary flex items-center justify-center shadow-sm">
-          <svg class="pv-icon w-[20px] h-[20px] text-white" aria-hidden="true"><use href="#i-building"/></svg>
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
+      <a href="#top" class="flex items-center gap-2 min-w-0 shrink">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl btn-brand-primary flex items-center justify-center shadow-sm shrink-0">
+          <svg class="pv-icon w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] text-white" aria-hidden="true"><use href="#i-building"/></svg>
         </div>
-        <div>
-          <div class="font-extrabold text-base sm:text-xl tracking-tight flex items-center gap-1.5 text-ink">
-            <span>PrimeVerse <span class="text-brand-primary">Ipoh</span></span>
-            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border badge-accent-soft">Perak</span>
+        <div class="min-w-0">
+          <div class="font-extrabold text-[15px] sm:text-xl tracking-tight flex items-center gap-1.5 text-ink">
+            <span class="truncate">PrimeVerse <span class="text-brand-primary">Ipoh</span></span>
+            <span class="hidden sm:inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border badge-accent-soft shrink-0">Perak</span>
           </div>
           <p class="text-[11px] text-muted hidden md:block" data-i18n="tagline">Ipoh Subsale Specialists · 100% Verified Listings (Example)</p>
         </div>
@@ -129,16 +129,16 @@
       </nav>
 
       <!-- Language & WhatsApp #25D366 Action -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
         <div class="inline-flex shrink-0 whitespace-nowrap rounded-full bg-surface-high p-0.5" role="group" aria-label="Language switcher">
-          <button type="button" id="lang-en" aria-pressed="true" onclick="setLanguage('en')" class="px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary">EN</button>
-          <button type="button" id="lang-zh" aria-pressed="false" onclick="setLanguage('zh')" class="px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-muted hover:text-ink">中文</button>
+          <button type="button" id="lang-en" aria-pressed="true" onclick="setLanguage('en')" class="px-2 sm:px-2.5 py-1 text-[11px] font-bold rounded-full transition-all btn-brand-primary">EN</button>
+          <button type="button" id="lang-zh" aria-pressed="false" onclick="setLanguage('zh')" class="px-2 sm:px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all text-muted hover:text-ink">中文</button>
         </div>
         <button type="button" onclick="openLeadModal('Ipoh Owner Listing Inquiry')" class="hidden xl:inline-flex whitespace-nowrap items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 hover:border-slate-400 text-ink font-semibold text-xs transition-colors">
           <span data-i18n="btnListProperty">List Your Property</span>
         </button>
-        <button type="button" onclick="openGeneralWhatsApp('General Ipoh Subsale Inquiry')" class="inline-flex whitespace-nowrap items-center gap-1.5 px-3 py-2 rounded-lg btn-whatsapp text-xs shadow-sm shrink-0">
-          <svg class="pv-icon w-[18px] h-[18px]" aria-hidden="true"><use href="#i-chat"/></svg>
+        <button type="button" onclick="openGeneralWhatsApp('General Ipoh Subsale Inquiry')" class="inline-flex whitespace-nowrap items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg btn-whatsapp text-xs shadow-sm shrink-0">
+          <svg class="pv-icon w-[17px] h-[17px] sm:w-[18px] sm:h-[18px]" aria-hidden="true"><use href="#i-chat"/></svg>
           <span class="hidden sm:inline" data-i18n="btnWhatsappUs">WhatsApp Agent</span>
           <span class="sm:hidden">Chat</span>
         </button>
@@ -147,13 +147,13 @@
   </header>
 
   <!-- PropertyGuru-Style Sticky Search & Filter Bar (slides in when scrolling past Hero Search) -->
-  <div id="sticky-search-bar" class="fixed top-0 inset-x-0 z-40 sticky-search-bar border-b border-slate-200/80 shadow-[0_8px_24px_-10px_rgba(19,27,46,0.16)]">
+  <div id="sticky-search-bar" class="fixed top-0 left-0 right-0 w-full z-40 sticky-search-bar border-b border-slate-200/80 shadow-[0_8px_24px_-10px_rgba(19,27,46,0.16)]">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2">
       <div class="flex flex-wrap md:flex-nowrap items-center gap-1.5 sm:gap-2">
         <!-- Keyword Input -->
-        <div class="flex items-center gap-1.5 bg-surface-low rounded-xl px-2.5 sm:px-3 py-1.5 flex-1 min-w-[155px] md:min-w-[205px] border border-slate-200/70">
+        <div class="flex items-center gap-1.5 bg-surface-low rounded-xl px-2.5 sm:px-3 py-1.5 flex-1 min-w-0 border border-slate-200/70">
           <svg class="pv-icon w-[17px] h-[17px] text-brand-primary shrink-0" aria-hidden="true"><use href="#i-search"/></svg>
-          <input id="sticky-search-input" type="search" aria-label="Search homes" placeholder="Search Botani, Upper East, Haven..." class="bg-transparent text-xs sm:text-sm font-semibold text-ink placeholder-slate-400 focus:outline-none w-full" />
+          <input id="sticky-search-input" type="search" aria-label="Search homes" placeholder="Search Botani, Upper East, Haven..." class="bg-transparent text-base sm:text-sm leading-tight font-semibold text-ink placeholder-slate-400 focus:outline-none w-full min-w-0" />
         </div>
 
         <!-- Quick Result Count, Map Jump, Reset & WhatsApp (stays right on md+) -->
@@ -169,39 +169,35 @@
           <button onclick="resetFilters()" title="Reset Filters" aria-label="Reset Filters" type="button" class="w-8 h-8 rounded-xl bg-surface-high hover:bg-slate-200 text-ink flex items-center justify-center transition-colors shrink-0">
             <svg class="pv-icon w-[17px] h-[17px]" aria-hidden="true"><use href="#i-reset"/></svg>
           </button>
-          <button onclick="openGeneralWhatsApp('Sticky Search Filter Inquiry')" title="WhatsApp Agent" aria-label="WhatsApp Agent" type="button" class="px-2.5 sm:px-3 h-8 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm shrink-0">
+          <button onclick="openGeneralWhatsApp('Sticky Search Filter Inquiry')" title="WhatsApp Agent" aria-label="WhatsApp Agent" type="button" class="w-8 sm:w-auto sm:px-3 h-8 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm shrink-0">
             <svg class="pv-icon w-[16px] h-[16px]" aria-hidden="true"><use href="#i-chat"/></svg>
             <span class="hidden sm:inline">WhatsApp</span>
           </button>
         </div>
 
-        <!-- Area / Type / Budget Dropdowns (row 2 swipeable on mobile, inline on desktop) -->
-        <div class="w-full md:w-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar md:overflow-visible">
-          <select id="sticky-filter-area" aria-label="Filter Ipoh Area" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
-            <option value="all">All Ipoh Areas</option>
-            <option value="Bandar Seri Botani">Bandar Seri Botani</option>
+        <!-- Area / Type / Budget Dropdowns (3 equal columns fit cleanly inside 320px-375px phones) -->
+        <div class="w-full md:w-auto grid grid-cols-3 md:flex items-center gap-1.5">
+          <select id="sticky-filter-area" aria-label="Filter Ipoh Area" class="w-full md:w-auto min-w-0 truncate bg-surface-low border border-slate-200/70 rounded-xl px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-ink focus:outline-none cursor-pointer">
+            <option value="all">All Areas</option>
+            <option value="Bandar Seri Botani">Botani</option>
             <option value="Tiger Lane">Tiger Lane</option>
-            <option value="Tambun / Sunway">Tambun &amp; Sunway City</option>
-            <option value="Canning / Ipoh Garden">Canning &amp; Ipoh Garden</option>
-            <option value="Meru Valley">Meru Valley &amp; Desa Park</option>
-            <option value="Station 18">Station 18 &amp; Pasir Puteh</option>
+            <option value="Tambun / Sunway">Tambun / Sunway</option>
+            <option value="Canning / Ipoh Garden">Canning / Garden</option>
+            <option value="Meru Valley">Meru Valley</option>
+            <option value="Station 18">Station 18</option>
           </select>
-          <select id="sticky-filter-tab" aria-label="Filter Property Type" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
+          <select id="sticky-filter-tab" aria-label="Filter Property Type" class="w-full md:w-auto min-w-0 truncate bg-surface-low border border-slate-200/70 rounded-xl px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-ink focus:outline-none cursor-pointer">
             <option value="all">All Types</option>
-            <option value="Landed">Landed Terrace / Semi-D</option>
-            <option value="Condo">Condo &amp; Resort</option>
-            <option value="investment">High-Yield (&gt;6%)</option>
+            <option value="Landed">Landed</option>
+            <option value="Condo">Condo</option>
+            <option value="investment">Yield &gt;6%</option>
           </select>
-          <select id="sticky-filter-budget" aria-label="Filter Max Budget" class="bg-surface-low border border-slate-200/70 rounded-xl px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-ink focus:outline-none cursor-pointer shrink-0">
+          <select id="sticky-filter-budget" aria-label="Filter Max Budget" class="w-full md:w-auto min-w-0 truncate bg-surface-low border border-slate-200/70 rounded-xl px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-ink focus:outline-none cursor-pointer">
             <option value="99999999">Any Price</option>
-            <option value="400000">Under RM 400k</option>
-            <option value="550000">Under RM 550k</option>
-            <option value="750000">Under RM 750k</option>
+            <option value="400000">&le; RM 400k</option>
+            <option value="550000">&le; RM 550k</option>
+            <option value="750000">&le; RM 750k</option>
           </select>
-          <a href="#ipoh-map-section" class="lg:hidden px-2.5 py-1.5 rounded-xl bg-surface-high text-ink text-[11px] font-bold flex items-center gap-1 shrink-0">
-            <svg class="pv-icon w-[14px] h-[14px] text-brand-primary" aria-hidden="true"><use href="#i-map"/></svg>
-            <span>Map</span>
-          </a>
         </div>
       </div>
     </div>
@@ -244,18 +240,18 @@
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-stretch">
-          <div class="col-span-2 lg:col-span-4 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
+          <div class="col-span-2 lg:col-span-4 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center min-w-0">
             <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="search-input">
               <svg class="pv-icon w-[15px] h-[15px] text-brand" aria-hidden="true"><use href="#i-search"/></svg> <span data-i18n="lblKeyword">Keyword / Condo</span>
             </label>
-            <input id="search-input" type="search" placeholder="Botani, Upper East, Haven, Station 18..." class="bg-transparent font-semibold text-sm sm:text-base text-ink placeholder-slate-400 focus:outline-none w-full mt-0.5" />
+            <input id="search-input" type="search" placeholder="Botani, Upper East, Haven, Station 18..." class="bg-transparent font-semibold text-base text-ink placeholder-slate-400 focus:outline-none w-full mt-0.5" />
           </div>
 
-          <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
+          <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center min-w-0">
             <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="filter-area">
               <svg class="pv-icon w-[15px] h-[15px] text-brand" aria-hidden="true"><use href="#i-pin"/></svg> <span data-i18n="lblArea">Area</span>
             </label>
-            <select id="filter-area" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full mt-0.5">
+            <select id="filter-area" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full min-w-0 truncate mt-0.5">
               <option value="all">All Ipoh Areas</option>
               <option value="Bandar Seri Botani">Bandar Seri Botani</option>
               <option value="Tiger Lane">Tiger Lane</option>
@@ -266,11 +262,11 @@
             </select>
           </div>
 
-          <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center">
+          <div class="col-span-1 lg:col-span-3 bg-surface-low rounded-xl px-3.5 py-2.5 flex flex-col justify-center min-w-0">
             <label class="text-[11px] font-bold text-muted flex items-center gap-1" for="filter-budget">
               <svg class="pv-icon w-[15px] h-[15px] text-brand-accent" aria-hidden="true"><use href="#i-wallet"/></svg> <span data-i18n="lblBudget">Max Budget</span>
             </label>
-            <select id="filter-budget" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full mt-0.5">
+            <select id="filter-budget" class="bg-transparent font-semibold text-xs sm:text-sm text-ink focus:outline-none cursor-pointer w-full min-w-0 truncate mt-0.5">
               <option value="99999999">Any Price</option>
               <option value="400000">Under RM 400k</option>
               <option value="550000">Under RM 550k</option>
