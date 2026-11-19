@@ -1,16 +1,12 @@
-// PrimeVerse Ipoh Realty - Unified Stitch UI + 3-Theme Pro Portal Logic
+// PrimeVerse Ipoh Realty - Unified Stitch UI + Real Leaflet Map + Pre-filled WhatsApp Pro Logic
 
 (function () {
   const DATA = window.APP_DATA;
 
-  const MAP_POSITIONS = {
-    "botani-seri-meranti": "bottom-16 sm:bottom-20 left-[24%] sm:left-[30%]",
-    "upper-east-tiger-lane": "top-24 sm:top-28 right-[26%] sm:right-[30%]",
-    "the-haven-tambun": "top-32 sm:top-36 right-[10%] sm:right-[14%]",
-    "canning-garden-terrace": "top-40 sm:top-44 left-[48%] sm:left-[48%]",
-    "meru-desa-park": "top-14 sm:top-16 left-[18%] sm:left-[20%]",
-    "manhattan-station-18": "bottom-12 sm:bottom-16 right-[32%] sm:right-[38%]"
-  };
+  let leafletMap = null;
+  let mapMarkersLayer = null;
+  let mapTileLayer = null;
+  let mapStyle = "voyager";
 
   const AREA_BADGES = {
     "Bandar Seri Botani": { en: "High Growth", zh: "热门成长区", cls: "bg-brand-soft border" },
@@ -37,7 +33,9 @@
     activeProjectId: null,
     activeModalTab: "overview",
     activePhotoIdx: 0,
-    roundRobinIndex: 0
+    roundRobinIndex: 0,
+    calcTouched: false,
+    calcSnapshot: null
   };
 
   // --- Helpers ---
@@ -129,8 +127,8 @@
     document.getElementById("map-eyebrow").textContent = isZh ? "怡保地理房价雷达" : "Geospatial Property Radar";
     document.getElementById("map-section-title").textContent = isZh ? "怡保各区房价分布地图" : "Ipoh Valley Price Distribution Map";
     document.getElementById("map-strip-title").textContent = isZh
-      ? "点击任意价格气泡预览详情（查看过会自动变浅灰 Viewed）"
-      : "Click any price pin to preview unit details — visited pins automatically turn grey (Viewed).";
+      ? "可双指缩放或点击右侧 +/- 查看怡保真实街道与学校医院周边（点击气泡预览并直连 WhatsApp，看过变浅灰 Viewed）"
+      : "Pinch or click +/− to zoom real Ipoh streets & landmarks — tap any price pin to preview or WhatsApp directly.";
     document.getElementById("matchmaking-title").textContent = isZh
       ? "找不到心仪的街道或朝向户型？"
       : "Can't find your exact street or layout in Ipoh?";
@@ -141,7 +139,7 @@
 
     updateCalculatorLabels();
     renderLifestylePills();
-    renderMapPins();
+    renderMapPins(false);
     renderProjects();
     renderAreaGuides();
     renderCompareTable();
@@ -180,7 +178,7 @@
         ? "search-tab-btn shrink-0 px-4 py-2 rounded-lg search-tab-active font-semibold text-[13px] shadow-sm transition-all"
         : "search-tab-btn shrink-0 px-4 py-2 rounded-lg bg-surface-high text-[#424655] hover:text-[#131B2E] font-semibold text-[13px] transition-colors";
     });
-    renderMapPins();
+    renderMapPins(true);
     renderProjects();
   };
 
@@ -194,7 +192,7 @@
         ? "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-brand-soft border text-xs font-bold"
         : "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-surface-high text-[#424655] text-xs font-semibold";
     });
-    renderMapPins();
+    renderMapPins(true);
   };
 
   function renderLifestylePills() {
@@ -214,14 +212,14 @@
   window.selectLifestyleFilter = function (topicId) {
     state.topic = topicId;
     renderLifestylePills();
-    renderMapPins();
+    renderMapPins(true);
     renderProjects();
   };
 
   window.filterByGuideArea = function (area) {
     state.area = area;
     document.getElementById("filter-area").value = area;
-    renderMapPins();
+    renderMapPins(true);
     renderProjects();
     document.getElementById("properties").scrollIntoView({ behavior: "smooth" });
   };
@@ -239,7 +237,7 @@
     setSearchTab("all");
     setMapLegendFilter("all");
     renderLifestylePills();
-    renderMapPins();
+    renderMapPins(true);
     renderProjects();
   };
 
@@ -260,61 +258,181 @@
     });
   }
 
-  // --- Stitch Floating Geospatial Map Price Pins ---
-  function renderMapPins() {
-    const container = document.getElementById("ipoh-map-pins");
-    const countEl = document.getElementById("map-pin-count");
-    if (!container) return;
+  // --- #3 Real Interactive Leaflet Ipoh Map & Geospatial Pins ---
+  function createTileLayer(style) {
+    if (style === "osm") {
+      return window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+      });
+    }
+    return window.L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      maxZoom: 19,
+      subdomains: "abcd",
+      attribution: "&copy; OpenStreetMap &copy; CARTO"
+    });
+  }
 
-    const list = getFilteredProjects().filter((p) => {
+  function initLeafletMap() {
+    const mapEl = document.getElementById("ipoh-leaflet-map");
+    if (!mapEl || !window.L || leafletMap) return;
+
+    leafletMap = window.L.map(mapEl, {
+      center: [4.602, 101.108],
+      zoom: 12,
+      zoomControl: false,
+      scrollWheelZoom: false
+    });
+
+    mapTileLayer = createTileLayer(mapStyle).addTo(leafletMap);
+    mapMarkersLayer = window.L.layerGroup().addTo(leafletMap);
+  }
+
+  window.zoomInMap = function () {
+    if (leafletMap) leafletMap.zoomIn();
+  };
+
+  window.zoomOutMap = function () {
+    if (leafletMap) leafletMap.zoomOut();
+  };
+
+  window.resetMapView = function () {
+    fitMapToCoords(getMapFilteredProjects().map((p) => p.coords).filter(Boolean));
+  };
+
+  window.toggleMapStyle = function () {
+    if (!leafletMap || !window.L) return;
+    mapStyle = mapStyle === "voyager" ? "osm" : "voyager";
+    if (mapTileLayer) leafletMap.removeLayer(mapTileLayer);
+    mapTileLayer = createTileLayer(mapStyle).addTo(leafletMap);
+
+    const btn = document.getElementById("map-style-btn");
+    if (btn) {
+      btn.className =
+        mapStyle === "osm"
+          ? "w-8 h-8 rounded-lg btn-brand-primary flex items-center justify-center transition-colors"
+          : "w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors";
+    }
+  };
+
+  function getMapFilteredProjects() {
+    return getFilteredProjects().filter((p) => {
       if (state.mapLegend === "sale") return !p.homestayHot;
       if (state.mapLegend === "homestay") return p.homestayHot;
       return true;
     });
+  }
 
+  function fitMapToCoords(coordsList) {
+    if (!leafletMap || !window.L) return;
+    const targets = coordsList && coordsList.length ? coordsList : DATA.projects.map((p) => p.coords).filter(Boolean);
+    if (!targets.length) return;
+    if (targets.length === 1) {
+      leafletMap.flyTo(targets[0], 14, { duration: 0.65 });
+      return;
+    }
+    leafletMap.fitBounds(window.L.latLngBounds(targets), {
+      padding: [52, 52],
+      maxZoom: 13,
+      animate: true
+    });
+  }
+
+  function buildMapPopupHtml(p) {
+    const shortName = p.name.replace(" (Example)", "");
+    const detailsLbl = state.lang === "zh" ? "看详情" : "Details";
+    return `
+      <div class="bg-white text-left font-sans">
+        <div class="relative h-28 bg-slate-200 overflow-hidden">
+          <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(shortName)}" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-black/15"></div>
+          <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 text-[#131B2E] text-[10px] font-bold shadow-sm">
+            ${escapeHtml(p.area)} &bull; ${escapeHtml(p.tenure)}
+          </span>
+          <div class="absolute bottom-2 left-2.5 right-2.5 text-white font-extrabold text-sm">
+            ${formatRM(p.priceFrom)} <span class="text-[10px] font-semibold text-slate-200">· RM ${p.psfAvg}/psf</span>
+          </div>
+        </div>
+        <div class="p-3">
+          <div class="font-bold text-xs text-[#131B2E] leading-snug line-clamp-1">${escapeHtml(shortName)}</div>
+          <div class="text-[11px] text-[#424655] mt-0.5 truncate">${escapeHtml(p.bedsSummary)} &bull; ${escapeHtml(p.sqftSummary)}</div>
+          <div class="text-[10px] text-[#006B2E] font-semibold mt-0.5 truncate">${escapeHtml(p.landmark || p.amenityDrive)}</div>
+          <div class="grid grid-cols-2 gap-1.5 mt-2.5">
+            <button type="button" onclick="openProjectModal('${p.id}')" class="py-1.5 px-2 rounded-lg bg-surface-high hover:bg-slate-200 text-[#131B2E] font-bold text-[11px] transition-colors">
+              ${detailsLbl} &rarr;
+            </button>
+            <button type="button" onclick="openProjectWhatsApp('${p.id}')" class="py-1.5 px-2 rounded-lg btn-whatsapp text-[11px] flex items-center justify-center gap-1">
+              <span>WhatsApp</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMapPins(shouldFit = true) {
+    const countEl = document.getElementById("map-pin-count");
+    const list = getMapFilteredProjects();
     if (countEl) countEl.textContent = list.length;
 
-    container.innerHTML = list
-      .map((p) => {
-        const pos = MAP_POSITIONS[p.id] || "top-1/2 left-1/2";
-        const isViewed = state.viewedIds.has(p.id);
-        const isNew = p.id === "botani-seri-meranti" || p.id === "manhattan-station-18";
+    if (!leafletMap || !mapMarkersLayer || !window.L) return;
+    mapMarkersLayer.clearLayers();
 
-        let pillCls = "map-pin-sale";
-        let tipCls = "map-pin-sale-tip";
-        if (isViewed) {
-          pillCls = "map-pin-viewed opacity-90";
-          tipCls = "map-pin-viewed-tip";
-        } else if (p.homestayHot) {
-          pillCls = "map-pin-rent";
-          tipCls = "map-pin-rent-tip";
-        } else if (isNew) {
-          pillCls = "map-pin-new";
-          tipCls = "map-pin-new-tip";
-        }
+    const coordsList = [];
 
-        const iconName = isViewed ? "visibility" : p.homestayHot ? "key" : p.category === "Landed" ? "villa" : "sell";
-        const shortArea = p.area.split("/")[0].replace("Bandar Seri ", "").trim();
+    list.forEach((p) => {
+      if (!p.coords) return;
+      coordsList.push(p.coords);
 
-        return `
-          <div onclick="openProjectModal('${p.id}')" class="absolute ${pos} -translate-x-1/2 cursor-pointer group z-20 hover:z-30">
-            <div class="relative flex flex-col items-center">
-              <div class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full ${pillCls} font-extrabold text-[11px] sm:text-xs shadow-xl flex items-center gap-1 ring-2 ring-white/80 group-hover:scale-110 transition-transform whitespace-nowrap">
-                ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : `<span class="material-symbols-outlined text-[13px]">${iconName}</span>`}
-                <span>${formatCompactRM(p.priceFrom)} &bull; ${escapeHtml(shortArea)}</span>
-              </div>
-              <div class="w-2.5 h-2.5 ${tipCls} rotate-45 -mt-1 shadow-sm"></div>
+      const isViewed = state.viewedIds.has(p.id);
+      const isNew = p.id === "botani-seri-meranti" || p.id === "manhattan-station-18";
 
-              <!-- Stitch Hover Preview Card -->
-              <div class="hidden group-hover:flex absolute bottom-full mb-2.5 w-60 bg-white rounded-xl p-3 shadow-2xl border border-slate-100 flex-col gap-1 text-left pointer-events-none">
-                <div class="font-bold text-xs text-[#131B2E] truncate">${escapeHtml(p.name)}</div>
-                <div class="text-[11px] text-[#424655]">${escapeHtml(p.sqftSummary)} &bull; ${escapeHtml(p.tenure)}</div>
-                <div class="text-xs font-extrabold text-brand-primary mt-0.5">${formatRM(p.priceFrom)} (RM ${p.psfAvg} PSF)</div>
-              </div>
-            </div>
-          </div>`;
-      })
-      .join("");
+      let pillCls = "map-pin-sale";
+      let tipCls = "map-pin-sale-tip";
+      if (isViewed) {
+        pillCls = "map-pin-viewed opacity-90";
+        tipCls = "map-pin-viewed-tip";
+      } else if (p.homestayHot) {
+        pillCls = "map-pin-rent";
+        tipCls = "map-pin-rent-tip";
+      } else if (isNew) {
+        pillCls = "map-pin-new";
+        tipCls = "map-pin-new-tip";
+      }
+
+      const iconName = isViewed ? "visibility" : p.homestayHot ? "key" : p.category === "Landed" ? "villa" : "sell";
+      const shortArea = p.area.split("/")[0].replace("Bandar Seri ", "").trim();
+
+      const html = `
+        <div class="pv-pin-root">
+          <div class="pv-pin-pill px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full ${pillCls} font-extrabold text-[11px] sm:text-xs flex items-center gap-1 ring-2 ring-white/90 whitespace-nowrap">
+            ${isNew && !isViewed ? `<span class="text-[9px] bg-white text-[#16A34A] font-extrabold px-1 rounded">NEW</span>` : `<span class="material-symbols-outlined text-[13px]">${iconName}</span>`}
+            <span>${formatCompactRM(p.priceFrom)} &bull; ${escapeHtml(shortArea)}</span>
+          </div>
+          <div class="w-2.5 h-2.5 ${tipCls} rotate-45 -mt-1 shadow-sm"></div>
+        </div>
+      `;
+
+      const icon = window.L.divIcon({
+        className: "pv-leaflet-pin-wrapper",
+        html,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+        popupAnchor: [0, -38]
+      });
+
+      const marker = window.L.marker(p.coords, { icon });
+      marker.bindPopup(buildMapPopupHtml(p), {
+        className: "pv-map-popup",
+        maxWidth: 276,
+        closeButton: true
+      });
+      marker.addTo(mapMarkersLayer);
+    });
+
+    if (shouldFit) {
+      fitMapToCoords(coordsList);
+    }
   }
 
   // --- Favorite Heart Toggle ---
@@ -442,7 +560,7 @@
                   <span>${state.lang === "zh" ? "看详情" : "Details"}</span>
                   <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
                 </button>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing Inquiry')" class="col-span-5 py-2.5 px-2 rounded-lg btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm" type="button">
+                <button onclick="openProjectWhatsApp('${p.id}')" class="col-span-5 py-2.5 px-2 rounded-lg btn-whatsapp text-xs flex items-center justify-center gap-1 shadow-sm" type="button">
                   <span class="material-symbols-outlined text-[16px]">chat</span>
                   <span>WhatsApp</span>
                 </button>
@@ -594,6 +712,7 @@
 
   // --- Ipoh DSR, Mortgage & MOT Stamp Duty Calculator ---
   window.applyDsrExample = function (price, rent) {
+    state.calcTouched = true;
     document.getElementById("slider-price").value = price;
     document.getElementById("slider-rent").value = rent;
     document.getElementById("slider-margin").value = 90;
@@ -642,6 +761,23 @@
     const cashflow = rent - monthlyInstallment;
     const downpayment = price * (1 - margin);
     const legalEstimate = price * 0.012 + 2800;
+
+    state.calcSnapshot = {
+      price,
+      marginPct: Math.round(margin * 100),
+      ratePct: (rate * 100).toFixed(2),
+      years,
+      rent,
+      isForeigner,
+      loanAmount,
+      monthlyInstallment,
+      minIncome,
+      mot,
+      downpayment,
+      grossYield,
+      cashflow,
+      motExemptionEligible: !isForeigner && price <= 500000
+    };
 
     document.getElementById("calc-val-price").textContent = formatRM(price);
     document.getElementById("calc-val-loan").textContent = `${Math.round(margin * 100)}%`;
@@ -692,7 +828,7 @@
               <button onclick="selectAgentPortfolio('${a.id}')" class="py-2.5 px-3 rounded-xl bg-surface-high hover:bg-slate-200 text-[#131B2E] text-xs font-bold transition-colors">
                 ${state.lang === "zh" ? "查看负责楼盘" : "View Listings"}
               </button>
-              <button onclick="openLeadModal('Ipoh Consultation with ${escapeHtml(a.name)} (${escapeHtml(a.renCode)})')" class="py-2.5 px-3 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1">
+              <button onclick="openAgentWhatsApp('${a.id}')" class="py-2.5 px-3 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1">
                 <span class="material-symbols-outlined text-[16px]">chat</span>
                 <span>WhatsApp</span>
               </button>
@@ -721,7 +857,7 @@
           <div class="text-xs text-brand-primary font-bold">${escapeHtml(agent.areas.join(" · "))} · ${escapeHtml(agent.languages.join(" / "))}</div>
           <h4 class="text-base sm:text-lg font-extrabold text-[#131B2E]">${escapeHtml(agent.name)} — ${state.lang === "zh" ? "怡保主理二手社区" : "Active Ipoh Developments"}</h4>
         </div>
-        <button onclick="openLeadModal('Direct Inquiry to ${escapeHtml(agent.name)}')" class="px-4 py-2 rounded-xl btn-whatsapp text-xs">
+        <button onclick="openAgentWhatsApp('${agent.id}')" class="px-4 py-2 rounded-xl btn-whatsapp text-xs">
           ${state.lang === "zh" ? "联系顾问看房" : "WhatsApp Specialist"}
         </button>
       </div>
@@ -771,7 +907,7 @@
     state.activeProjectId = projectId;
     state.activeModalTab = "overview";
     state.activePhotoIdx = 0;
-    renderMapPins();
+    renderMapPins(false);
     renderProjects();
     document.getElementById("project-modal").classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
@@ -868,7 +1004,7 @@
               </div>
               <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                 <div class="text-base sm:text-lg font-extrabold text-brand-primary">${formatRM(u.price)}</div>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(u.code)} Viewing')" class="px-3.5 py-2 rounded-lg btn-whatsapp text-xs">
+                <button onclick="openUnitWhatsApp('${p.id}', '${escapeHtml(u.code)}')" class="px-3.5 py-2 rounded-lg btn-whatsapp text-xs">
                   ${state.lang === "zh" ? "WhatsApp 看房" : "WhatsApp Viewing"}
                 </button>
               </div>
@@ -882,14 +1018,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           ${p.floorPlans
             .map(
-              (fp) => `
+              (fp, idx) => `
             <div class="rounded-2xl border border-slate-200 p-4 bg-surface-low">
               ${renderFloorPlanSvg(fp, isLanded)}
               <div class="font-extrabold text-[#131B2E] text-sm mb-1">${escapeHtml(fp.type)}</div>
               <div class="text-xs text-[#424655] mb-3">${fp.sqft} sqft &middot; ${fp.beds} Bed &middot; ${fp.baths} Bath &middot; Est. Rent: <strong class="text-brand-primary">${escapeHtml(fp.estRent)}</strong></div>
               <div class="flex items-center justify-between pt-2 border-t border-slate-200">
                 <span class="font-extrabold text-[#131B2E]">${escapeHtml(fp.price)}</span>
-                <button onclick="openLeadModal('${escapeHtml(p.name)} — ${escapeHtml(fp.type)} Floor Plan & Bank Value')" class="text-xs font-bold text-brand-primary hover:underline">
+                <button onclick="openFloorPlanLead('${p.id}', ${idx})" class="text-xs font-bold text-brand-primary hover:underline">
                   ${state.lang === "zh" ? "索取视频与估价 →" : "Get Video & Bank Value →"}
                 </button>
               </div>
@@ -959,7 +1095,7 @@
 
       <div class="p-4 sm:p-6 overflow-y-auto thin-scroll flex-1 bg-white">${bodyHtml}</div>
 
-      <div class="p-3.5 sm:px-6 bg-surface-low border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+      <div class="p-3.5 sm:px-6 bg-surface-low border-t border-slate-200 flex items-center justify-between gap-2.5 shrink-0">
         <div class="flex items-center gap-2 min-w-0 text-xs">
           <div class="w-8 h-8 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${agent.initials}</div>
           <div class="truncate">
@@ -967,18 +1103,161 @@
             <div class="text-[#424655] text-[11px]">${escapeHtml(agent.renCode)} &middot; ${agent.avgReplyMin}m reply</div>
           </div>
         </div>
-        <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shadow-sm shrink-0">
-          ${t("modalDownloadCta")}
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="openLeadModal('${escapeHtml(p.name)} — Viewing &amp; Bank Valuation')" class="hidden sm:inline-flex px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-[#131B2E] font-bold text-xs">
+            ${state.lang === "zh" ? "预约时段" : "Book Viewing"}
+          </button>
+          <button onclick="openProjectWhatsApp('${p.id}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">chat</span>
+            <span>WhatsApp</span>
+          </button>
+        </div>
       </div>
     `;
   }
 
+  // --- #4 Real Pre-filled WhatsApp Launchers (with DSR Budget Sync) ---
+  function getDsrSummaryLine(forceInclude) {
+    if (!state.calcSnapshot || (!forceInclude && !state.calcTouched)) return "";
+    const c = state.calcSnapshot;
+    const isZh = state.lang === "zh";
+    return isZh
+      ? `\n[DSR 试算参考] 目标房价 ${formatRM(c.price)}（${c.marginPct}% 贷款 · ${c.years}年 @ ${c.ratePct}%），月供约 ${formatRM(c.monthlyInstallment)}，建议月入 ≥ ${formatRM(c.minIncome)}`
+      : `\n[DSR Calculator Budget] Target ${formatRM(c.price)} (${c.marginPct}% loan, ${c.years}y @ ${c.ratePct}%), est. ${formatRM(c.monthlyInstallment)}/mo (70% DSR income: ${formatRM(c.minIncome)}/mo)`;
+  }
+
+  window.openProjectWhatsApp = function (projectId) {
+    const p = findProject(projectId);
+    if (!p || !window.PVConcierge) return;
+    const agent = findAgent(p.specialistId);
+    const agentShort = agent.name.replace(" (Example)", "");
+    const title = p.name.replace(" (Example)", "");
+    const dsrNote = getDsrSummaryLine(false);
+    const msg =
+      state.lang === "zh"
+        ? `你好 ${agentShort}，我在 PrimeVerse Ipoh 看到楼盘「${title}」（${p.area} · ${p.tenure} · ${formatRM(p.priceFrom)}+ · RM ${p.psfAvg}/psf）。请问目前有哪些实盘单位可看房？${dsrNote}`
+        : `Hi ${agentShort}, I viewed "${title}" (${p.area} · ${p.tenure} · From ${formatRM(p.priceFrom)}, RM ${p.psfAvg}/psf) on PrimeVerse Ipoh. Please share available subsale units and viewing slots.${dsrNote}`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      agent,
+      eventName: "project_whatsapp",
+      meta: { package: "pro", projectId: p.id, area: p.area, price: p.priceFrom, label: title },
+      lang: state.lang
+    });
+  };
+
+  window.openUnitWhatsApp = function (projectId, unitCode) {
+    const p = findProject(projectId);
+    if (!p || !window.PVConcierge) return;
+    const unit = p.verifiedUnits.find((u) => u.code === unitCode) || p.verifiedUnits[0];
+    const agent = findAgent(p.specialistId);
+    const agentShort = agent.name.replace(" (Example)", "");
+    const title = p.name.replace(" (Example)", "");
+    const dsrNote = getDsrSummaryLine(false);
+    const msg =
+      state.lang === "zh"
+        ? `你好 ${agentShort}，我想询问「${title}」示范编号 [${unit.code}] 的单位（${unit.layout} · ${formatRM(unit.price)} · ${unit.furnishing}），请问还可以安排看房与查银行估价吗？${dsrNote}`
+        : `Hi ${agentShort}, I'm interested in Unit Ref [${unit.code}] at ${title} (${unit.layout} · ${formatRM(unit.price)} · ${unit.furnishing}). Is it available for viewing & bank valuation check?${dsrNote}`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      agent,
+      eventName: "unit_whatsapp",
+      meta: { package: "pro", projectId: p.id, unitCode: unit.code, price: unit.price, label: `${unit.code} · ${title}` },
+      lang: state.lang
+    });
+  };
+
+  window.openDsrWhatsApp = function () {
+    if (!window.PVConcierge) return;
+    if (!state.calcSnapshot) updateCalculators();
+    const c = state.calcSnapshot;
+    const motNoteEn = c.motExemptionEligible
+      ? `Est. MOT ${formatRM(c.mot)} (1st-Time Buyer RM500k Exemption check)`
+      : `Est. MOT ${formatRM(c.mot)}`;
+    const motNoteZh = c.motExemptionEligible
+      ? `MOT 印花税约 ${formatRM(c.mot)}（50万内首购免税适用确认）`
+      : `MOT 印花税约 ${formatRM(c.mot)}`;
+
+    const msg =
+      state.lang === "zh"
+        ? `你好 PrimeVerse Ipoh 顾问，我刚用网站怡保 DSR 计算器做了预算评估：\n• 目标房价：${formatRM(c.price)}（首付 ${formatRM(c.downpayment)}）\n• 贷款设定：${c.marginPct}%（${formatRM(c.loanAmount)}）· ${c.years} 年 · ${c.ratePct}%\n• 预计月供：${formatRM(c.monthlyInstallment)}/月\n• 70% DSR 建议月入：${formatRM(c.minIncome)}/月（${motNoteZh}）\n请帮我做免费银行 Pre-Check（Maybank/PBB/CIMB），并推荐匹配此预算的怡保二手好房！`
+        : `Hi PrimeVerse Ipoh team, I just ran the Ipoh DSR Calculator on your portal:\n• Target Price: ${formatRM(c.price)} (Downpayment ${formatRM(c.downpayment)})\n• Loan: ${c.marginPct}% (${formatRM(c.loanAmount)}) · ${c.years} Years @ ${c.ratePct}%\n• Est. Repayment: ${formatRM(c.monthlyInstallment)}/month\n• Min. 70% DSR Income: ${formatRM(c.minIncome)}/mo · ${motNoteEn}\nCan you help me run a free bank eligibility pre-check and recommend matching Ipoh homes?`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      eventName: "dsr_whatsapp",
+      meta: { package: "pro", targetPrice: c.price, monthlyInstallment: Math.round(c.monthlyInstallment), label: `DSR Check · ${formatRM(c.price)}` },
+      lang: state.lang
+    });
+  };
+
+  window.openAgentWhatsApp = function (agentId) {
+    const agent = findAgent(agentId);
+    if (!window.PVConcierge) return;
+    const agentShort = agent.name.replace(" (Example)", "");
+    const dsrNote = getDsrSummaryLine(false);
+    const msg =
+      state.lang === "zh"
+        ? `你好 ${agentShort}（${agent.renCode}），我在 PrimeVerse Ipoh 看到你主理 ${agent.areas.join(" / ")} 的怡保二手房源，想进一步咨询实盘报价与预约看房。${dsrNote}`
+        : `Hi ${agentShort} (${agent.renCode}), I saw your Ipoh specialist profile covering ${agent.areas.join(" / ")} on PrimeVerse Ipoh and would like advice on verified subsale listings.${dsrNote}`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      agent,
+      eventName: "agent_whatsapp",
+      meta: { package: "pro", agentId: agent.id, label: agentShort },
+      lang: state.lang
+    });
+  };
+
+  window.openGeneralWhatsApp = function (customTopic) {
+    if (!window.PVConcierge) return;
+    const topic = customTopic || "General Ipoh Subsale Inquiry";
+    const filters = [];
+    if (state.area !== "all") filters.push(state.area);
+    if (state.searchTab !== "all") filters.push(state.searchTab);
+    if (state.maxBudget < 99999999) filters.push((state.lang === "zh" ? "预算 <= " : "Budget <= ") + formatRM(state.maxBudget));
+    const filterNote = filters.length ? ` (${filters.join(" · ")})` : "";
+    const dsrNote = getDsrSummaryLine(false);
+    const msg =
+      state.lang === "zh"
+        ? `你好 PrimeVerse Ipoh 团队，我正在浏览网站（Pro 版），想咨询「${topic}」${filterNote}。${dsrNote}`
+        : `Hi PrimeVerse Ipoh team, I'm browsing your Ipoh property portal regarding "${topic}"${filterNote}.${dsrNote}`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      eventName: "general_whatsapp",
+      meta: { package: "pro", topic, label: topic },
+      lang: state.lang
+    });
+  };
+
   // --- Concierge / Buyer Inquiry Modal ---
+  window.openFloorPlanLead = function (projectId, fpIdx) {
+    const p = findProject(projectId);
+    if (!p) return;
+    const fp = p.floorPlans[fpIdx];
+    const label = fp ? `${p.name} — ${fp.type} Floor Plan & Bank Value` : `${p.name} — Floor Plan`;
+    openLeadModal(label);
+  };
+
   window.openLeadModal = function (contextText) {
     document.getElementById("lead-context").value = contextText;
     document.getElementById("lead-success-box").classList.add("hidden");
     document.getElementById("lead-form").classList.remove("hidden");
+
+    const directLink = document.getElementById("lead-direct-wa-link");
+    if (directLink && window.PVConcierge) {
+      const dsrNote = getDsrSummaryLine(false);
+      const msg =
+        state.lang === "zh"
+          ? `你好 PrimeVerse Ipoh 团队，我想直接咨询「${contextText}」。${dsrNote}`
+          : `Hi PrimeVerse Ipoh team, I would like to inquire directly about: ${contextText}.${dsrNote}`;
+      directLink.href = window.PVConcierge.buildWhatsAppUrl(msg);
+    }
+
     document.getElementById("lead-modal").classList.remove("hidden");
   };
 
@@ -995,25 +1274,48 @@
     const assignedAgent = DATA.agents[state.roundRobinIndex % DATA.agents.length];
     state.roundRobinIndex += 1;
 
+    const dsrNote = getDsrSummaryLine(false);
+    const waMsg =
+      state.lang === "zh"
+        ? `你好 ${assignedAgent.name.replace(" (Example)", "")}，我是 ${name} (${phone})，刚在官网提交了请求：「${ctx}」，请发送实拍照片、银行估价与可看房时间。${dsrNote}`
+        : `Hi ${assignedAgent.name.replace(" (Example)", "")}, I'm ${name} (${phone}). I submitted an inquiry on PrimeVerse Ipoh for "${ctx}". Please share unit details, valuation estimate & viewing slots.${dsrNote}`;
+
+    const waUrl = window.PVConcierge ? window.PVConcierge.buildWhatsAppUrl(waMsg, assignedAgent) : "https://wa.me/60125082048";
+    if (window.PVConcierge) {
+      window.PVConcierge.trackLeadEvent("form_lead", {
+        package: "pro",
+        name,
+        phone,
+        topic: ctx,
+        agentId: assignedAgent.id,
+        agentName: assignedAgent.name,
+        lang: state.lang
+      });
+    }
+
     document.getElementById("lead-form").classList.add("hidden");
     const box = document.getElementById("lead-success-box");
     box.classList.remove("hidden");
     box.innerHTML =
       state.lang === "zh"
         ? `
-      <div class="font-extrabold text-sm text-emerald-800">✓ 怡保看房与估价请求已提交！</div>
-      <p>感谢 <strong>${escapeHtml(name)}</strong>！关于 <em>"${escapeHtml(ctx)}"</em> 的实拍资料与银行估价参考正发送至您的 WhatsApp（${escapeHtml(phone)}）。</p>
+      <div class="font-extrabold text-sm text-emerald-800">✓ 请求已登记！点击下方按钮一键直达顾问 WhatsApp</div>
+      <p>感谢 <strong>${escapeHtml(name)}</strong>（${escapeHtml(phone)}），系统已指派怡保专员并为你备好以下预填消息：</p>
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
           <div class="font-bold text-[#131B2E]">怡保对接顾问：${escapeHtml(assignedAgent.name)} (${escapeHtml(assignedAgent.renCode)})</div>
-          <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内与您 WhatsApp 联系</div>
+          <div class="text-slate-500">预计 ${assignedAgent.avgReplyMin} 分钟内回复</div>
         </div>
       </div>
-      <button onclick="closeLeadModal()" class="w-full py-2.5 rounded-lg btn-brand-primary font-bold">好的 / 完成</button>`
+      <div class="p-2.5 rounded-xl bg-white/80 border border-emerald-200/80 text-[11px] text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(waMsg)}</div>
+      <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'pro', topic: document.getElementById('lead-context').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
+        <span>立即在 WhatsApp 发送消息 &rarr;</span>
+      </a>
+      <button type="button" onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">关闭</button>`
         : `
-      <div class="font-extrabold text-sm text-emerald-800">✓ Request Confirmed!</div>
-      <p>Thank you, <strong>${escapeHtml(name)}</strong>! Unit photos &amp; bank valuation details for <em>"${escapeHtml(ctx)}"</em> are being sent to WhatsApp (${escapeHtml(phone)}).</p>
+      <div class="font-extrabold text-sm text-emerald-800">✓ Request Logged! Tap below to open WhatsApp:</div>
+      <p>Thank you, <strong>${escapeHtml(name)}</strong> (${escapeHtml(phone)}). Your specialist is assigned and your WhatsApp message is ready:</p>
       <div class="p-3 rounded-xl bg-white border border-emerald-200 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full btn-brand-primary font-bold flex items-center justify-center shrink-0">${assignedAgent.initials}</div>
         <div>
@@ -1021,30 +1323,37 @@
           <div class="text-slate-500">Typically replies within ${assignedAgent.avgReplyMin} mins</div>
         </div>
       </div>
-      <button onclick="closeLeadModal()" class="w-full py-2.5 rounded-lg btn-brand-primary font-bold">Done</button>`;
+      <div class="p-2.5 rounded-xl bg-white/80 border border-emerald-200/80 text-[11px] text-slate-600 leading-relaxed whitespace-pre-line">${escapeHtml(waMsg)}</div>
+      <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'pro', topic: document.getElementById('lead-context').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
+        <span>Open WhatsApp Chat Now &rarr;</span>
+      </a>
+      <button type="button" onclick="closeLeadModal()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">Done</button>`;
   };
 
   // --- Bind Events & Init ---
   function bindEvents() {
     document.getElementById("search-input").addEventListener("input", (e) => {
       state.search = e.target.value;
-      renderMapPins();
+      renderMapPins(true);
       renderProjects();
     });
     document.getElementById("filter-area").addEventListener("change", (e) => {
       state.area = e.target.value;
-      renderMapPins();
+      renderMapPins(true);
       renderProjects();
     });
     document.getElementById("filter-budget").addEventListener("change", (e) => {
       state.maxBudget = Number(e.target.value);
-      renderMapPins();
+      renderMapPins(true);
       renderProjects();
     });
 
     ["slider-price", "slider-margin", "slider-rate", "slider-tenure", "slider-rent", "calc-foreigner"].forEach(
       (id) => {
-        document.getElementById(id).addEventListener("input", updateCalculators);
+        document.getElementById(id).addEventListener("input", function () {
+          state.calcTouched = true;
+          updateCalculators();
+        });
       }
     );
 
@@ -1059,9 +1368,16 @@
   function init() {
     bindEvents();
     setTheme(state.theme);
+    initLeafletMap();
     updateCalculators();
     updateCompareCounters();
     setLanguage("en");
+    if (leafletMap) {
+      setTimeout(function () {
+        leafletMap.invalidateSize();
+        resetMapView();
+      }, 250);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);

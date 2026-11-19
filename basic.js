@@ -486,11 +486,87 @@
             <div class="text-[11px] text-brand-primary font-semibold">${escapeHtml(a.renCode)}</div>
           </div>
         </div>
-        <button onclick="openBasicInquiry('Consultation with ${escapeHtml(a.name)}')" class="px-3 py-2 rounded-xl btn-whatsapp text-xs shrink-0">WhatsApp</button>
+        <button onclick="openBasicAgentWhatsApp('${a.id}')" class="px-3 py-2 rounded-xl btn-whatsapp text-xs shrink-0">WhatsApp</button>
       </div>`
       )
       .join("");
   }
+
+  // --- #4 Real Pre-filled WhatsApp Launchers (Basic Package) ---
+  window.openBasicListingWhatsApp = function (listingId) {
+    const item = BASIC_LISTINGS.find((l) => l.id === listingId);
+    if (!item || !window.PVConcierge) return;
+    const agent = findAgent(item.agentId);
+    const agentShort = agent.name.replace(" (Example)", "");
+    const title = pick(item, "titleEn", "titleZh");
+    const msg =
+      state.lang === "zh"
+        ? `你好 ${agentShort}，我在 PrimeVerse Ipoh 看到二手房源 [${item.id.toUpperCase()}] ${title}（${formatRM(item.price)} · ${item.area} · ${item.specs}），请问还在售吗？想了解屋况详情或预约看房。`
+        : `Hi ${agentShort}, I viewed [${item.id.toUpperCase()}] ${title} (${formatRM(item.price)} · ${item.area} · ${item.specs}) on PrimeVerse Ipoh. Is it still available for viewing?`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      agent,
+      eventName: "listing_whatsapp",
+      meta: { package: "basic", listingId: item.id, area: item.area, price: item.price, label: title },
+      lang: state.lang
+    });
+  };
+
+  window.openBasicBlogWhatsApp = function (postId) {
+    const post = BLOG_POSTS.find((b) => b.id === postId);
+    if (!post || !window.PVConcierge) return;
+    const title = pick(post, "titleEn", "titleZh");
+    const msg =
+      state.lang === "zh"
+        ? `你好 PrimeVerse Ipoh 团队，我刚阅读了攻略文章《${title}》，想了解文中提到的怡保推荐楼盘与最新在售二手实盘清单。`
+        : `Hi PrimeVerse Ipoh team, I just read your guide "${title}" and would like recommendations on available Ipoh subsale units in those areas.`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      eventName: "blog_whatsapp",
+      meta: { package: "basic", postId: post.id, label: title },
+      lang: state.lang
+    });
+  };
+
+  window.openBasicAgentWhatsApp = function (agentId) {
+    const agent = findAgent(agentId);
+    if (!window.PVConcierge) return;
+    const agentShort = agent.name.replace(" (Example)", "");
+    const msg =
+      state.lang === "zh"
+        ? `你好 ${agentShort}（${agent.renCode}），我想咨询你在 ${agent.areas.join(" / ")} 负责的怡保二手房源与银行估价。`
+        : `Hi ${agentShort} (${agent.renCode}), I'd like to consult you regarding verified subsale homes in ${agent.areas.join(" / ")}, Ipoh.`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      agent,
+      eventName: "agent_whatsapp",
+      meta: { package: "basic", agentId: agent.id, label: agent.name },
+      lang: state.lang
+    });
+  };
+
+  window.openBasicDirectWhatsApp = function (topic) {
+    if (!window.PVConcierge) return;
+    const filters = [];
+    if (state.area !== "all") filters.push(state.area);
+    if (state.type !== "all") filters.push(state.type);
+    if (state.maxBudget < 99999999) filters.push((state.lang === "zh" ? "预算 <= " : "Budget <= ") + formatRM(state.maxBudget));
+    const filterNote = filters.length ? ` (${filters.join(" · ")})` : "";
+    const msg =
+      state.lang === "zh"
+        ? `你好 PrimeVerse Ipoh，我正在浏览贵团队网站（Basic 版），想咨询「${topic}」${filterNote}。`
+        : `Hi PrimeVerse Ipoh, I'm browsing your site regarding "${topic}"${filterNote} and would like to speak with an Ipoh specialist.`;
+
+    window.PVConcierge.launchWhatsApp({
+      message: msg,
+      eventName: "general_whatsapp",
+      meta: { package: "basic", topic, label: topic },
+      lang: state.lang
+    });
+  };
 
   window.openListingModal = function (id) {
     state.viewedIds.add(id);
@@ -525,7 +601,7 @@
           <div class="font-bold text-slate-900">${escapeHtml(agent.name)}</div>
           <div class="text-slate-500">${escapeHtml(agent.renCode)}</div>
         </div>
-        <button onclick="openBasicInquiry('${escapeHtml(title)}')" class="px-5 py-2.5 rounded-xl btn-whatsapp text-xs">
+        <button onclick="openBasicListingWhatsApp('${item.id}')" class="px-5 py-2.5 rounded-xl btn-whatsapp text-xs">
           ${state.lang === "zh" ? "WhatsApp 预约看房" : "Inquire on WhatsApp"}
         </button>
       </div>`;
@@ -556,7 +632,7 @@
       </div>
       <div class="p-4 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
         <span class="text-xs text-slate-600">${state.lang === "zh" ? "想找文中提到的社区房源？" : "Looking for homes mentioned in this guide?"}</span>
-        <button onclick="openBasicInquiry('Blog Inquiry: ${escapeHtml(title)}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shrink-0">
+        <button onclick="openBasicBlogWhatsApp('${post.id}')" class="px-4 py-2.5 rounded-xl btn-whatsapp text-xs shrink-0">
           ${state.lang === "zh" ? "WhatsApp 咨询顾问" : "WhatsApp Ipoh Agent"}
         </button>
       </div>`;
@@ -574,6 +650,14 @@
     document.getElementById("basic-inq-ctx").value = ctx;
     document.getElementById("basic-inq-form").classList.remove("hidden");
     document.getElementById("basic-inq-done").classList.add("hidden");
+    const directLink = document.getElementById("basic-direct-wa-link");
+    if (directLink && window.PVConcierge) {
+      const msg =
+        state.lang === "zh"
+          ? `你好 PrimeVerse Ipoh，我想直接咨询「${ctx}」。`
+          : `Hi PrimeVerse Ipoh, I would like to inquire directly about: ${ctx}`;
+      directLink.href = window.PVConcierge.buildWhatsAppUrl(msg);
+    }
     document.getElementById("basic-lead-modal").classList.remove("hidden");
   };
 
@@ -587,13 +671,41 @@
     const phone = document.getElementById("basic-inq-phone").value.trim();
     const ctx = document.getElementById("basic-inq-ctx").value;
 
+    const waMsg =
+      state.lang === "zh"
+        ? `你好 PrimeVerse Ipoh，我是 ${name} (${phone})，刚在官网（Basic 版）提交了咨询「${ctx}」，请发送相关房源资料与安排联系，谢谢！`
+        : `Hi PrimeVerse Ipoh, I'm ${name} (${phone}). I just submitted an inquiry for "${ctx}" on your website. Please share the details & viewing slots.`;
+
+    const waUrl = window.PVConcierge ? window.PVConcierge.buildWhatsAppUrl(waMsg) : "https://wa.me/60125082048";
+    if (window.PVConcierge) {
+      window.PVConcierge.trackLeadEvent("form_lead", {
+        package: "basic",
+        name,
+        phone,
+        topic: ctx,
+        lang: state.lang
+      });
+    }
+
     document.getElementById("basic-inq-form").classList.add("hidden");
     const box = document.getElementById("basic-inq-done");
     box.classList.remove("hidden");
     box.innerHTML =
       state.lang === "zh"
-        ? `<div class="font-bold text-emerald-800">✓ 已收到您的咨询！</div><p>感谢 ${escapeHtml(name)}，顾问将通过 WhatsApp (${escapeHtml(phone)}) 回复关于「${escapeHtml(ctx)}」的详情。</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg btn-brand-primary font-bold">关闭</button>`
-        : `<div class="font-bold text-emerald-800">✓ Inquiry Received!</div><p>Thank you ${escapeHtml(name)}, our Ipoh agent will message you on WhatsApp (${escapeHtml(phone)}) regarding "${escapeHtml(ctx)}".</p><button onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg btn-brand-primary font-bold">Done</button>`;
+        ? `<div class="font-bold text-emerald-800">✓ 资料已记录，点击下方一键发送 WhatsApp！</div>
+           <p class="text-emerald-900/90">顾问将优先跟进 ${escapeHtml(name)}（${escapeHtml(phone)}）关于「${escapeHtml(ctx)}」的请求：</p>
+           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-slate-600 leading-relaxed">${escapeHtml(waMsg)}</div>
+           <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'basic', topic: document.getElementById('basic-inq-ctx').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
+             <span>立即在 WhatsApp 发送消息 &rarr;</span>
+           </a>
+           <button type="button" onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">关闭</button>`
+        : `<div class="font-bold text-emerald-800">✓ Details Saved! Tap below to open WhatsApp:</div>
+           <p class="text-emerald-900/90">Ready for <strong>${escapeHtml(name)}</strong> (${escapeHtml(phone)}) regarding "${escapeHtml(ctx)}":</p>
+           <div class="p-2.5 rounded-xl bg-white border border-emerald-200 text-[11px] text-slate-600 leading-relaxed">${escapeHtml(waMsg)}</div>
+           <a href="${waUrl}" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('form_to_whatsapp', { package: 'basic', topic: document.getElementById('basic-inq-ctx').value })" class="w-full py-2.5 rounded-xl btn-whatsapp text-xs flex items-center justify-center gap-1.5 shadow-sm">
+             <span>Open WhatsApp Chat Now &rarr;</span>
+           </a>
+           <button type="button" onclick="closeBasicInquiry()" class="w-full py-2 rounded-lg bg-white border border-emerald-200 text-slate-700 font-bold text-xs">Done</button>`;
   };
 
   function bindEvents() {

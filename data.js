@@ -8,10 +8,17 @@ window.APP_DATA = {
     domain: "primeverse-property-seo.netlify.app",
     phone: "+60 5-241 8810",
     whatsapp: "+60 12-508 2048",
+    whatsappDigits: "60125082048",
     addressEn: "No. 18, Persiaran Greentown 6, Greentown Business Centre, 30450 Ipoh, Perak (Example)",
     addressZh: "No. 18, Persiaran Greentown 6, Greentown Business Centre, 30450 Ipoh, Perak (Example)",
     taglineEn: "Ipoh Subsale Specialists · 100% Verified Listings (Example)",
     taglineZh: "怡保严选二手房与社区指南 · 团队实勘真房源 (Example)"
+  },
+
+  tracking: {
+    ga4MeasurementId: "", // Plug in G-XXXXXXXXXX upon client launch
+    metaPixelId: "",      // Plug in Meta Pixel ID upon client launch
+    leadWebhookUrl: ""    // Optional Google Apps Script / Make / Supabase webhook URL
   },
 
   heroImage: "./images/haven-night.jpg",
@@ -229,6 +236,8 @@ window.APP_DATA = {
       id: "botani-seri-meranti",
       name: "Bandar Seri Botani — Seri Meranti (Example)",
       area: "Bandar Seri Botani",
+      coords: [4.5446, 101.1066],
+      landmark: "Next to Botani Eco Park & SJK(C) Bandar Seri Botani",
       category: "Landed",
       tenure: "Freehold",
       completion: "Subsale (Ready Move-In)",
@@ -294,6 +303,8 @@ window.APP_DATA = {
       id: "upper-east-tiger-lane",
       name: "Upper East @ Tiger Lane (Example)",
       area: "Tiger Lane",
+      coords: [4.5964, 101.1056],
+      landmark: "Jalan Sultan Azlan Shah near Royal Perak Golf Club",
       category: "Condo",
       tenure: "Freehold",
       completion: "Subsale (Completed)",
@@ -359,6 +370,8 @@ window.APP_DATA = {
       id: "the-haven-tambun",
       name: "The Haven Lakeside Residences @ Tambun (Example)",
       area: "Tambun / Sunway",
+      coords: [4.6248, 101.1585],
+      landmark: "Jalan Haven, Tambun near Lost World & Sunway Medical",
       category: "Condo",
       tenure: "Leasehold",
       completion: "Subsale (Resort Ready)",
@@ -424,6 +437,8 @@ window.APP_DATA = {
       id: "canning-garden-terrace",
       name: "Canning Garden & Ipoh Garden East Terrace (Example)",
       area: "Canning / Ipoh Garden",
+      coords: [4.6114, 101.1135],
+      landmark: "3 mins to AEON Kinta City & Pantai Hospital Ipoh",
       category: "Landed",
       tenure: "Freehold",
       completion: "Subsale (Mature Prime)",
@@ -489,6 +504,8 @@ window.APP_DATA = {
       id: "meru-desa-park",
       name: "Meru Desa Park & Meru Valley (Example)",
       area: "Meru Valley",
+      coords: [4.6712, 101.0764],
+      landmark: "Next to Tenby International School & Mydin Meru Raya",
       category: "Landed",
       tenure: "Freehold",
       completion: "Subsale (Gated Township)",
@@ -554,6 +571,8 @@ window.APP_DATA = {
       id: "manhattan-station-18",
       name: "Manhattan Condominium @ Station 18 (Example)",
       area: "Station 18",
+      coords: [4.5488, 101.0695],
+      landmark: "Jalan Pasir Puteh beside AEON Station 18 & Lotus's",
       category: "Condo",
       tenure: "Freehold",
       completion: "Subsale (Completed)",
@@ -617,3 +636,140 @@ window.APP_DATA = {
     }
   ]
 };
+
+// Shared Concierge Helper: Real Pre-filled WhatsApp (wa.me) & Lead Event Tracking
+window.PVConcierge = (function () {
+  function formatRM(num) {
+    return "RM " + Math.round(num).toLocaleString("en-US");
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function getWhatsAppNumber(agent) {
+    const brand = (window.APP_DATA && window.APP_DATA.brand) || {};
+    const raw = (agent && agent.whatsappDigits) || brand.whatsappDigits || "60125082048";
+    return String(raw).replace(/\D+/g, "");
+  }
+
+  function buildWhatsAppUrl(message, agent) {
+    const digits = getWhatsAppNumber(agent);
+    return `https://wa.me/${digits}?text=${encodeURIComponent(message || "")}`;
+  }
+
+  function trackLeadEvent(eventName, payload) {
+    const data = {
+      event: eventName,
+      timestamp: new Date().toISOString(),
+      page: typeof location !== "undefined" ? location.pathname : "/",
+      ...(payload || {})
+    };
+
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(data);
+    } catch (_) {}
+
+    try {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, payload || {});
+      }
+    } catch (_) {}
+
+    try {
+      if (typeof window.fbq === "function") {
+        window.fbq("track", eventName === "form_lead" ? "Lead" : "Contact", payload || {});
+      }
+    } catch (_) {}
+
+    try {
+      if (typeof localStorage !== "undefined") {
+        const key = "pv_lead_events";
+        const existing = JSON.parse(localStorage.getItem(key) || "[]");
+        existing.push(data);
+        localStorage.setItem(key, JSON.stringify(existing.slice(-50)));
+      }
+    } catch (_) {}
+
+    try {
+      const tracking = (window.APP_DATA && window.APP_DATA.tracking) || {};
+      if (tracking.leadWebhookUrl && typeof fetch === "function") {
+        fetch(tracking.leadWebhookUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).catch(function () {});
+      }
+    } catch (_) {}
+  }
+
+  let toastTimer = null;
+
+  function showWhatsAppToast(label, url, lang) {
+    if (typeof document === "undefined" || !document.body) return;
+    let toast = document.getElementById("pv-wa-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "pv-wa-toast";
+      document.body.appendChild(toast);
+    }
+
+    const isZh = lang === "zh";
+    const heading = isZh ? "正在打开 WhatsApp 对话..." : "Opening WhatsApp Chat...";
+    const sub = label ? escapeHtml(label) : isZh ? "已自动预填房源与预算信息" : "Pre-filled message ready";
+    const cta = isZh ? "若未自动弹出，点此打开 WhatsApp →" : "Tap here if WhatsApp didn't open →";
+
+    toast.className = "fixed top-20 right-3 sm:top-auto sm:bottom-5 sm:right-5 z-[70] max-w-xs w-[calc(100vw-24px)] sm:w-80 pv-toast-animate";
+    toast.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-2xl border border-emerald-200 p-3.5 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl btn-whatsapp flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.79 14.12c-.24.68-1.42 1.3-1.97 1.38-.51.08-1.15.11-1.86-.12-.43-.14-.98-.32-1.69-.63-2.97-1.28-4.91-4.27-5.06-4.47-.15-.2-1.21-1.61-1.21-3.07 0-1.46.76-2.18 1.03-2.48.27-.3.59-.38.79-.38.2 0 .4 0 .57.01.18.01.43-.07.67.51.24.59.83 2.02.9 2.17.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.18-.32.4-.45.54-.15.15-.31.31-.13.61.18.3.79 1.3 1.7 2.11 1.17 1.04 2.15 1.37 2.45 1.52.3.15.48.13.66-.08.18-.2.76-.89.96-1.19.2-.3.4-.25.67-.15.27.1 1.74.82 2.04.97.3.15.5.22.57.35.07.12.07.72-.17 1.4z"/></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="text-xs font-extrabold text-[#131B2E]">${heading}</div>
+          <div class="text-[11px] text-[#424655] truncate mt-0.5">${sub}</div>
+          <a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-block text-[11px] font-bold text-[#006B2E] hover:underline mt-1">${cta}</a>
+        </div>
+        <button type="button" onclick="this.closest('#pv-wa-toast').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-sm font-bold leading-none px-1" aria-label="Close">&times;</button>
+      </div>
+    `;
+    toast.classList.remove("hidden");
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      const el = document.getElementById("pv-wa-toast");
+      if (el) el.classList.add("hidden");
+    }, 6000);
+  }
+
+  function launchWhatsApp(options) {
+    const opts = options || {};
+    const url = buildWhatsAppUrl(opts.message || "", opts.agent);
+    trackLeadEvent(opts.eventName || "whatsapp_click", {
+      channel: "whatsapp",
+      ...(opts.meta || {})
+    });
+    try {
+      if (typeof window.open === "function") {
+        window.open(url, "_blank", "noopener,noreferrer");
+      }
+    } catch (_) {}
+    showWhatsAppToast((opts.meta && opts.meta.label) || "WhatsApp", url, opts.lang || "en");
+    return url;
+  }
+
+  return {
+    formatRM,
+    getWhatsAppNumber,
+    buildWhatsAppUrl,
+    trackLeadEvent,
+    showWhatsAppToast,
+    launchWhatsApp
+  };
+})();

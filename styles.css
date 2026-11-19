@@ -338,3 +338,105 @@ input[type="range"].custom-range::-webkit-slider-thumb:hover {
   color: #334155;
   margin-bottom: 0.35rem;
 }
+
+/* --- #3 Real Interactive Leaflet Ipoh Map Isolation & Custom Stitch Styling --- */
+#ipoh-map-wrapper {
+  isolation: isolate;
+  position: relative;
+  z-index: 10;
+}
+
+#ipoh-leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: #e2e8f0 url('./images/ipoh-map-underlay.jpg') center/cover no-repeat;
+}
+
+.pv-leaflet-pin-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.pv-pin-root {
+  width: max-content;
+  transform: translate(-50%, -100%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.pv-pin-pill {
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.16s ease;
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.28);
+}
+
+.pv-pin-root:hover .pv-pin-pill {
+  transform: scale(1.08);
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.35);
+}
+
+.pv-map-popup .leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 38px -12px rgba(19, 27, 46, 0.25);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.pv-map-popup .leaflet-popup-content {
+  margin: 0 !important;
+  width: 268px !important;
+}
+
+.pv-map-popup .leaflet-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.65) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  z-index: 20;
+}
+
+.pv-map-popup .leaflet-popup-close-button:hover {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #ffffff !important;
+}
+
+.pv-map-popup .leaflet-popup-tip {
+  background: #ffffff;
+}
+
+#ipoh-leaflet-map .leaflet-control-attribution {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(4px);
+  border-radius: 6px 0 0 0;
+  padding: 2px 6px;
+  color: #475569;
+}
+
+/* --- #4 WhatsApp Launch Toast Animation --- */
+@keyframes pvToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pv-toast-animate {
+  animation: pvToastIn 0.2s ease-out forwards;
+}

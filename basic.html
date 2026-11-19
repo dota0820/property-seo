@@ -14,6 +14,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- GA4 / GTM / Meta Pixel Ready DataLayer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -85,7 +90,7 @@
           <button id="basic-lang-en" onclick="setBasicLang('en')" class="px-2.5 py-1 text-xs font-bold rounded-md transition-all btn-brand-primary">EN</button>
           <button id="basic-lang-zh" onclick="setBasicLang('zh')" class="px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-slate-600 hover:text-slate-900">中文</button>
         </div>
-        <button onclick="openBasicInquiry('General Ipoh Listing Inquiry')" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg btn-whatsapp text-xs">
+        <button onclick="openBasicDirectWhatsApp('General Ipoh Subsale Inquiry')" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg btn-whatsapp text-xs">
           <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline" id="btn-wa-lbl">WhatsApp Us</span>
           <span class="sm:hidden">WhatsApp</span>
@@ -208,7 +213,7 @@
         <i data-lucide="newspaper" class="w-4 h-4"></i>
         <span>Blog</span>
       </a>
-      <button onclick="openBasicInquiry('Ipoh Property Viewing Inquiry')" class="flex flex-col items-center justify-center gap-1 text-[#16A34A]">
+      <button onclick="openBasicDirectWhatsApp('Mobile Quick Ipoh Inquiry')" class="flex flex-col items-center justify-center gap-1 text-[#16A34A]">
         <i data-lucide="message-circle" class="w-4 h-4"></i>
         <span>WhatsApp</span>
       </button>
@@ -239,8 +244,13 @@
         <input id="basic-inq-name" type="text" required placeholder="Your Name" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-slate-500" />
         <input id="basic-inq-phone" type="tel" required placeholder="WhatsApp Number (+60 12-...)" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-slate-500" />
         <button type="submit" class="w-full py-3 rounded-xl btn-whatsapp text-sm">Send Inquiry via WhatsApp</button>
+        <div class="text-center pt-1">
+          <a id="basic-direct-wa-link" href="https://wa.me/60125082048" target="_blank" rel="noopener noreferrer" onclick="if (window.PVConcierge) window.PVConcierge.trackLeadEvent('whatsapp_direct_skip', { topic: document.getElementById('basic-inq-ctx').value });" class="inline-flex items-center gap-1 text-[11px] font-bold text-[#006B2E] hover:underline">
+            <span>Prefer not to wait? Chat directly on WhatsApp &rarr;</span>
+          </a>
+        </div>
       </form>
-      <div id="basic-inq-done" class="hidden mt-4 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs text-emerald-900 space-y-2"></div>
+      <div id="basic-inq-done" class="hidden mt-4 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-xs text-emerald-900 space-y-2.5"></div>
     </div>
   </div>
 
