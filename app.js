@@ -6,7 +6,7 @@
   let leafletMap = null;
   let mapMarkersLayer = null;
   let mapTileLayer = null;
-  let mapStyle = "voyager";
+  let mapStyle = "street";
 
   const AREA_BADGES = {
     "Bandar Seri Botani": { en: "High Growth", zh: "热门成长区", cls: "bg-brand-soft border" },
@@ -260,17 +260,22 @@
 
   // --- #3 Real Interactive Leaflet Ipoh Map & Geospatial Pins ---
   function createTileLayer(style) {
-    if (style === "osm") {
-      return window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors"
-      });
+    if (style === "satellite") {
+      return window.L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          maxZoom: 18,
+          attribution: "Imagery &copy; Esri &mdash; World Imagery"
+        }
+      );
     }
-    return window.L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-      subdomains: "abcd",
-      attribution: "&copy; OpenStreetMap &copy; CARTO"
-    });
+    return window.L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+      {
+        maxZoom: 18,
+        attribution: "Tiles &copy; Esri &mdash; World Street Map"
+      }
+    );
   }
 
   function initLeafletMap() {
@@ -302,16 +307,17 @@
 
   window.toggleMapStyle = function () {
     if (!leafletMap || !window.L) return;
-    mapStyle = mapStyle === "voyager" ? "osm" : "voyager";
+    mapStyle = mapStyle === "street" ? "satellite" : "street";
     if (mapTileLayer) leafletMap.removeLayer(mapTileLayer);
     mapTileLayer = createTileLayer(mapStyle).addTo(leafletMap);
 
     const btn = document.getElementById("map-style-btn");
     if (btn) {
       btn.className =
-        mapStyle === "osm"
+        mapStyle === "satellite"
           ? "w-8 h-8 rounded-lg btn-brand-primary flex items-center justify-center transition-colors"
           : "w-8 h-8 rounded-lg bg-surface-high hover:bg-slate-200 flex items-center justify-center text-[#131B2E] transition-colors";
+      btn.title = mapStyle === "satellite" ? "Switch to Street Map" : "Switch to Satellite View";
     }
   };
 
